@@ -352,19 +352,19 @@ func _update_ui_bars() -> void:
 
 func _check_victory_conditions() -> bool:
 	if PlayerRepository.hp <= 0:
-		log_text.text = "* Donga kehabisan energi... Investigasi Gagal!"
+		log_text.text = BattleConfig.LOG_DEFEAT
 		return true
 	
 	if enemy_hp <= 0:
-		log_text.text = "* Anomali berhasil dilumpuhkan secara fisik. (Jalur Tekan)"
+		log_text.text = BattleConfig.LOG_VICTORY_HP
 		return true
 		
 	if enemy_trust >= 100:
-		log_text.text = "* Rafflesia berhenti menyerang. Ia merasa dipahami dan percaya padamu! (Jalur Damai)"
+		log_text.text = BattleConfig.LOG_VICTORY_TRUST
 		return true
 		
 	if enemy_stability >= 100:
-		log_text.text = "* Ekosistem pulih! Rafflesia tenang kembali karena habitatnya terestorasi. (Jalur Restorasi)"
+		log_text.text = BattleConfig.LOG_VICTORY_STABILITY
 		return true
 		
 	return false
@@ -375,10 +375,10 @@ func _on_btn_item_pressed() -> void:
 		child.visible = (child.name == "ItemBox")
 
 func _on_btn_species_pressed() -> void:
-	_resolve_observe("Spesies: Rafflesia Urbanis", 10)
+	_resolve_observe(enemy_resource.observe_species, 10)
 
 func _on_btn_status_pressed() -> void:
-	_resolve_observe("Status: Tertekan (Distressed) akibat invasi beton kota", 10)
+	_resolve_observe(enemy_resource.observe_status, 10)
 
 func _on_btn_cause_pressed() -> void:
 	_resolve_observe("Penyebab: Kehilangan habitat asli dan kekurangan nutrisi", 15)
