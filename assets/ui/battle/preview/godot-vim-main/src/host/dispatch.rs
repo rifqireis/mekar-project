@@ -1,0 +1,676 @@
+//! Routes [`HostRequest`] variants to handler modules (file I/O, clipboard,
+//! buffer navigation, shell commands, custom Godot commands) with security
+//! policy enforcement.
+
+use compact_str::CompactString;
+use godot::classes::{CodeEdit, EditorInterface, InputEventShortcut};
+use godot::prelude::*;
+use vim_core::execution::{
+    CmdlineCompletionEntry, CmdlineCompletionKind, HostRequest, HostRequestId, HostResult,
+};
+
+use super::{host_failure, host_success};
+use crate::settings::{FileAccessScope, ProjectVimrc, ShellExecution};
+use crate::types::ForceOverride;
+
+/// Security policy governing dangerous host operations.
+///
+/// Extracted from EditorSettings at call time and passed by value, keeping the
+/// host layer decoupled from Godot's settings API. Each field gates a different
+/// category of side effects.
+#[derive(Debug, Clone, Copy)]
+pub(crate) struct SecurityPolicy {
+    pub(crate) shell_execution: ShellExecution,
+    pub(crate) file_access_scope: FileAccessScope,
+    /// Controls how project-level vimrc files are treated when sourced.
+    ///
+    /// `ProjectVimrc::Sandbox` strips dangerous patterns (`:!` commands);
+    /// `ProjectVimrc::Disabled` prevents sourcing entirely. Consumed by
+    /// `controller/host_bridge.rs` after `ReadConfigFile` returns — dispatch
+    /// returns raw file text and the controller owns sandboxing responsibility.
+    pub(crate) project_vimrc: ProjectVimrc,
+}
+
+/// Gate for shell execution — enforced before `:!cmd` and `:{range}!cmd`.
+///
+/// Returns `Err(HostResult::Failure)` with `E145` if shell execution is disabled,
+/// preventing arbitrary command execution from within the editor.
+fn require_shell_enabled(id: HostRequestId, policy: &SecurityPolicy) -> Result<(), HostResult> {
+    if policy.shell_execution == ShellExecution::Disabled {
+        log::warn!("Shell execution blocked by security policy");
+        Err(host_failure(
+            id,
+            "E145: Shell commands are disabled (set security/shell_execution to Enabled in Editor Settings)",
+        ))
+    } else {
+        Ok(())
+    }
+}
+
+/// Shared evaluator for `EvaluateExpression` and `EvaluateMapping` host requests.
+fn eval_to_host_result(id: HostRequestId, expr: &str, mode_str: &str) -> HostResult {
+    match super::eval::eval_simple_expression(expr, mode_str) {
+        Ok(value) => HostResult::Data {
+            id,
+            data: CompactString::from(value.as_ref()),
+            offset: None,
+        },
+        Err(e) => host_failure(id, e),
+    }
+}
+
+/// Central dispatch: routes each `HostRequest` variant to its handler module.
+///
+/// This is the single entry point for all host request fulfillment. The engine
+/// emits host requests when it needs side effects (file I/O, clipboard, shell)
+/// that only the editor shell can provide. Security policy is enforced here
+/// (shell execution, file scope) before delegating to handler modules.
+pub(crate) fn execute(
+    request: &HostRequest,
+    editor: &mut Gd<CodeEdit>,
+    policy: &SecurityPolicy,
+    mode_str: &str,
+    clipboard: &dyn crate::bridge::clipboard::ClipboardPort,
+    pending_ui_actions: &mut Vec<crate::bridge::godot_host::PendingUiAction>,
+) -> HostResult {
+    log::debug!("host::execute: {:?}", request.kind());
+
+    // GodotEditorHost is created per-branch rather than upfront because some
+    // branches (e.g., ReindentRange, RequestCompletion) need the raw
+    // `&mut Gd<CodeEdit>` directly — wrapping it in GodotEditorHost would
+    // consume the mutable borrow.
+    match request {
+        HostRequest::WriteFile {
+            meta: _,
+            path,
+            force,
+        } => {
+            let mut host = super::GodotEditorHost(editor);
+            super::file::handle_write_file(
+                request.id(),
+                &mut host,
+                path.as_deref(),
+                ForceOverride::from(*force),
+                policy.file_access_scope,
+            )
+        }
+
+        HostRequest::Quit { meta: _, force } => {
+            let mut host = super::GodotEditorHost(editor);
+            super::file::handle_quit(request.id(), &mut host, ForceOverride::from(*force))
+        }
+
+        HostRequest::WriteQuit { meta: _, force } => {
+            let mut host = super::GodotEditorHost(editor);
+            super::file::handle_write_quit(request.id(), &mut host, ForceOverride::from(*force))
+        }
+
+        HostRequest::EditFile {
+            meta: _,
+            path,
+            force,
+        } => {
+            let mut host = super::GodotEditorHost(editor);
+            super::file::handle_edit_file(
+                request.id(),
+                &mut host,
+                path.as_str(),
+                ForceOverride::from(*force),
+                policy.file_access_scope,
+            )
+        }
+
+        HostRequest::ReadFile {
+            meta: _,
+            path,
+            after_line,
+        } => super::file::handle_read_file(
+            request.id(),
+            path.as_str(),
+            *after_line,
+            policy.file_access_scope,
+        ),
+
+        HostRequest::FilterDocumentRange {
+            meta: _,
+            range: _,
+            motion_type: _,
+            input_text,
+            command,
+        } => {
+            if let Err(result) = require_shell_enabled(request.id(), policy) {
+                return result;
+            }
+            super::external::handle_filter(request.id(), input_text.as_str(), command.as_str())
+        }
+
+        HostRequest::ReindentRange {
+            meta: _,
+            range,
+            motion_type: _,
+            input_text,
+            ..
+        } => super::external::handle_reindent(request.id(), editor, input_text.as_str(), range),
+
+        HostRequest::ReadClipboard {
+            meta: _,
+            cursor_offset: _,
+        } => super::clipboard::handle_read_clipboard(request.id(), clipboard),
+
+        HostRequest::ExternalCommand { meta: _, command } => {
+            if let Err(result) = require_shell_enabled(request.id(), policy) {
+                return result;
+            }
+            super::external::handle_external_command(request.id(), command.as_str())
+        }
+
+        HostRequest::CustomExCommand { meta: _, command } => {
+            super::custom_commands::handle_custom_ex_command(request.id(), command.as_str(), editor)
+        }
+
+        HostRequest::SyncCommandLine { meta: _, .. } => {
+            // No-op: command-line state is pulled from the engine via ui_snapshot()
+            // (state-snapshot pattern), so there is nothing to push to the host.
+            log::trace!("host::execute: SyncCommandLine no-op (state-snapshot pattern)");
+            host_success(request.id())
+        }
+
+        HostRequest::SwitchBuffer { meta: _, number } => {
+            super::buffer::handle_goto_buffer(request.id(), *number as usize)
+        }
+
+        HostRequest::BufferNext { meta: _, count } | HostRequest::TabNext { meta: _, count } => {
+            super::buffer::handle_switch_buffer(
+                request.id(),
+                crate::bridge::codec::u32_to_i32_sat(*count),
+            )
+        }
+
+        HostRequest::BufferPrev { meta: _, count } | HostRequest::TabPrev { meta: _, count } => {
+            super::buffer::handle_switch_buffer(
+                request.id(),
+                -crate::bridge::codec::u32_to_i32_sat(*count),
+            )
+        }
+
+        HostRequest::BufferFirst { meta: _ } => super::buffer::handle_goto_buffer(request.id(), 1),
+
+        HostRequest::BufferLast { meta: _ } => super::buffer::handle_goto_last_buffer(request.id()),
+
+        HostRequest::TabClose { meta: _, force } => {
+            let mut host = super::GodotEditorHost(editor);
+            super::file::handle_quit(request.id(), &mut host, ForceOverride::from(*force))
+        }
+
+        HostRequest::TabNew { meta: _, path } => {
+            if let Some(p) = path {
+                let mut host = super::GodotEditorHost(editor);
+                super::file::handle_edit_file(
+                    request.id(),
+                    &mut host,
+                    p.as_str(),
+                    ForceOverride::Normal,
+                    policy.file_access_scope,
+                )
+            } else {
+                host_failure(request.id(), "E471: Argument required")
+            }
+        }
+
+        HostRequest::BufferList { meta: _ } => super::buffer::handle_buffer_list(request.id()),
+
+        HostRequest::ReadConfigFile { meta: _, path } => {
+            if let Err(e) =
+                super::file::validate_path_scope(path.as_str(), policy.file_access_scope)
+            {
+                return host_failure(request.id(), e.to_string());
+            }
+            let gpath = GString::from(path.as_str());
+            match godot::classes::FileAccess::open(
+                &gpath,
+                godot::classes::file_access::ModeFlags::READ,
+            ) {
+                Some(fa) => {
+                    // Raw text returned here. Sandbox filtering (stripping
+                    // dangerous :! commands etc.) is applied by host_bridge
+                    // before the result reaches the engine.
+                    let text = fa.get_as_text().to_string();
+                    HostResult::Data {
+                        id: request.id(),
+                        data: CompactString::from(text),
+                        offset: None,
+                    }
+                }
+                None => host_failure(request.id(), format!("E484: Can't open file {}", path)),
+            }
+        }
+
+        HostRequest::EvaluateExpression {
+            meta: _,
+            expression,
+        } => eval_to_host_result(request.id(), expression.as_str(), mode_str),
+
+        HostRequest::EvaluateMapping {
+            meta: _,
+            expression,
+            ..
+        } => eval_to_host_result(request.id(), expression.as_str(), mode_str),
+
+        HostRequest::RequestCompletion { .. } => {
+            if editor.is_code_completion_enabled() {
+                editor.request_code_completion_ex().force(false).done();
+            }
+            host_success(request.id())
+        }
+
+        HostRequest::ShowMessageHistory { meta: _, entries } => {
+            let text = entries
+                .iter()
+                .map(|e| e.text.as_str())
+                .collect::<Vec<_>>()
+                .join("\n");
+            HostResult::Success {
+                id: request.id(),
+                message: Some(CompactString::from(text)),
+            }
+        }
+
+        HostRequest::JumpToBuffer {
+            meta: _,
+            buffer_id,
+            offset: jump_offset,
+        } => super::buffer::handle_jump_to_buffer(
+            request.id(),
+            buffer_id.get(),
+            jump_offset.get(),
+            buffer_id,
+        ),
+
+        HostRequest::ListActions { meta: _, filter } => {
+            let mut actions: Vec<String> = Vec::new();
+
+            // Add editor shortcuts from EditorSettings.
+            let editor_iface = EditorInterface::singleton();
+            if let Some(mut settings) = editor_iface.get_editor_settings() {
+                let shortcut_list = settings.call("get_shortcut_list", &[]);
+                if let Ok(arr) = shortcut_list.try_to::<PackedStringArray>() {
+                    for s in arr.as_slice() {
+                        let name = s.to_string();
+                        if !name.is_empty() {
+                            actions.push(name);
+                        }
+                    }
+                }
+            }
+
+            // Add custom commands.
+            for cmd in super::custom_commands::list_all_commands() {
+                actions.push(cmd.to_string());
+            }
+
+            actions.sort();
+            actions.dedup();
+
+            // Filter.
+            let text: String = match filter {
+                Some(f) if !f.is_empty() => {
+                    let filtered: Vec<&str> = actions
+                        .iter()
+                        .filter(|a| a.contains(f.as_str()))
+                        .map(|s| s.as_str())
+                        .collect();
+                    filtered.join("\n")
+                }
+                _ => actions.join("\n"),
+            };
+            HostResult::Data {
+                id: request.id(),
+                data: CompactString::from(text),
+                offset: None,
+            }
+        }
+
+        // ── Window management ────────────────────────────────────────────
+        // Godot uses a single-editor-per-tab model. Window split/resize
+        // operations have no meaningful mapping, but nav commands can map
+        // to tab switching (handled via CompoundAction in effect dispatch).
+        // As host requests they return descriptive failures.
+        HostRequest::SplitWindow { .. } => host_failure(
+            request.id(),
+            "Window splitting is not supported in the Godot editor",
+        ),
+        HostRequest::CloseWindow { meta: _, force } => {
+            let mut host = super::GodotEditorHost(editor);
+            super::file::handle_quit(request.id(), &mut host, ForceOverride::from(*force))
+        }
+        HostRequest::CloseOtherWindows { .. } => host_failure(
+            request.id(),
+            "Window management is not supported in the Godot editor",
+        ),
+        HostRequest::WriteAll { .. } => {
+            // TODO: iterate all open scripts and save each
+            host_failure(
+                request.id(),
+                ":wall is not yet supported in the Godot editor",
+            )
+        }
+        HostRequest::QuitAll { meta: _, force } => {
+            let mut host = super::GodotEditorHost(editor);
+            super::file::handle_quit(request.id(), &mut host, ForceOverride::from(*force))
+        }
+        HostRequest::WriteQuitAll { .. } => {
+            let mut host = super::GodotEditorHost(editor);
+            super::file::handle_write_quit(request.id(), &mut host, ForceOverride::Normal)
+        }
+        HostRequest::CloseBuffer { meta: _, force, .. } => {
+            let mut host = super::GodotEditorHost(editor);
+            super::file::handle_quit(request.id(), &mut host, ForceOverride::from(*force))
+        }
+
+        // ── Window navigation (Ctrl-W commands) ─────────────────────────
+        // These are now routed as HostRequests rather than Effects. In
+        // Godot's tab model, nav commands map to tab switching.
+        HostRequest::WindowNext { .. } => super::buffer::handle_switch_buffer(request.id(), 1),
+        HostRequest::WindowPrev { .. } => super::buffer::handle_switch_buffer(request.id(), -1),
+        HostRequest::WindowMoveLeft { .. } => super::buffer::handle_switch_buffer(request.id(), -1),
+        HostRequest::WindowMoveRight { .. } => super::buffer::handle_switch_buffer(request.id(), 1),
+        HostRequest::WindowMoveUp { .. } => super::buffer::handle_switch_buffer(request.id(), -1),
+        HostRequest::WindowMoveDown { .. } => super::buffer::handle_switch_buffer(request.id(), 1),
+        // No meaningful mapping in Godot's single-editor-per-tab model.
+        HostRequest::WindowRotateDown { .. }
+        | HostRequest::WindowRotateUp { .. }
+        | HostRequest::WindowEqualSize { .. }
+        | HostRequest::WindowIncreaseHeight { .. }
+        | HostRequest::WindowDecreaseHeight { .. }
+        | HostRequest::WindowIncreaseWidth { .. }
+        | HostRequest::WindowDecreaseWidth { .. } => {
+            log::trace!("Window resize/rotate request (no-op in Godot single-editor)");
+            host_success(request.id())
+        }
+
+        // ── LSP / Navigation ────────────────────────────────────────────
+        HostRequest::GotoDefinition { .. } => {
+            let mut port = crate::bridge::port_impl::CodeEditPort(editor, pending_ui_actions);
+            crate::effects::navigation::handle_goto_definition(&mut port);
+            host_success(request.id())
+        }
+        HostRequest::ShowDocumentation { .. } => {
+            let mut port = crate::bridge::port_impl::CodeEditPort(editor, pending_ui_actions);
+            crate::effects::navigation::handle_show_documentation(&mut port);
+            host_success(request.id())
+        }
+
+        // ── Command-line / extension ────────────────────────────────────
+        HostRequest::OpenCommandWindow { .. } => {
+            log::warn!("q: / q/ command window not supported in CodeEdit");
+            host_failure(
+                request.id(),
+                "E11: Command window not supported in CodeEdit",
+            )
+        }
+        HostRequest::CallOperatorFunc { .. } => {
+            log::warn!("operatorfunc (g@) not yet supported in the Godot editor");
+            host_failure(request.id(), "E774: operatorfunc (g@) not yet supported")
+        }
+        HostRequest::ExecuteNorm { .. } => {
+            // :norm is handled as a compound action in effect dispatch, not
+            // as a host request. If it arrives here, something is unexpected.
+            log::warn!("ExecuteNorm arrived as host request — expected compound action path");
+            host_failure(
+                request.id(),
+                ":norm host request routing not expected in Godot editor",
+            )
+        }
+
+        // ── Global mark / action / cmdline completion ───────────────────
+        HostRequest::JumpToGlobalMark {
+            meta: _,
+            buffer_id,
+            offset: jump_offset,
+            ..
+        } => super::buffer::handle_jump_to_buffer(
+            request.id(),
+            buffer_id.get(),
+            jump_offset.get(),
+            buffer_id,
+        ),
+        HostRequest::RunAction {
+            ref name, count, ..
+        } => {
+            log::debug!("RunAction: {} (count={:?})", name, count);
+            let repeat = count.unwrap_or(1).max(1);
+
+            // Try editor shortcut synthesis first.
+            let editor_iface = EditorInterface::singleton();
+            let settings = editor_iface.get_editor_settings();
+            if let Some(mut settings) = settings {
+                if let Some(shortcut) =
+                    crate::bridge::godot_calls::get_shortcut(&mut settings, name.as_str())
+                {
+                    let viewport = editor_iface
+                        .get_base_control()
+                        .and_then(|ctrl| ctrl.get_viewport());
+                    if let Some(mut viewport) = viewport {
+                        for _ in 0..repeat {
+                            let mut event: Gd<InputEventShortcut> = InputEventShortcut::new_gd();
+                            event.set_shortcut(&shortcut);
+                            viewport.call_deferred(
+                                "push_input",
+                                &[event.to_variant(), false.to_variant()],
+                            );
+                        }
+                        return host_success(request.id());
+                    }
+                    log::warn!("RunAction: shortcut found but no viewport for '{}'", name);
+                }
+            }
+
+            // Fall back to custom command dispatch.
+            let result = super::custom_commands::handle_custom_ex_command(
+                request.id(),
+                name.as_str(),
+                editor,
+            );
+            // If the custom command handler returned success, use it.
+            // Otherwise, report the action as unavailable.
+            if matches!(result, HostResult::Failure { .. }) {
+                host_failure(
+                    request.id(),
+                    format!(
+                        "Host action '{}' is not available in the Godot editor",
+                        name
+                    ),
+                )
+            } else {
+                result
+            }
+        }
+        HostRequest::RequestCmdlineCompletion {
+            kind, ref prefix, ..
+        } => match kind {
+            CmdlineCompletionKind::Action => {
+                // Collect action names matching the prefix.
+                let mut candidates: Vec<CmdlineCompletionEntry> = Vec::new();
+
+                // Editor shortcuts.
+                let editor_iface = EditorInterface::singleton();
+                if let Some(mut settings) = editor_iface.get_editor_settings() {
+                    let shortcut_list = settings.call("get_shortcut_list", &[]);
+                    if let Ok(arr) = shortcut_list.try_to::<Array<Variant>>() {
+                        for item in arr.iter_shared() {
+                            if let Ok(s) = item.try_to::<GString>() {
+                                let name = s.to_string();
+                                if !name.is_empty() && name.starts_with(prefix.as_str()) {
+                                    candidates.push(CmdlineCompletionEntry {
+                                        text: CompactString::from(name),
+                                        description: None,
+                                        detail: None,
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Custom commands.
+                for cmd in super::custom_commands::list_all_commands() {
+                    if cmd.starts_with(prefix.as_str()) {
+                        candidates.push(CmdlineCompletionEntry {
+                            text: CompactString::from(*cmd),
+                            description: None,
+                            detail: None,
+                        });
+                    }
+                }
+
+                candidates.sort_by(|a, b| a.text.cmp(&b.text));
+                candidates.dedup_by(|a, b| a.text == b.text);
+                HostResult::CmdlineCompletionCandidates {
+                    id: request.id(),
+                    candidates,
+                }
+            }
+            _ => {
+                // File path / buffer completion — not yet implemented.
+                HostResult::CmdlineCompletionCandidates {
+                    id: request.id(),
+                    candidates: Vec::new(),
+                }
+            }
+        },
+
+        // ── :mkvimrc — generate .godot-vimrc template ─────────────────
+        HostRequest::MkVimrc { meta: _, force } => {
+            let path = "res://.godot-vimrc";
+            let gpath = GString::from(path);
+
+            if !force && godot::classes::FileAccess::file_exists(&gpath) {
+                return host_failure(
+                    request.id(),
+                    ".godot-vimrc already exists (use :mkvimrc! to overwrite)",
+                );
+            }
+
+            let presets = &crate::config::presets::PRESETS;
+            let content = crate::config::writer::generate_default_config(presets);
+            match crate::config::writer::write_text_to_file(path, &content) {
+                Ok(()) => HostResult::Success {
+                    id: request.id(),
+                    message: Some(CompactString::from(format!("Wrote {path}"))),
+                },
+                Err(e) => host_failure(request.id(), e),
+            }
+        }
+
+        // ── Forward compatibility for #[non_exhaustive] ─────────────────
+        _ => {
+            let kind = format!("{:?}", request.kind());
+            log::debug!("Unknown host request variant from newer vim-core: {kind}");
+            host_failure(request.id(), format!("Unsupported host request: {kind}"))
+        }
+    }
+}
+
+#[cfg(test)]
+const HANDLED_HOST_REQUESTS: &[vim_core::execution::HostRequestKind] = &[
+    vim_core::execution::HostRequestKind::WriteFile,
+    vim_core::execution::HostRequestKind::Quit,
+    vim_core::execution::HostRequestKind::WriteQuit,
+    vim_core::execution::HostRequestKind::EditFile,
+    vim_core::execution::HostRequestKind::ReadFile,
+    vim_core::execution::HostRequestKind::FilterDocumentRange,
+    vim_core::execution::HostRequestKind::ReindentRange,
+    vim_core::execution::HostRequestKind::ReadClipboard,
+    vim_core::execution::HostRequestKind::ExternalCommand,
+    vim_core::execution::HostRequestKind::CustomExCommand,
+    vim_core::execution::HostRequestKind::SyncCommandLine,
+    vim_core::execution::HostRequestKind::SwitchBuffer,
+    vim_core::execution::HostRequestKind::BufferNext,
+    vim_core::execution::HostRequestKind::BufferPrev,
+    vim_core::execution::HostRequestKind::BufferFirst,
+    vim_core::execution::HostRequestKind::BufferLast,
+    vim_core::execution::HostRequestKind::BufferList,
+    vim_core::execution::HostRequestKind::TabNew,
+    vim_core::execution::HostRequestKind::TabNext,
+    vim_core::execution::HostRequestKind::TabPrev,
+    vim_core::execution::HostRequestKind::TabClose,
+    vim_core::execution::HostRequestKind::ReadConfigFile,
+    vim_core::execution::HostRequestKind::EvaluateExpression,
+    vim_core::execution::HostRequestKind::EvaluateMapping,
+    vim_core::execution::HostRequestKind::RequestCompletion,
+    vim_core::execution::HostRequestKind::ShowMessageHistory,
+    vim_core::execution::HostRequestKind::JumpToBuffer,
+    vim_core::execution::HostRequestKind::ListActions,
+    vim_core::execution::HostRequestKind::SplitWindow,
+    vim_core::execution::HostRequestKind::CloseWindow,
+    vim_core::execution::HostRequestKind::CloseOtherWindows,
+    vim_core::execution::HostRequestKind::WriteAll,
+    vim_core::execution::HostRequestKind::QuitAll,
+    vim_core::execution::HostRequestKind::WriteQuitAll,
+    vim_core::execution::HostRequestKind::CloseBuffer,
+    vim_core::execution::HostRequestKind::WindowNext,
+    vim_core::execution::HostRequestKind::WindowPrev,
+    vim_core::execution::HostRequestKind::WindowMoveLeft,
+    vim_core::execution::HostRequestKind::WindowMoveRight,
+    vim_core::execution::HostRequestKind::WindowMoveUp,
+    vim_core::execution::HostRequestKind::WindowMoveDown,
+    vim_core::execution::HostRequestKind::WindowRotateDown,
+    vim_core::execution::HostRequestKind::WindowRotateUp,
+    vim_core::execution::HostRequestKind::WindowEqualSize,
+    vim_core::execution::HostRequestKind::WindowIncreaseHeight,
+    vim_core::execution::HostRequestKind::WindowDecreaseHeight,
+    vim_core::execution::HostRequestKind::WindowIncreaseWidth,
+    vim_core::execution::HostRequestKind::WindowDecreaseWidth,
+    vim_core::execution::HostRequestKind::GotoDefinition,
+    vim_core::execution::HostRequestKind::ShowDocumentation,
+    vim_core::execution::HostRequestKind::OpenCommandWindow,
+    vim_core::execution::HostRequestKind::CallOperatorFunc,
+    vim_core::execution::HostRequestKind::ExecuteNorm,
+    vim_core::execution::HostRequestKind::JumpToGlobalMark,
+    vim_core::execution::HostRequestKind::RunAction,
+    vim_core::execution::HostRequestKind::RequestCmdlineCompletion,
+    vim_core::execution::HostRequestKind::MkVimrc,
+    // Variants handled by the forward-compatibility wildcard (`_ =>`).
+    // Listed here so the test detects NEW vim-core variants that need
+    // explicit match arms rather than silent wildcard degradation.
+    vim_core::execution::HostRequestKind::DiagnosticNext,
+    vim_core::execution::HostRequestKind::DiagnosticPrev,
+    vim_core::execution::HostRequestKind::DiagnosticList,
+    vim_core::execution::HostRequestKind::DiagnosticGoto,
+    vim_core::execution::HostRequestKind::CQuit,
+    vim_core::execution::HostRequestKind::UpdateFile,
+    vim_core::execution::HostRequestKind::FoldRange,
+    vim_core::execution::HostRequestKind::FoldOpenRange,
+    vim_core::execution::HostRequestKind::FoldCloseRange,
+];
+
+#[cfg(test)]
+mod host_request_coverage_tests {
+    use super::*;
+    use std::collections::HashSet;
+    use vim_core::execution::HostRequestKind;
+
+    #[test]
+    fn host_request_dispatch_covers_all_variants() {
+        let handled: HashSet<_> = HANDLED_HOST_REQUESTS.iter().copied().collect();
+        let all: HashSet<_> = HostRequestKind::ALL.iter().copied().collect();
+        let missing: Vec<_> = all.difference(&handled).collect();
+        assert!(
+            missing.is_empty(),
+            "Unhandled HostRequestKind variants: {:?}",
+            missing
+        );
+    }
+
+    #[test]
+    fn handled_host_requests_has_no_duplicates() {
+        let mut seen = HashSet::new();
+        for kind in HANDLED_HOST_REQUESTS {
+            assert!(
+                seen.insert(kind),
+                "Duplicate in HANDLED_HOST_REQUESTS: {:?}",
+                kind
+            );
+        }
+    }
+}

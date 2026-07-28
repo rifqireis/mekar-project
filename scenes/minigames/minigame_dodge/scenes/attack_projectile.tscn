@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://cnsgh1ciy4vk5"]
+
+[ext_resource type="Script" uid="uid://c4lmmvdimhgie" path="res://scenes/minigames/minigame_dodge/scripts/attack_projectile.gd" id="1_6uw3e"]
+[ext_resource type="Texture2D" uid="uid://er0hhgbdkydb" path="res://assets/ui/battle/enemy_attack/icon.svg" id="2_tnrn0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cxf33"]
+radius = 30.066593
+
+[node name="AttackProjectile" type="Area2D" unique_id=176680487]
+script = ExtResource("1_6uw3e")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1164607340]
+position = Vector2(0, 2)
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("2_tnrn0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=67262257]
+position = Vector2(-1, 1)
+scale = Vector2(0.5, 0.5)
+shape = SubResource("CircleShape2D_cxf33")

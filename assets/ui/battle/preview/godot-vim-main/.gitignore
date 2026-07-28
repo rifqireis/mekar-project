@@ -1,0 +1,8 @@
+/target
+.DS_Store
+.idea/
+.vscode/
+.env
+.godot/
+addons/godot_vim/bin/
+.cargo/
