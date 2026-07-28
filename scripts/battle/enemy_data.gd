@@ -65,3 +65,16 @@ extends Resource
 @export var obstacle_spawn_rate: float = 0.4
 @export var basic_attack_scene: PackedScene  
 @export var special_attack_scene: PackedScene
+
+@export_group("Data Interaksi & Observasi")
+@export var observe_species: String = "Spesies: Rafflesia Urbanis"
+@export var observe_status: String = "Status: Tertekan (Distressed) akibat invasi beton kota"
+@export var observe_cause: String = "Penyebab: Kehilangan habitat asli dan kekurangan nutrisi"
+
+@export_group("Data Pilihan Engage (A/B/C/D)")
+@export var engage_choices: Array[Dictionary] = [
+	{"text": "Kami tahu kotalah yang merebut tanahmu...", "correct": true, "trust": 25},
+	{"text": "Kembali ke hutan sekarang atau kami bakar akarmu!", "correct": false, "trust": 15},
+	{"text": "Donga menurunkan senjata dan memperlihatkan bibit...", "correct": true, "trust": 20},
+	{"text": "Dasar monster parasit pemakan beton!", "correct": false, "trust": 15}
+]
