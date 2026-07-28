@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dla24gcg673ed"]
+
+[ext_resource type="Texture2D" uid="uid://er0hhgbdkydb" path="res://assets/ui/battle/enemy_attack/icon.svg" id="1_8asc5"]
+[ext_resource type="Script" uid="uid://d1ip5jac61cub" path="res://scenes/minigames/minigame_dodge/scripts/patterns/spore_bullet.gd" id="1_nbenw"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cxf33"]
+radius = 12.369317
+
+[node name="SporeBullet" type="Area2D" unique_id=706408697]
+script = ExtResource("1_nbenw")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1306197754]
+scale = Vector2(0.015, 0.015)
+texture = ExtResource("1_8asc5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=897251893]
+shape = SubResource("CircleShape2D_cxf33")

@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://d1geipx7l7mdk"]
+
+[ext_resource type="Script" uid="uid://bcqob73l3o7xg" path="res://scenes/minigames/minigame_dodge/scripts/patterns/pattern_spore_wind.gd" id="1_t8sp1"]
+[ext_resource type="PackedScene" uid="uid://dla24gcg673ed" path="res://scenes/minigames/minigame_dodge/scenes/patterns/spore_bullet.tscn" id="2_352d7"]
+
+[sub_resource type="Curve2D" id="Curve2D_tly40"]
+_data = {
+"points": PackedVector2Array(-12, -8, 12, 8, 704, 2, 0, 0, 0, 0, 575, 448, 92, 7, -92, -7, 459, 3, 0, 0, 0, 0, 325, 452, 65, 5, -65, -5, 214, 6, 0, 0, 0, 0, 131, 448, 56, -4, -56, 4, 47, 7, 0, 0, 0, 0, -1, 454)
+}
+point_count = 8
+
+[node name="PatternSporeWind" type="Node2D" unique_id=1175840296]
+script = ExtResource("1_t8sp1")
+spore_scene = ExtResource("2_352d7")
+
+[node name="SporePath" type="Path2D" parent="." unique_id=2022985593]
+curve = SubResource("Curve2D_tly40")
+
+[node name="SpawnTimer" type="Timer" parent="." unique_id=1503641884]
+
+[node name="ReferenceRect" type="ReferenceRect" parent="." unique_id=990409063]
+custom_minimum_size = Vector2(705, 452)
+offset_right = 40.0
+offset_bottom = 40.0

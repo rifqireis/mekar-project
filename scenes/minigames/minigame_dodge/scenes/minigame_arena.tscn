@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://cr1f3fqojpwiq"]
+
+[ext_resource type="Script" uid="uid://b5u6h313a5t1u" path="res://scenes/minigames/minigame_dodge/scripts/minigame_arena.gd" id="1_6ml4e"]
+[ext_resource type="PackedScene" uid="uid://rsgvp3mc2uy1" path="res://scenes/minigames/minigame_dodge/scenes/minigame_player.tscn" id="2_j5upo"]
+
+[node name="MinigameArena" type="Node2D" unique_id=935506465]
+script = ExtResource("1_6ml4e")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1832237746]
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(1, 0, 0, 1)
+
+[node name="ProjectileContainer" type="Node2D" parent="." unique_id=1461959899]
+
+[node name="MinigamePlayer" parent="." unique_id=1155234502 instance=ExtResource("2_j5upo")]

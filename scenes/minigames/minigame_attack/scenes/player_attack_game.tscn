@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://hqhfujyr0d5u"]
+
+[ext_resource type="Script" uid="uid://2yvhfq3tfwt4" path="res://scenes/minigames/minigame_attack/scripts/player_attack_game.gd" id="1_8d6gr"]
+
+[node name="PlayerAttackGame" type="Control" unique_id=1541002712]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_8d6gr")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1167944941]
+layout_mode = 0
+offset_left = 110.0
+offset_top = 220.0
+offset_right = 1017.0
+offset_bottom = 529.0
+color = Color(1, 0, 0, 1)
+
+[node name="TargetZone" type="ColorRect" parent="." unique_id=1888903557]
+layout_mode = 0
+offset_left = 535.0
+offset_top = 218.0
+offset_right = 616.0
+offset_bottom = 526.0
+color = Color(0, 0, 0, 1)
+
+[node name="Cursor" type="ColorRect" parent="." unique_id=2036860324]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 113.0
+offset_top = 223.0
+offset_right = 162.0
+offset_bottom = 530.0
+grow_vertical = 2

@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://rsgvp3mc2uy1"]
+
+[ext_resource type="Script" uid="uid://cotobj31va8na" path="res://scenes/minigames/minigame_dodge/scripts/minigame_player.gd" id="1_4nr83"]
+[ext_resource type="Texture2D" uid="uid://snrpcov6nbt0" path="res://assets/ui/battle/main/Group 593 3.png" id="2_5ckvo"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cxf33"]
+radius = 23.086792
+
+[node name="MinigamePlayer" type="CharacterBody2D" unique_id=1155234502]
+script = ExtResource("1_4nr83")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1154527229]
+scale = Vector2(0.14072849, 0.1390449)
+texture = ExtResource("2_5ckvo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=105498410]
+position = Vector2(-2, -2)
+shape = SubResource("CircleShape2D_cxf33")
