@@ -1,4 +1,4 @@
-# Proyek Investigasi Anomali
+# Proyek Gemastik
 
 Game narrative-adventure sekaligus tactical RPG, dibangun pakai Godot Engine 4. Pemain jadi **Donga**, investigator yang menangani anomali ekosistem (contohnya *Rafflesia Urbanis*) lewat eksplorasi peta, observasi, negosiasi, atau kalau perlu, konfrontasi langsung.
 
@@ -91,3 +91,4 @@ git add .
 git commit -m "Refactor: Pemisahan data musuh ke Resource dan modul BattleConfig"
 git push origin main
 ```
+
