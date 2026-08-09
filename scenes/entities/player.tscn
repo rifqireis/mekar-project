@@ -150,21 +150,17 @@ script = ExtResource("1_08t41")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1597964792]
 texture_filter = 1
-position = Vector2(26, 270)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_dgg5m")
 animation = &"walk_right"
 
 [node name="RayInteract" type="RayCast2D" parent="." unique_id=305846055]
-position = Vector2(26, 273)
 target_position = Vector2(0, 20)
 collide_with_areas = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=941045567]
-position = Vector2(26, 273)
 shape = SubResource("RectangleShape2D_g6aeh")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=700999112]
-position = Vector2(22, 260)
-scale = Vector2(-71.03571, 368.33334)
+scale = Vector2(4, -20.741)
 zoom = Vector2(4, 4)

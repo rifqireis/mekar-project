@@ -207,26 +207,38 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("IntroCamera:position")
+tracks/2/path = NodePath("TransitionLayer/ColorRect:modulate")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(15, 269)]
+"values": [Color(1, 1, 1, 0)]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("TransitionLayer/ColorRect:modulate")
+tracks/3/path = NodePath("Path2D/PlayerFollow:progress_ratio")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 1, 1, 0)]
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Path2D/CameraFollow:progress_ratio")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
 }
 
 [sub_resource type="Animation" id="Animation_2sj4f"]
@@ -235,34 +247,10 @@ length = 3.0000000000000004
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("IntroCamera:position")
+tracks/0/path = NodePath("TransitionLayer/ColorRect:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(15, 269)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Player:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(-900, 7)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("TransitionLayer/ColorRect:modulate")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
 "times": PackedFloat32Array(0, 3),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
@@ -301,40 +289,16 @@ tracks/1/keys = {
 "method": &"play_cutscene_idle"
 }, {
 "args": [],
-"method": &"change_cam"
+"method": &"set_cam"
 }]
 }
-tracks/2/type = "value"
+tracks/2/type = "method"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Player:position")
+tracks/2/path = NodePath(".")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(6, 10),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(-94, 7), Vector2(112, 7)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("IntroCamera:position")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(11, 14),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(15, 272), Vector2(138, 269)]
-}
-tracks/4/type = "method"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath(".")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
 "times": PackedFloat32Array(14.5, 15),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
@@ -344,6 +308,30 @@ tracks/4/keys = {
 "args": [],
 "method": &"lepaskan_pemain"
 }]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Path2D/PlayerFollow:progress_ratio")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(6, 10),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Path2D/CameraFollow:progress_ratio")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 11, 14),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0]
 }
 
 [sub_resource type="Animation" id="Animation_5e8uq"]
@@ -456,6 +444,12 @@ radius = 27.294687
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cxf33"]
 size = Vector2(118, 81)
 
+[sub_resource type="Curve2D" id="Curve2D_5e8uq"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 107, 0, 0, 0, 0, 0, 232, 0)
+}
+point_count = 2
+
 [node name="MapHutan" type="Node2D" unique_id=451014480]
 modulate = Color(0.7871086, 0.7871086, 0.7871086, 0.7871086)
 script = ExtResource("1_5e8uq")
@@ -474,11 +468,8 @@ tile_map_data = PackedByteArray("AAAmAAgAAAADAAEAAAAmAAkAAAADAAIAAAAnAAgAAAAEAAE
 tile_set = SubResource("TileSet_fmtq5")
 
 [node name="IntroCamera" type="Camera2D" parent="." unique_id=1529999600]
-position = Vector2(15, 269)
+position = Vector2(39, 278)
 zoom = Vector2(4, 4)
-
-[node name="DongaStopPoint" type="Marker2D" parent="." unique_id=550199720]
-position = Vector2(188, 280)
 
 [node name="Player" parent="." unique_id=414423822 instance=ExtResource("2_llsjw")]
 position = Vector2(-94, 7)
@@ -1747,6 +1738,22 @@ position = Vector2(1032, 428)
 zoom = Vector2(5, 5)
 
 [node name="SpotInvestigasi" type="Marker2D" parent="." unique_id=1697216521]
+
+[node name="Path2D" type="Path2D" parent="." unique_id=1635259878]
+position = Vector2(-68, 278)
+curve = SubResource("Curve2D_5e8uq")
+
+[node name="PlayerFollow" type="PathFollow2D" parent="Path2D" unique_id=7918077]
+position = Vector2(107, 0)
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Path2D/PlayerFollow" unique_id=723827326]
+remote_path = NodePath("../../../Player")
+
+[node name="CameraFollow" type="PathFollow2D" parent="Path2D" unique_id=2055109370]
+position = Vector2(107, 0)
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Path2D/CameraFollow" unique_id=2027922853]
+remote_path = NodePath("../../../IntroCamera")
 
 [connection signal="dialogue_finished" from="UIDialogueLayer/SlantedDialogueBox" to="." method="_on_slanted_dialogue_box_dialogue_finished"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

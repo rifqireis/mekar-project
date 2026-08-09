@@ -52,12 +52,11 @@ func move_player(_delta):
 	move_and_slide()
 	
 	
-func play_cutscene_walk():
-	animated_sprite.animation = "walk_right"
+func putar_animasi_cutscene(nama_animasi: String):
+	animated_sprite.play(nama_animasi)
 	
+func hentikan_animasi_cutscene():
+	animated_sprite.stop()
 
-func play_cutscene_idle():
-	animated_sprite.animation = "idle_right"
-	
-func change_cam():
+func set_cam():
 	$Camera2D.make_current()
