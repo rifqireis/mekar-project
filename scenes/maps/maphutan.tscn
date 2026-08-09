@@ -183,58 +183,46 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
+tracks/0/path = NodePath("IntroCanvas/NarasiLabel:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 1, 1, 1)]
+"values": [Color(1, 1, 1, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("IntroCanvas/NarasiLabel:modulate")
+tracks/1/path = NodePath("Player:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 1, 1, 0)]
+"values": [Vector2(-94, 7)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Player:position")
+tracks/2/path = NodePath("IntroCamera:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(-94, 7)]
+"values": [Vector2(15, 269)]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("IntroCamera:position")
+tracks/3/path = NodePath("TransitionLayer/ColorRect:modulate")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(15, 269)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("TransitionLayer/ColorRect:modulate")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
@@ -247,38 +235,38 @@ length = 3.0000000000000004
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
+tracks/0/path = NodePath("IntroCamera:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 3),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(0, 0, 0, 0), Color(1, 1, 1, 1)]
+"values": [Vector2(15, 269)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("IntroCamera:position")
+tracks/1/path = NodePath("Player:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(15, 269)]
+"values": [Vector2(-900, 7)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Player:position")
+tracks/2/path = NodePath("TransitionLayer/ColorRect:modulate")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(-900, 7)]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_llsjw"]
@@ -358,8 +346,57 @@ tracks/4/keys = {
 }]
 }
 
+[sub_resource type="Animation" id="Animation_5e8uq"]
+resource_name = "investigasi"
+length = 10.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Player:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(989, 155)]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"values": [{
+"args": [],
+"method": &"change_cam_investigation"
+}, {
+"args": ["investigasi"],
+"method": &"picu_dialog"
+}, {
+"args": [],
+"method": &"selesai_investigasi"
+}]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("TransitionLayer/ColorRect:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
 [sub_resource type="Animation" id="Animation_pwvdq"]
 resource_name = "transisi_investigasi"
+length = 1.5
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -367,10 +404,10 @@ tracks/0/path = NodePath("TransitionLayer/ColorRect:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.5, 1),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 1.5),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_pwvdq"]
@@ -378,6 +415,7 @@ _data = {
 &"RESET": SubResource("Animation_xxbdk"),
 &"autoload_animation": SubResource("Animation_2sj4f"),
 &"intro_sequence": SubResource("Animation_llsjw"),
+&"investigasi": SubResource("Animation_5e8uq"),
 &"transisi_investigasi": SubResource("Animation_pwvdq")
 }
 
@@ -419,6 +457,7 @@ radius = 27.294687
 size = Vector2(52, 36)
 
 [node name="MapHutan" type="Node2D" unique_id=451014480]
+modulate = Color(0.7871086, 0.7871086, 0.7871086, 0.7871086)
 script = ExtResource("1_5e8uq")
 
 [node name="Ground" type="TileMapLayer" parent="." unique_id=1689723694]
@@ -519,6 +558,7 @@ color = Color(0, 0, 0, 1)
 libraries/ = SubResource("AnimationLibrary_pwvdq")
 autoplay = &"autoload_animation"
 next/autoload_animation = &"intro_sequence"
+next/transisi_investigasi = &"investigasi"
 
 [node name="TileMap" type="TileMap" parent="." unique_id=1024594798]
 format = 2
@@ -1703,6 +1743,7 @@ shape = SubResource("RectangleShape2D_cxf33")
 
 [node name="InvestigationCamera" type="Camera2D" parent="." unique_id=508034002]
 position = Vector2(1032, 428)
+zoom = Vector2(5, 5)
 
 [node name="SpotInvestigasi" type="Marker2D" parent="." unique_id=1697216521]
 
