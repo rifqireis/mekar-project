@@ -5,6 +5,43 @@
 [ext_resource type="Texture2D" uid="uid://dvf80nkygstkj" path="res://assets/ui/main_menu/aboutdev/exit.png" id="3_26clu"]
 [ext_resource type="Texture2D" uid="uid://dxh4s3ummckf4" path="res://assets/ui/main_menu/aboutdev/exit_hover.png" id="4_iuimh"]
 
+[sub_resource type="Animation" id="Animation_qt3yv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_5jyx8"]
+resource_name = "autoload_animation"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_26clu"]
+_data = {
+&"RESET": SubResource("Animation_qt3yv"),
+&"autoload_animation": SubResource("Animation_5jyx8")
+}
+
 [node name="AboutDev" type="Node2D" unique_id=453984050]
 script = ExtResource("1_qt3yv")
 
@@ -21,6 +58,21 @@ offset_bottom = 922.0
 texture_normal = ExtResource("3_26clu")
 texture_hover = ExtResource("4_iuimh")
 texture_focused = ExtResource("4_iuimh")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=740218427]
+libraries/ = SubResource("AnimationLibrary_26clu")
+autoplay = &"autoload_animation"
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=530484977]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
 [connection signal="mouse_entered" from="ExitButton" to="." method="_on_exit_button_mouse_entered"]
 [connection signal="pressed" from="ExitButton" to="." method="_on_exit_button_pressed"]

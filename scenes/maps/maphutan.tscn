@@ -454,7 +454,7 @@ animations = [{
 radius = 27.294687
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cxf33"]
-size = Vector2(52, 36)
+size = Vector2(118, 81)
 
 [node name="MapHutan" type="Node2D" unique_id=451014480]
 modulate = Color(0.7871086, 0.7871086, 0.7871086, 0.7871086)
@@ -544,6 +544,7 @@ theme_override_font_sizes/mono_font_size = 40
 text = "Raflesia"
 
 [node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=1601444571]
+visible = false
 
 [node name="ColorRect" type="ColorRect" parent="TransitionLayer" unique_id=384061191]
 modulate = Color(1, 1, 1, 0)
@@ -1738,7 +1739,7 @@ texture = ExtResource("10_nyl8k")
 position = Vector2(833, 33)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InvestigationArea" unique_id=1656527223]
-position = Vector2(-5, 247)
+position = Vector2(198, 399)
 shape = SubResource("RectangleShape2D_cxf33")
 
 [node name="InvestigationCamera" type="Camera2D" parent="." unique_id=508034002]

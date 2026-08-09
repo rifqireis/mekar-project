@@ -290,6 +290,10 @@ tracks/22/keys = {
 "values": [true]
 }
 
+[sub_resource type="Animation" id="Animation_8bhm3"]
+resource_name = "autoload_animation"
+length = 0.25
+
 [sub_resource type="Animation" id="Animation_yu1x5"]
 resource_name = "play_cinematic"
 length = 60.0
@@ -589,6 +593,7 @@ tracks/23/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_d7182"]
 _data = {
 &"RESET": SubResource("Animation_d7182"),
+&"autoload_animation": SubResource("Animation_8bhm3"),
 &"play_cinematic": SubResource("Animation_yu1x5")
 }
 
@@ -609,6 +614,7 @@ autoplay = true
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
+mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="ImageContainer" type="Control" parent="." unique_id=1531830388]
@@ -639,7 +645,8 @@ stretch_mode = 4
 
 [node name="img_4" type="TextureRect" parent="ImageContainer" unique_id=239608800]
 layout_mode = 0
-offset_right = 1920.0
+offset_left = -100.0
+offset_right = 1820.0
 offset_bottom = 1080.0
 scale = Vector2(1.1, 1.1)
 pivot_offset = Vector2(960, 540)
@@ -672,6 +679,7 @@ texture = ExtResource("6_7wly1")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=600152707]
 libraries/ = SubResource("AnimationLibrary_d7182")
 autoplay = &"play_cinematic"
+next/autoload_animation = &"play_cinematic"
 
 [node name="TopBar" type="ColorRect" parent="." unique_id=1702031753]
 layout_mode = 0
