@@ -7,7 +7,6 @@ func _on_play_button_pressed():
 	get_tree().change_scene_to_file("res://scenes/cutscenes/introduction.tscn")
 
 func _on_about_dev_button_pressed():
-	# Ganti path ini sesuai dengan lokasi scene About Dev yang kamu buat nanti
 	get_tree().change_scene_to_file("res://scenes/ui/about_dev.tscn")
 
 func _on_exit_button_pressed():
