@@ -3,7 +3,7 @@ extends CharacterBody2D
 @onready var ray_interact : RayCast2D = $RayInteract
 @onready var animated_sprite : AnimatedSprite2D = $AnimatedSprite2D
 
-const VELOCITY = 200
+const VELOCITY = 100
 
 func _ready() -> void:
 	add_to_group("player") 
@@ -51,3 +51,13 @@ func move_player(_delta):
 		animated_sprite.stop()
 	move_and_slide()
 	
+	
+func play_cutscene_walk():
+	animated_sprite.animation = "walk_right"
+	
+
+func play_cutscene_idle():
+	animated_sprite.animation = "idle_right"
+	
+func change_cam():
+	$Camera2D.make_current()

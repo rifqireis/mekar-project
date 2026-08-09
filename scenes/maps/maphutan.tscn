@@ -1,10 +1,12 @@
 [gd_scene format=4 uid="uid://c2g837cknk720"]
 
-[ext_resource type="Texture2D" uid="uid://cswugukyicxf5" path="res://assets/tiles/fantasy_world/characters/spritesheet (1).png" id="3_22nj0"]
+[ext_resource type="PackedScene" uid="uid://be73hmjac1rk3" path="res://scenes/entities/player.tscn" id="2_llsjw"]
+[ext_resource type="FontFile" uid="uid://ckgpk7nwhmai1" path="res://assets/fonts/Courier_Prime/CourierPrime-Regular.ttf" id="3_2sj4f"]
 [ext_resource type="Texture2D" uid="uid://bs84w7btmnu0" path="res://assets/tiles/forest/Grass_transition_02.png" id="3_fmtq5"]
-[ext_resource type="Script" uid="uid://cpwsuy1y2qdmp" path="res://scripts/player/player.gd" id="4_cd2ue"]
+[ext_resource type="Texture2D" uid="uid://l5oos8rpy1vi" path="res://assets/ui/battle/main/textbox.png" id="3_xxbdk"]
 [ext_resource type="Texture2D" uid="uid://dr2msafrbsphy" path="res://assets/tiles/forest/Tree_1.png" id="4_orqae"]
 [ext_resource type="Texture2D" uid="uid://byxnuaphm6a28" path="res://assets/tiles/forest/Tree_2.png" id="5_fljpw"]
+[ext_resource type="Script" uid="uid://c1ctndvjganu3" path="res://scripts/maps/slanted_dialogue_box.gd" id="5_pwvdq"]
 [ext_resource type="Texture2D" uid="uid://bymiwjwojk26p" path="res://assets/tiles/forest/stones/Wall_02.png" id="6_fljpw"]
 [ext_resource type="Texture2D" uid="uid://wmbs6cscnml2" path="res://assets/tiles/forest/bushes/bush_01.png" id="6_gm6n8"]
 [ext_resource type="Script" uid="uid://cf6b36jd32m24" path="res://scripts/maps/encounter_trigger.gd" id="6_llsjw"]
@@ -19,15 +21,102 @@
 [sub_resource type="GDScript" id="GDScript_036b0"]
 script/source = "extends Node2D
 
+@onready var player = $Player
+@onready var dialogue_ui = $UIDialogueLayer/SlantedDialogueBox
+@onready var anim_player = $AnimationPlayer # Pastikan path ini benar
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+
+# Gabungkan naskah ke dalam satu Dictionary agar mudah dipanggil
+var daftar_naskah = {
+	\"pendaratan\": [
+		{\"nama\": \"Donga\", \"teks\": \"Level anomali sedang. Rutin.\"},
+		{\"nama\": \"Donga\", \"teks\": \"Kalau lancar, jam segini besok udah di rumah. Orey pasti nanya lagi soal luka di lengan gue yang kemarin.\"},
+		{\"nama\": \"Donga\", \"teks\": \"Fokus dulu. Cerita nanti aja.\"}
+	],
+	\"investigasi\": [
+		{\"nama\": \"Donga\", \"teks\": \"Bukan sisa perkelahian. Ini ditandain.\"},
+		{\"nama\": \"Donga\", \"teks\": \"Dan lebih besar dari yang tertulis di laporan.\"}
+	],
+	\"konfrontasi\": [
+		{\"nama\": \"Donga\", \"teks\": \"Target teridentifikasi.\"},
+		{\"nama\": \"Arnoldios\", \"teks\": \"Kalian cabut akarku dari tanah ini. Kalian bakar rumahku buat batu dan besi. Sekarang kalian masih berdiri di sisa-sisanya.\"}
+	]
+}
+
+func _ready():
+	player.set_physics_process(false)
+	# Asumsi: anim_player.play(\"intro_sequence\") sudah berjalan otomatis
+
+# --- FUNGSI UNTUK DIPANGGIL OLEH ANIMATION PLAYER ---
+
+func picu_dialog(kunci_naskah: String):
+	# 1. Hentikan (Pause) timeline animasi saat dialog muncul
+	anim_player.pause() 
+	# 2. Kirim data naskah ke UI
+	dialogue_ui.start_dialogue(daftar_naskah[kunci_naskah])
+
+func lepaskan_pemain():
+	# Buka kunci fisika dan panggil tutorial melayang
+	player.set_physics_process(true)
+	var wasd = get_node_or_null(\"Player/TutorialWASD\")
+	if is_instance_valid(wasd):
+		wasd.tampilkan_indikator()
+
+# --- PENERIMA SINYAL DARI UI DIALOG ---
+
+func _on_slanted_dialogue_box_dialogue_finished():
+	# Saat UI selesai, lanjutkan (Resume) timeline animasi yang tadi di-pause
+	if anim_player.is_playing() == false:
+		anim_player.play()
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+@onready var cinematic_camera = $CinematicCamera
+@onready var spot_investigasi = $SpotInvestigasi
+
+# Variabel penyimpan koordinat asli
+var posisi_sebelum_investigasi: Vector2 
+
+# --- LOGIKA TRIGGER ---
+func _on_investigation_area_body_entered(body: Node2D) -> void:
+	if body.name == \"Player\":
+		# 1. Kunci fisika pemain
+		player.set_physics_process(false)
+		
+		# 2. Rekam posisi X dan Y pemain saat ini
+		posisi_sebelum_investigasi = player.global_position
+		
+		# 3. Putar timeline transisi
+		anim_player.play(\"transisi_investigasi\")
+		
+		if has_node(\"InvestigationArea\"):
+			$InvestigationArea.set_deferred(\"monitoring\", false)
+			$InvestigationArea.queue_free()
+
+# --- FUNGSI JEMBATAN UNTUK ANIMATION PLAYER ---
+
+# Dipanggil saat layar hitam penuh pertama kali
+func pindah_ke_set_investigasi():
+	# Pindahkan tubuh Donga ke titik di depan Rafflesia
+	player.global_position = spot_investigasi.global_position
+	
+	# Paksa Donga menghadap ke arah yang benar (Sesuaikan nama animasi milikmu)
+	# player.get_node(\"AnimatedSprite2D\").play(\"idle_up\") 
+	
+	# Pindahkan kamera ke mode sinematik
+	cinematic_camera.make_current()
+
+# Dipanggil saat layar hitam penuh kedua kalinya (setelah dialog)
+func kembali_ke_posisi_awal():
+	# Kembalikan tubuh Donga ke tempat asalnya berpijak
+	player.global_position = posisi_sebelum_investigasi
+	
+	# Kembalikan pandangan ke kamera bawaan Donga
+	player.get_node(\"Camera2D\").make_current()
+
+func selesai_investigasi():
+	player.set_physics_process(true)
+	if is_instance_valid(cinematic_camera):
+		cinematic_camera.queue_free()
 "
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_orqae"]
@@ -189,146 +278,208 @@ texture = ExtResource("3_fmtq5")
 [sub_resource type="TileSet" id="TileSet_fmtq5"]
 sources/0 = SubResource("TileSetAtlasSource_p3o1y")
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_nyl8k"]
-atlas = ExtResource("3_22nj0")
-region = Rect2(32, 0, 32, 48)
+[sub_resource type="Animation" id="Animation_xxbdk"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("IntroCanvas/NarasiLabel:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Player:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-94, 7)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("IntroCamera:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(15, 269)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("TransitionLayer/ColorRect:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_j4cn5"]
-atlas = ExtResource("3_22nj0")
-region = Rect2(96, 48, 32, 48)
+[sub_resource type="Animation" id="Animation_2sj4f"]
+resource_name = "autoload_animation"
+length = 3.0000000000000004
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("IntroCamera:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(15, 269)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Player:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-900, 7)]
+}
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_22nj0"]
-atlas = ExtResource("3_22nj0")
-region = Rect2(32, 96, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_nyx4n"]
-atlas = ExtResource("3_22nj0")
-region = Rect2(0, 0, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_uthm4"]
-atlas = ExtResource("3_22nj0")
-region = Rect2(32, 0, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_kimbr"]
-atlas = ExtResource("3_22nj0")
-region = Rect2(64, 0, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fraup"]
-atlas = ExtResource("3_22nj0")
-region = Rect2(96, 0, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_mru8y"]
-atlas = ExtResource("3_22nj0")
-region = Rect2(0, 48, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hlten"]
-atlas = ExtResource("3_22nj0")
-region = Rect2(32, 48, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ga24u"]
-atlas = ExtResource("3_22nj0")
-region = Rect2(64, 48, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_evtix"]
-atlas = ExtResource("3_22nj0")
-region = Rect2(96, 48, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_6dw8o"]
-atlas = ExtResource("3_22nj0")
-region = Rect2(0, 96, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d0y5r"]
-atlas = ExtResource("3_22nj0")
-region = Rect2(32, 96, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_whd2c"]
-atlas = ExtResource("3_22nj0")
-region = Rect2(64, 96, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_o70fq"]
-atlas = ExtResource("3_22nj0")
-region = Rect2(96, 96, 32, 48)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_dgg5m"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_nyl8k")
-}],
-"loop": 1,
-"name": &"idle_down",
-"speed": 5.0
+[sub_resource type="Animation" id="Animation_llsjw"]
+resource_name = "intro_sequence"
+length = 15.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("IntroCanvas/NarasiLabel:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5, 4.5, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Player")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(6, 10, 14.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"values": [{
+"args": [],
+"method": &"play_cutscene_walk"
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j4cn5")
-}],
-"loop": 1,
-"name": &"idle_right",
-"speed": 5.0
+"args": [],
+"method": &"play_cutscene_idle"
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_22nj0")
-}],
-"loop": 1,
-"name": &"idle_top",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_nyx4n")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_uthm4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_kimbr")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_fraup")
-}],
-"loop": 1,
-"name": &"walk_down",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_mru8y")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hlten")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ga24u")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_evtix")
-}],
-"loop": 1,
-"name": &"walk_right",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_6dw8o")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d0y5r")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_whd2c")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_o70fq")
-}],
-"loop": 1,
-"name": &"walk_up",
-"speed": 5.0
+"args": [],
+"method": &"change_cam"
 }]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Player:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(6, 10),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(-94, 7), Vector2(112, 7)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("IntroCamera:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(11, 14),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(15, 272), Vector2(138, 269)]
+}
+tracks/4/type = "method"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath(".")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(14.5, 15),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": ["pendaratan"],
+"method": &"picu_dialog"
+}, {
+"args": [],
+"method": &"lepaskan_pemain"
+}]
+}
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_g6aeh"]
-size = Vector2(9, 6)
+[sub_resource type="Animation" id="Animation_pwvdq"]
+resource_name = "transisi_investigasi"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TransitionLayer/ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pwvdq"]
+_data = {
+&"RESET": SubResource("Animation_xxbdk"),
+&"autoload_animation": SubResource("Animation_2sj4f"),
+&"intro_sequence": SubResource("Animation_llsjw"),
+&"transisi_investigasi": SubResource("Animation_pwvdq")
+}
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_orqae"]
 
@@ -364,7 +515,10 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_dgg5m"]
 radius = 27.294687
 
-[node name="World" type="Node2D" unique_id=451014480]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cxf33"]
+size = Vector2(52, 36)
+
+[node name="MapHutan" type="Node2D" unique_id=451014480]
 script = SubResource("GDScript_036b0")
 
 [node name="Ground" type="TileMapLayer" parent="." unique_id=1689723694]
@@ -380,1199 +534,1283 @@ tile_set = SubResource("TileSet_orqae")
 tile_map_data = PackedByteArray("AAAmAAgAAAADAAEAAAAmAAkAAAADAAIAAAAnAAgAAAAEAAEAAAAnAAkAAAAEAAIAAAAoAAoAAAAFAAAAAAAoAAsAAAAFAAEAAAApAAoAAAAGAAAAAAApAAsAAAAGAAEAAAAqAAoAAAAHAAAAAAAqAAsAAAAHAAEAAAAwAAYAAAAFAAAAAAAwAAcAAAAFAAEAAAAxAAYAAAAGAAAAAAAxAAcAAAAGAAEAAAAyAAYAAAAHAAAAAAAyAAcAAAAHAAEAAAAwAAgAAAAFAAAAAAAwAAkAAAAFAAEAAAAxAAgAAAAGAAAAAAAxAAkAAAAGAAEAAAAyAAgAAAAHAAAAAAAyAAkAAAAHAAEAAAAwAAoAAAAFAAAAAAAwAAsAAAAFAAEAAAAxAAoAAAAGAAAAAAAxAAsAAAAGAAEAAAAyAAoAAAAHAAAAAAAyAAsAAAAHAAEAAAAzAAYAAAAFAAAAAAAzAAcAAAAFAAEAAAA0AAYAAAAGAAAAAAA0AAcAAAAGAAEAAAA1AAYAAAAHAAAAAAA1AAcAAAAHAAEAAAAzAAgAAAAFAAAAAAAzAAkAAAAFAAEAAAA0AAgAAAAGAAAAAAA0AAkAAAAGAAEAAAA1AAgAAAAHAAAAAAA1AAkAAAAHAAEAAAAzAAoAAAAFAAAAAAAzAAsAAAAFAAEAAAA0AAoAAAAGAAAAAAA0AAsAAAAGAAEAAAA1AAoAAAAHAAAAAAA1AAsAAAAHAAEAAAA2AAYAAAAFAAAAAAA2AAcAAAAFAAEAAAA3AAYAAAAGAAAAAAA3AAcAAAAGAAEAAAA4AAYAAAAHAAAAAAA4AAcAAAAHAAEAAAA2AAgAAAAFAAAAAAA2AAkAAAAFAAEAAAA3AAgAAAAGAAAAAAA3AAkAAAAGAAEAAAA4AAgAAAAHAAAAAAA4AAkAAAAHAAEAAAA2AAoAAAAFAAAAAAA2AAsAAAAFAAEAAAA3AAoAAAAGAAAAAAA3AAsAAAAGAAEAAAA4AAoAAAAHAAAAAAA4AAsAAAAHAAEAAAA5AAYAAAAFAAAAAAA5AAcAAAAFAAEAAAA6AAYAAAAGAAAAAAA6AAcAAAAGAAEAAAA7AAYAAAAHAAAAAAA7AAcAAAAHAAEAAAA5AAgAAAAFAAAAAAA5AAkAAAAFAAEAAAA6AAgAAAAGAAAAAAA6AAkAAAAGAAEAAAA7AAgAAAAHAAAAAAA7AAkAAAAHAAEAAAA5AAoAAAAFAAAAAAA5AAsAAAAFAAEAAAA6AAoAAAAGAAAAAAA6AAsAAAAGAAEAAAA7AAoAAAAHAAAAAAA7AAsAAAAHAAEAAAA8AAYAAAAFAAAAAAA8AAcAAAAFAAEAAAA9AAYAAAAGAAAAAAA9AAcAAAAGAAEAAAA8AAgAAAAFAAAAAAA8AAkAAAAFAAEAAAA9AAgAAAAGAAAAAAA9AAkAAAAGAAEAAAA8AAoAAAAFAAAAAAA8AAsAAAAFAAEAAAA9AAoAAAAGAAAAAAA9AAsAAAAGAAEAAAAgAAoAAAADAAEAAAAgAAsAAAADAAIAAAAhAAoAAAAEAAEAAAAhAAsAAAAEAAIAAAAfAAIAAAAAAAAAAAAfAAMAAAAAAAEAAAAfAAQAAAAAAAIAAAAgAAIAAAABAAAAAAAgAAMAAAABAAEAAAAgAAQAAAABAAIAAAAhAAIAAAACAAAAAAAhAAMAAAACAAEAAAAhAAQAAAACAAIAAAADABQAAAAEAAIAAAADABUAAAAFAAEAAAAEABQAAAAGAAAAAAAEABUAAAAGAAEAAAAFABQAAAAHAAAAAAAFABUAAAAHAAEAAAALABQAAAAFAAAAAAALABUAAAAFAAEAAAAMABQAAAAGAAAAAAAMABUAAAAGAAEAAAANABQAAAAHAAAAAAANABUAAAAHAAEAAAAOABQAAAAFAAAAAAAOABUAAAAFAAEAAAAQABMAAAAFAAAAAAAQABQAAAAFAAEAAAARABMAAAAGAAAAAAARABQAAAAGAAEAAAASABMAAAAHAAAAAAASABQAAAAHAAEAAAACABMAAAADAAEAAAABABYAAAABAAQAAAAXABQAAAAAAAEAAAAYABMAAAABAAAAAAAWAA8AAAABAAIAAAATAA4AAAABAAQAAAAWAA4AAAABAAEAAAAIAA8AAAAEAAIAAAAEAA4AAAABAAQAAAA5ABYAAAAFAAMAAAA5ABcAAAAFAAQAAAA6ABUAAAAGAAIAAAA6ABYAAAAGAAMAAAA6ABcAAAAGAAQAAAA6ABgAAAAGAAUAAAA7ABUAAAAHAAIAAAA7ABYAAAAHAAMAAAA7ABcAAAAHAAQAAAA7ABgAAAAHAAUAAAA8ABYAAAAIAAMAAAA8ABcAAAAIAAQAAAA0ABMAAAAGAAIAAAA0ABQAAAAGAAMAAAA0ABUAAAAGAAQAAAA0ABYAAAAGAAUAAAA1ABMAAAAHAAIAAAA1ABQAAAAHAAMAAAA1ABUAAAAHAAQAAAA1ABYAAAAHAAUAAAA2ABQAAAAIAAMAAAA2ABUAAAAIAAQAAAACABQAAAADAAIAAAADABMAAAAEAAEAAAAHAA4AAAADAAEAAAAHAA8AAAADAAIAAAAIAA4AAAAEAAEAAAAVAA0AAAAAAAAAAAAVAA4AAAAAAAEAAAAVAA8AAAAAAAIAAAAWAA0AAAABAAAAAAAXAA0AAAACAAAAAAAXAA4AAAACAAEAAAAXAA8AAAACAAIAAAAXABMAAAAAAAAAAAAXABUAAAAAAAIAAAAYABQAAAABAAEAAAAYABUAAAABAAIAAAAZABMAAAACAAAAAAAZABQAAAACAAEAAAAZABUAAAACAAIAAAApAAcAAAAFAAAAAAApAAgAAAAFAAEAAAAqAAcAAAAGAAAAAAAqAAgAAAAGAAEAAAArAAcAAAAHAAAAAAArAAgAAAAHAAEAAAAsAAcAAAAFAAAAAAAsAAgAAAAFAAEAAAA6AAwAAAAFAAAAAAA6AA0AAAAFAAEAAAA7AAwAAAAGAAAAAAA7AA0AAAAGAAEAAAA8AAwAAAAHAAAAAAA8AA0AAAAHAAEAAAA9AAwAAAAFAAAAAAA9AA0AAAAFAAEAAAA+AAwAAAAGAAAAAAA+AA0AAAAGAAEAAAA/AAwAAAAHAAAAAAA/AA0AAAAHAAEAAAA7AA4AAAAFAAAAAAA7AA8AAAAFAAEAAAA8AA4AAAAGAAAAAAA8AA8AAAAGAAEAAAA9AA4AAAAHAAAAAAA9AA8AAAAHAAEAAAAlAP3/AAAAAAAAAAAlAP7/AAAAAAEAAAAlAP//AAAAAAIAAAAmAP3/AAABAAAAAAAmAP7/AAABAAEAAAAmAP//AAABAAIAAAAnAP3/AAACAAAAAAAnAP7/AAACAAEAAAAnAP//AAACAAIAAAAoAP3/AAAAAAAAAAAoAP7/AAAAAAEAAAAoAP//AAAAAAIAAAApAP3/AAABAAAAAAApAP7/AAABAAEAAAApAP//AAABAAIAAAAqAP3/AAACAAAAAAAqAP7/AAACAAEAAAAqAP//AAACAAIAAAArAP3/AAAAAAAAAAArAP7/AAAAAAEAAAArAP//AAAAAAIAAAAsAP3/AAABAAAAAAAsAP7/AAABAAEAAAAsAP//AAABAAIAAAAtAP3/AAACAAAAAAAtAP7/AAACAAEAAAAtAP//AAACAAIAAAAuAP3/AAAAAAAAAAAuAP7/AAAAAAEAAAAuAP//AAAAAAIAAAAvAP3/AAABAAAAAAAvAP7/AAABAAEAAAAvAP//AAABAAIAAAAwAP3/AAACAAAAAAAwAP7/AAACAAEAAAAwAP//AAACAAIAAAAxAP3/AAAAAAAAAAAxAP7/AAAAAAEAAAAxAP//AAAAAAIAAAAyAP3/AAABAAAAAAAyAP7/AAABAAEAAAAyAP//AAABAAIAAAAzAP3/AAACAAAAAAAzAP7/AAACAAEAAAAzAP//AAACAAIAAAA0AP3/AAAAAAAAAAA0AP7/AAAAAAEAAAA0AP//AAAAAAIAAAA1AP3/AAABAAAAAAA1AP7/AAABAAEAAAA1AP//AAABAAIAAAA2AP3/AAACAAAAAAA2AP7/AAACAAEAAAA2AP//AAACAAIAAAA3AP3/AAAAAAAAAAA3AP7/AAAAAAEAAAA3AP//AAAAAAIAAAA4AP3/AAABAAAAAAA4AP7/AAABAAEAAAA4AP//AAABAAIAAAA5AP3/AAACAAAAAAA5AP7/AAACAAEAAAA5AP//AAACAAIAAAA6AP3/AAAAAAAAAAA6AP7/AAAAAAEAAAA6AP//AAAAAAIAAAA7AP3/AAABAAAAAAA7AP7/AAABAAEAAAA7AP//AAABAAIAAAA8AP3/AAACAAAAAAA8AP7/AAACAAEAAAA8AP//AAACAAIAAAA9AP3/AAAAAAAAAAA9AP7/AAAAAAEAAAA9AP//AAAAAAIAAAA+AP3/AAABAAAAAAA+AP7/AAABAAEAAAA+AP//AAABAAIAAAA/AP3/AAACAAAAAAA/AP7/AAACAAEAAAA/AP//AAACAAIAAABAAP3/AAAAAAAAAABAAP7/AAAAAAEAAABAAP//AAAAAAIAAABBAP3/AAABAAAAAABBAP7/AAABAAEAAABBAP//AAABAAIAAABCAP3/AAACAAAAAABCAP7/AAACAAEAAABCAP//AAACAAIAAAA9ABoAAAAEAAIAAABAABoAAAADAAIAAAA=")
 tile_set = SubResource("TileSet_fmtq5")
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=745730613 groups=["player"]]
-z_index = 2
-position = Vector2(48, 1)
-script = ExtResource("4_cd2ue")
+[node name="IntroCamera" type="Camera2D" parent="." unique_id=1529999600]
+position = Vector2(15, 269)
+zoom = Vector2(4, 4)
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player" unique_id=1478861573]
-texture_filter = 1
-position = Vector2(26, 270)
-scale = Vector2(0.5, 0.5)
-sprite_frames = SubResource("SpriteFrames_dgg5m")
-animation = &"idle_down"
+[node name="DongaStopPoint" type="Marker2D" parent="." unique_id=550199720]
+position = Vector2(188, 280)
 
-[node name="RayInteract" type="RayCast2D" parent="Player" unique_id=225565158]
-position = Vector2(26, 273)
-target_position = Vector2(0, 20)
-collide_with_areas = true
+[node name="Player" parent="." unique_id=414423822 instance=ExtResource("2_llsjw")]
+position = Vector2(-94, 7)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=820749036]
-position = Vector2(26, 273)
-shape = SubResource("RectangleShape2D_g6aeh")
+[node name="IntroCanvas" type="CanvasLayer" parent="." unique_id=463466257]
 
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1573488780]
-position = Vector2(27, 280)
-scale = Vector2(-71.03571, 368.33334)
-zoom = Vector2(3, 3)
+[node name="NarasiLabel" type="RichTextLabel" parent="IntroCanvas" unique_id=1410540118]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 70.0
+offset_top = -165.0
+offset_right = 777.0
+offset_bottom = -60.0
+grow_vertical = 0
+theme_override_fonts/normal_font = ExtResource("3_2sj4f")
+theme_override_font_sizes/normal_font_size = 32
+text = "Sektor Operasi: Hutan Bukit Kaba.
+Tingkat Ancaman: Anomali Flora."
 
-[node name="Pohon1" type="Area2D" parent="." unique_id=1335790546]
+[node name="UIDialogueLayer" type="CanvasLayer" parent="." unique_id=119560982]
+
+[node name="SlantedDialogueBox" type="TextureRect" parent="UIDialogueLayer" unique_id=2112004615]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -797.0
+offset_top = -399.0
+offset_right = 797.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("3_xxbdk")
+script = ExtResource("5_pwvdq")
+
+[node name="LogText" type="RichTextLabel" parent="UIDialogueLayer/SlantedDialogueBox" unique_id=1589032995]
+layout_mode = 0
+offset_left = 188.0
+offset_top = 147.99998
+offset_right = 1228.0
+offset_bottom = 286.3333
+theme_override_font_sizes/normal_font_size = 40
+theme_override_font_sizes/bold_font_size = 40
+theme_override_font_sizes/bold_italics_font_size = 40
+theme_override_font_sizes/italics_font_size = 40
+theme_override_font_sizes/mono_font_size = 40
+text = "Lorem Ipsum Dolor Amet"
+
+[node name="LogName" type="RichTextLabel" parent="UIDialogueLayer/SlantedDialogueBox" unique_id=731386602]
+layout_mode = 0
+offset_left = 302.0
+offset_top = 36.999985
+offset_right = 475.0
+offset_bottom = 103.999985
+theme_override_font_sizes/normal_font_size = 40
+theme_override_font_sizes/bold_font_size = 40
+theme_override_font_sizes/bold_italics_font_size = 40
+theme_override_font_sizes/italics_font_size = 40
+theme_override_font_sizes/mono_font_size = 40
+text = "Raflesia"
+
+[node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=1601444571]
+
+[node name="ColorRect" type="ColorRect" parent="TransitionLayer" unique_id=384061191]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -32.0
+offset_top = -25.0
+offset_right = -32.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=523230879]
+libraries/ = SubResource("AnimationLibrary_pwvdq")
+autoplay = &"autoload_animation"
+next/autoload_animation = &"intro_sequence"
+
+[node name="TileMap" type="TileMap" parent="." unique_id=1024594798]
+format = 2
+
+[node name="Pohon1" type="Area2D" parent="TileMap" unique_id=1335790546]
 position = Vector2(84, 159.00005)
 scale = Vector2(1.6799991, 1.6799991)
 
-[node name="Sprite2D9" type="Sprite2D" parent="Pohon1" unique_id=509172140]
+[node name="Sprite2D9" type="Sprite2D" parent="TileMap/Pohon1" unique_id=509172140]
 position = Vector2(242.26205, -104.16675)
 scale = Vector2(0.9999998, 0.9999998)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1" unique_id=1032983044]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1" unique_id=1032983044]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1" unique_id=320149202]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1" unique_id=320149202]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1" unique_id=508988284]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1" unique_id=508988284]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1" unique_id=477362514]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1" unique_id=477362514]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1" unique_id=1225616552]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1" unique_id=1225616552]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1" unique_id=742269752]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1" unique_id=742269752]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1" unique_id=1648189427]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1" unique_id=1648189427]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1" unique_id=110043766]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1" unique_id=110043766]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1" unique_id=389433525]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1" unique_id=389433525]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D" type="Area2D" parent="Pohon1" unique_id=2032017242]
+[node name="Area2D" type="Area2D" parent="TileMap/Pohon1" unique_id=2032017242]
 z_index = 3
 position = Vector2(31.547642, 173.80959)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D" unique_id=1019085263]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D" unique_id=1019085263]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D" unique_id=565475363]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D" unique_id=565475363]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D" unique_id=1484104596]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D" unique_id=1484104596]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D" unique_id=120142034]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D" unique_id=120142034]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D" unique_id=1928843794]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D" unique_id=1928843794]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D" unique_id=298473800]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D" unique_id=298473800]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D" unique_id=1441951620]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D" unique_id=1441951620]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D" unique_id=1093375518]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D" unique_id=1093375518]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D" unique_id=1522220361]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D" unique_id=1522220361]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D2" type="Area2D" parent="Pohon1" unique_id=486945368]
+[node name="Area2D2" type="Area2D" parent="TileMap/Pohon1" unique_id=486945368]
 z_index = 3
 position = Vector2(211.30963, 185.11913)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D2" unique_id=779496672]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D2" unique_id=779496672]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D2" unique_id=1532427115]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D2" unique_id=1532427115]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D2" unique_id=1930161947]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D2" unique_id=1930161947]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D2" unique_id=2024399711]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D2" unique_id=2024399711]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D2" unique_id=1385952091]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D2" unique_id=1385952091]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D2" unique_id=623010736]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D2" unique_id=623010736]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D2" unique_id=1699060342]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D2" unique_id=1699060342]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D2" unique_id=1358272532]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D2" unique_id=1358272532]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D2" unique_id=1537334570]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D2" unique_id=1537334570]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D3" type="Area2D" parent="Pohon1" unique_id=2101363379]
+[node name="Area2D3" type="Area2D" parent="TileMap/Pohon1" unique_id=2101363379]
 z_index = 3
 position = Vector2(289.2859, 106.54765)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D3" unique_id=1973294588]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D3" unique_id=1973294588]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D3" unique_id=1101846571]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D3" unique_id=1101846571]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D3" unique_id=920182879]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D3" unique_id=920182879]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D3" unique_id=1076108048]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D3" unique_id=1076108048]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D3" unique_id=382552975]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D3" unique_id=382552975]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D3" unique_id=488396945]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D3" unique_id=488396945]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D3" unique_id=988311311]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D3" unique_id=988311311]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D3" unique_id=1550312756]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D3" unique_id=1550312756]
 position = Vector2(135.7989, 49.90202)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D3" unique_id=736070703]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D3" unique_id=736070703]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D4" type="Area2D" parent="Pohon1" unique_id=1754911071]
+[node name="Area2D4" type="Area2D" parent="TileMap/Pohon1" unique_id=1754911071]
 z_index = 3
 position = Vector2(380.35736, 1.1904602)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D4" unique_id=556881489]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D4" unique_id=556881489]
 position = Vector2(165.2493, -67.89946)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D4" unique_id=48998735]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D4" unique_id=48998735]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D4" unique_id=1299556642]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D4" unique_id=1299556642]
 position = Vector2(91.623375, -62.99107)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D4" unique_id=1809766345]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D4" unique_id=1809766345]
 position = Vector2(90.80529, -31.904575)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D4" unique_id=720209860]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D4" unique_id=720209860]
 position = Vector2(139.0712, -35.994907)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D4" unique_id=635216910]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D4" unique_id=635216910]
 position = Vector2(310.865, 152.16022)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D4" unique_id=2008668870]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D4" unique_id=2008668870]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D5" type="Area2D" parent="Pohon1" unique_id=1790308094]
+[node name="Area2D5" type="Area2D" parent="TileMap/Pohon1" unique_id=1790308094]
 z_index = 3
 position = Vector2(454.16693, 200.00008)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=822230357]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=822230357]
 position = Vector2(89.9872, 15.543243)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=765653199]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=765653199]
 position = Vector2(102.25817, -137.43504)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D21" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=331817768]
+[node name="Sprite2D21" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=331817768]
 position = Vector2(151.34212, -142.34344)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=466628200]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=466628200]
 position = Vector2(64.62714, -134.98085)
 texture = ExtResource("4_orqae")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Pohon1/Area2D5" unique_id=150017114]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=150017114]
 position = Vector2(149.706, -103.076294)
 scale = Vector2(0.8180657, 0.8180657)
 sprite_frames = SubResource("SpriteFrames_4s15k")
 autoplay = "default"
 frame_progress = 0.029650645
 
-[node name="Area2D" type="Area2D" parent="Pohon1/Area2D5/AnimatedSprite2D" unique_id=2029130489]
+[node name="Area2D" type="Area2D" parent="TileMap/Pohon1/Area2D5/AnimatedSprite2D" unique_id=2029130489]
 script = ExtResource("6_llsjw")
 enemy_resource = ExtResource("7_xxbdk")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D5/AnimatedSprite2D/Area2D" unique_id=1401440245]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D5/AnimatedSprite2D/Area2D" unique_id=1401440245]
 position = Vector2(1, 4)
 scale = Vector2(0.9999998, 0.9999998)
 shape = SubResource("CircleShape2D_dgg5m")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=1494085751]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=1494085751]
 position = Vector2(252.78226, -134.1628)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=1155459755]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=1155459755]
 position = Vector2(31.90453, 29.450375)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=808454578]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=808454578]
 position = Vector2(159.52277, 15.543243)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=1802609483]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=1802609483]
 position = Vector2(213.51515, 14.725195)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D9" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=2061958937]
+[node name="Sprite2D9" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=2061958937]
 position = Vector2(114.26328, 44.547077)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D10" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=1076229748]
+[node name="Sprite2D10" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=1076229748]
 position = Vector2(56.180626, 58.45421)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D11" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=421971958]
+[node name="Sprite2D11" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=421971958]
 position = Vector2(183.79886, 44.547077)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D12" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=2145233033]
+[node name="Sprite2D12" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=2145233033]
 position = Vector2(237.79123, 43.72903)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D13" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=1183080776]
+[node name="Sprite2D13" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=1183080776]
 position = Vector2(303.23645, 60.908394)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D14" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=1900868286]
+[node name="Sprite2D14" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=1900868286]
 position = Vector2(245.15381, 74.81552)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D15" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=204837901]
+[node name="Sprite2D15" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=204837901]
 position = Vector2(372.77203, 60.908394)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D16" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=1412479286]
+[node name="Sprite2D16" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=1412479286]
 position = Vector2(426.7644, 60.090347)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D17" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=186876082]
+[node name="Sprite2D17" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=186876082]
 position = Vector2(-72.25571, 75.633575)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D18" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=1257485518]
+[node name="Sprite2D18" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=1257485518]
 position = Vector2(-130.33835, 89.5407)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D19" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=881876153]
+[node name="Sprite2D19" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=881876153]
 position = Vector2(-2.7201233, 75.633575)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D20" type="Sprite2D" parent="Pohon1/Area2D5" unique_id=1518582651]
+[node name="Sprite2D20" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=1518582651]
 position = Vector2(51.272247, 74.81553)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D5" unique_id=635545931]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D5" unique_id=635545931]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D6" type="Area2D" parent="Pohon1" unique_id=592173906]
+[node name="Area2D6" type="Area2D" parent="TileMap/Pohon1" unique_id=592173906]
 z_index = 3
 position = Vector2(636.9051, -5.357147)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D6" unique_id=726011667]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D6" unique_id=726011667]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D6" unique_id=1343737466]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D6" unique_id=1343737466]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D6" unique_id=796501535]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D6" unique_id=796501535]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D6" unique_id=574446059]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D6" unique_id=574446059]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D6" unique_id=434256156]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D6" unique_id=434256156]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D6" unique_id=1434590615]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D6" unique_id=1434590615]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D6" unique_id=1458863206]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D6" unique_id=1458863206]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D6" unique_id=555176619]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D6" unique_id=555176619]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D6" unique_id=317266818]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D6" unique_id=317266818]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D7" type="Area2D" parent="Pohon1" unique_id=20302641]
+[node name="Area2D7" type="Area2D" parent="TileMap/Pohon1" unique_id=20302641]
 z_index = 3
 position = Vector2(636.3099, 92.85716)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D7" unique_id=1542558288]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D7" unique_id=1542558288]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D7" unique_id=2131488440]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D7" unique_id=2131488440]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D7" unique_id=1041578793]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D7" unique_id=1041578793]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D7" unique_id=532657303]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D7" unique_id=532657303]
 position = Vector2(4.908349, -70.35367)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D7" unique_id=1122985694]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D7" unique_id=1122985694]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D7" unique_id=306153865]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D7" unique_id=306153865]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D7" unique_id=1990487749]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D7" unique_id=1990487749]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D7" unique_id=328057193]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D7" unique_id=328057193]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D7" unique_id=1447457783]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D7" unique_id=1447457783]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D8" type="Area2D" parent="Pohon1" unique_id=300368003]
+[node name="Area2D8" type="Area2D" parent="TileMap/Pohon1" unique_id=300368003]
 z_index = 3
 position = Vector2(641.0718, 192.85721)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D8" unique_id=1333491865]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D8" unique_id=1333491865]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D8" unique_id=967007208]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D8" unique_id=967007208]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D8" unique_id=1852448739]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D8" unique_id=1852448739]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D8" unique_id=1025721180]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D8" unique_id=1025721180]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D8" unique_id=1273900350]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D8" unique_id=1273900350]
 position = Vector2(14.725183, -26.178104)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D8" unique_id=581649282]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D8" unique_id=581649282]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D8" unique_id=2025019877]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D8" unique_id=2025019877]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D8" unique_id=2089850414]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D8" unique_id=2089850414]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D8" unique_id=904176537]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D8" unique_id=904176537]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D9" type="Area2D" parent="Pohon1" unique_id=1229864810]
+[node name="Area2D9" type="Area2D" parent="TileMap/Pohon1" unique_id=1229864810]
 z_index = 3
 position = Vector2(641.0718, -106.5477)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D9" unique_id=173114617]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D9" unique_id=173114617]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D9" unique_id=917818926]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D9" unique_id=917818926]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D9" unique_id=2072065115]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D9" unique_id=2072065115]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D9" unique_id=644940820]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D9" unique_id=644940820]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D9" unique_id=1721746807]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D9" unique_id=1721746807]
 position = Vector2(106.34856, -7.362592)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D9" unique_id=593403834]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D9" unique_id=593403834]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D9" unique_id=1874924748]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D9" unique_id=1874924748]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D10" type="Area2D" parent="Pohon1" unique_id=602264304]
+[node name="Area2D10" type="Area2D" parent="TileMap/Pohon1" unique_id=602264304]
 z_index = 3
 position = Vector2(460.1193, -124.40486)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D10" unique_id=800144653]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D10" unique_id=800144653]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D10" unique_id=2121826305]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D10" unique_id=2121826305]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D10" unique_id=508821874]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D10" unique_id=508821874]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D10" unique_id=489415792]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D10" unique_id=489415792]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D10" unique_id=978807742]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D10" unique_id=978807742]
 position = Vector2(4.9083943, -13.9071045)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D10" unique_id=1397766797]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D10" unique_id=1397766797]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D10" unique_id=980102983]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D10" unique_id=980102983]
 position = Vector2(134.16278, -9.816774)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D10" unique_id=26154626]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D10" unique_id=26154626]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D10/Sprite2D4" unique_id=1702608147]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D10/Sprite2D4" unique_id=1702608147]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D10" unique_id=962488518]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D10" unique_id=962488518]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D11" type="Area2D" parent="Pohon1" unique_id=73362830]
+[node name="Area2D11" type="Area2D" parent="TileMap/Pohon1" unique_id=73362830]
 z_index = 3
 position = Vector2(283.3335, -125.59533)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D11" unique_id=933332824]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D11" unique_id=933332824]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D11" unique_id=1029602468]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D11" unique_id=1029602468]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D11" unique_id=993078514]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D11" unique_id=993078514]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D11" unique_id=1751035164]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D11" unique_id=1751035164]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D11" unique_id=534784945]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D11" unique_id=534784945]
 position = Vector2(38.44909, -35.99489)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D11" unique_id=1336770587]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D11" unique_id=1336770587]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D11" unique_id=424660665]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D11" unique_id=424660665]
 position = Vector2(133.34471, -9.816787)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D11" unique_id=1361064637]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D11" unique_id=1361064637]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D11" unique_id=1185098226]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D11" unique_id=1185098226]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D12" type="Area2D" parent="Pohon1" unique_id=1727851918]
+[node name="Area2D12" type="Area2D" parent="TileMap/Pohon1" unique_id=1727851918]
 z_index = 3
 position = Vector2(50.000046, -122.023895)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D12" unique_id=1903375528]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D12" unique_id=1903375528]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D12" unique_id=1599929087]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D12" unique_id=1599929087]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D12" unique_id=1890188331]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D12" unique_id=1890188331]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D12" unique_id=1003211415]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D12" unique_id=1003211415]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D12" unique_id=474648990]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D12" unique_id=474648990]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D12" unique_id=256157518]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D12" unique_id=256157518]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D12" unique_id=192243613]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D12" unique_id=192243613]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D12" unique_id=657008396]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D12" unique_id=657008396]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D12" unique_id=22508750]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D12" unique_id=22508750]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D13" type="Area2D" parent="Pohon1" unique_id=1771828137]
+[node name="Area2D13" type="Area2D" parent="TileMap/Pohon1" unique_id=1771828137]
 z_index = 3
 position = Vector2(-15.476196, 213.0953)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D13" unique_id=1942055550]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D13" unique_id=1942055550]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D13" unique_id=1443172646]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D13" unique_id=1443172646]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D13" unique_id=1607602484]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D13" unique_id=1607602484]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D13" unique_id=1573945469]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D13" unique_id=1573945469]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D13" unique_id=2098261716]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D13" unique_id=2098261716]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D13" unique_id=1743579758]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D13" unique_id=1743579758]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D13" unique_id=1113725967]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D13" unique_id=1113725967]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D13" unique_id=1540171086]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D13" unique_id=1540171086]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D13" unique_id=448965992]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D13" unique_id=448965992]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D14" type="Area2D" parent="Pohon1" unique_id=1981585260]
+[node name="Area2D14" type="Area2D" parent="TileMap/Pohon1" unique_id=1981585260]
 z_index = 3
 position = Vector2(-15.476196, 213.0953)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D14" unique_id=1464848077]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D14" unique_id=1464848077]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D14" unique_id=603022184]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D14" unique_id=603022184]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D14" unique_id=1349579978]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D14" unique_id=1349579978]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D14" unique_id=886472161]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D14" unique_id=886472161]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D14" unique_id=752894415]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D14" unique_id=752894415]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D14" unique_id=1167674389]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D14" unique_id=1167674389]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D14" unique_id=2144310218]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D14" unique_id=2144310218]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D14" unique_id=2106454276]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D14" unique_id=2106454276]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D14" unique_id=1449181849]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D14" unique_id=1449181849]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D15" type="Area2D" parent="Pohon1" unique_id=1764027371]
+[node name="Area2D15" type="Area2D" parent="TileMap/Pohon1" unique_id=1764027371]
 z_index = 3
 position = Vector2(-202.38107, -31.547668)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D15" unique_id=1624328422]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D15" unique_id=1624328422]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D15" unique_id=189324766]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D15" unique_id=189324766]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D15" unique_id=219963105]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D15" unique_id=219963105]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D15" unique_id=65878467]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D15" unique_id=65878467]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D15" unique_id=1991113520]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D15" unique_id=1991113520]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D15" unique_id=1697993477]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D15" unique_id=1697993477]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D15" unique_id=1837502159]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D15" unique_id=1837502159]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D15" unique_id=598960422]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D15" unique_id=598960422]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D15" unique_id=492844866]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D15" unique_id=492844866]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D16" type="Area2D" parent="Pohon1" unique_id=409465026]
+[node name="Area2D16" type="Area2D" parent="TileMap/Pohon1" unique_id=409465026]
 z_index = 3
 position = Vector2(-204.16675, 16.071407)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D16" unique_id=1428285890]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D16" unique_id=1428285890]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D16" unique_id=297016224]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D16" unique_id=297016224]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D16" unique_id=2140963068]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D16" unique_id=2140963068]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D16" unique_id=1009034753]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D16" unique_id=1009034753]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D16" unique_id=1057589451]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D16" unique_id=1057589451]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D16" unique_id=762589041]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D16" unique_id=762589041]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D16" unique_id=716215021]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D16" unique_id=716215021]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D16" unique_id=1133279879]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D16" unique_id=1133279879]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D16" unique_id=1115964150]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D16" unique_id=1115964150]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D17" type="Area2D" parent="Pohon1" unique_id=27073327]
+[node name="Area2D17" type="Area2D" parent="TileMap/Pohon1" unique_id=27073327]
 z_index = 3
 position = Vector2(-189.28578, 77.9762)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D17" unique_id=1291934230]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D17" unique_id=1291934230]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D17" unique_id=2010699262]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D17" unique_id=2010699262]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D17" unique_id=1209993517]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D17" unique_id=1209993517]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D17" unique_id=2121006346]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D17" unique_id=2121006346]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D17" unique_id=1904222202]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D17" unique_id=1904222202]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D17" unique_id=1475062754]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D17" unique_id=1475062754]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D17" unique_id=2084844262]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D17" unique_id=2084844262]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D17" unique_id=22195880]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D17" unique_id=22195880]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D17" unique_id=974025088]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D17" unique_id=974025088]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D18" type="Area2D" parent="Pohon1" unique_id=1747964225]
+[node name="Area2D18" type="Area2D" parent="TileMap/Pohon1" unique_id=1747964225]
 z_index = 3
 position = Vector2(-189.28584, 142.85718)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D18" unique_id=1825601004]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D18" unique_id=1825601004]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D18" unique_id=1541138954]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D18" unique_id=1541138954]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D18" unique_id=1816743213]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D18" unique_id=1816743213]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D18" unique_id=518074870]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D18" unique_id=518074870]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D18" unique_id=1155220120]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D18" unique_id=1155220120]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D18" unique_id=684692177]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D18" unique_id=684692177]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D18" unique_id=1078447095]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D18" unique_id=1078447095]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D18" unique_id=437937602]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D18" unique_id=437937602]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D18" unique_id=623055657]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D18" unique_id=623055657]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D19" type="Area2D" parent="Pohon1" unique_id=944043140]
+[node name="Area2D19" type="Area2D" parent="TileMap/Pohon1" unique_id=944043140]
 z_index = 3
 position = Vector2(-199.40486, 211.90483)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D19" unique_id=1518116780]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D19" unique_id=1518116780]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D19" unique_id=1588457577]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D19" unique_id=1588457577]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D19" unique_id=20071509]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D19" unique_id=20071509]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D19" unique_id=872306894]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D19" unique_id=872306894]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D19" unique_id=108030887]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D19" unique_id=108030887]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D19" unique_id=1843816264]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D19" unique_id=1843816264]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D19" unique_id=1884485267]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D19" unique_id=1884485267]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D19" unique_id=459853335]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D19" unique_id=459853335]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D19" unique_id=1878024781]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D19" unique_id=1878024781]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D20" type="Area2D" parent="Pohon1" unique_id=2032662323]
+[node name="Area2D20" type="Area2D" parent="TileMap/Pohon1" unique_id=2032662323]
 z_index = 3
 position = Vector2(279.16684, 236.3096)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D20" unique_id=1052226677]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D20" unique_id=1052226677]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D20" unique_id=1001522365]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D20" unique_id=1001522365]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D20" unique_id=1074788568]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D20" unique_id=1074788568]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D20" unique_id=981777168]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D20" unique_id=981777168]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D20" unique_id=1073398350]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D20" unique_id=1073398350]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D20" unique_id=2124156078]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D20" unique_id=2124156078]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D20" unique_id=1721084834]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D20" unique_id=1721084834]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D20" unique_id=1927264248]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D20" unique_id=1927264248]
 position = Vector2(382.85474, 17.179441)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D20" unique_id=1904885976]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D20" unique_id=1904885976]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Area2D21" type="Area2D" parent="Pohon1" unique_id=1604586836]
+[node name="Area2D21" type="Area2D" parent="TileMap/Pohon1" unique_id=1604586836]
 z_index = 3
 position = Vector2(148.80963, 269.04773)
 scale = Vector2(0.72761685, 0.72761685)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon1/Area2D21" unique_id=781139689]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D21" unique_id=781139689]
 position = Vector2(177.16672, -60.071514)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon1/Area2D21" unique_id=371405445]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon1/Area2D21" unique_id=371405445]
 position = Vector2(105.142876, -69.00009)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon1/Area2D21" unique_id=1727926468]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D21" unique_id=1727926468]
 position = Vector2(42.047615, -69.59534)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon1/Area2D21" unique_id=1270039363]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon1/Area2D21" unique_id=1270039363]
 position = Vector2(-6.1666946, -71.38104)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon1/Area2D21" unique_id=78710916]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D21" unique_id=78710916]
 position = Vector2(0, -2.724785e-05)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon1/Area2D21" unique_id=333749798]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon1/Area2D21" unique_id=333749798]
 position = Vector2(70.23813, -7.1428876)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon1/Area2D21" unique_id=845185737]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon1/Area2D21" unique_id=845185737]
 position = Vector2(132.73816, -1.1905041)
 texture = ExtResource("4_orqae")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon1/Area2D21" unique_id=1308016721]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon1/Area2D21" unique_id=1308016721]
 position = Vector2(197.02391, -11.309557)
 texture = ExtResource("4_orqae")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pohon1/Area2D21" unique_id=843363407]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D21" unique_id=843363407]
 shape = SubResource("RectangleShape2D_orqae")
 
-[node name="Pohon2" type="Area2D" parent="." unique_id=1814382293]
+[node name="Pohon2" type="Area2D" parent="TileMap" unique_id=1814382293]
 
-[node name="Sprite2D" type="Sprite2D" parent="Pohon2" unique_id=981566106]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon2" unique_id=981566106]
 position = Vector2(148, 189)
 texture = ExtResource("5_fljpw")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Pohon2" unique_id=449595697]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Pohon2" unique_id=449595697]
 position = Vector2(198, 202)
 texture = ExtResource("5_fljpw")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Pohon2" unique_id=444738885]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Pohon2" unique_id=444738885]
 position = Vector2(240, 193)
 texture = ExtResource("5_fljpw")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Pohon2" unique_id=1372026497]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Pohon2" unique_id=1372026497]
 position = Vector2(279, 196)
 texture = ExtResource("5_fljpw")
 
-[node name="Sprite2D5" type="Sprite2D" parent="Pohon2" unique_id=567128994]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon2" unique_id=567128994]
 position = Vector2(345, 195)
 texture = ExtResource("5_fljpw")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Pohon2" unique_id=771418243]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Pohon2" unique_id=771418243]
 position = Vector2(352, 192)
 texture = ExtResource("5_fljpw")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Pohon2" unique_id=1531673055]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon2" unique_id=1531673055]
 position = Vector2(424, 192)
 texture = ExtResource("5_fljpw")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Pohon2" unique_id=1108516523]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Pohon2" unique_id=1108516523]
 position = Vector2(985, 118)
 texture = ExtResource("5_fljpw")
 
-[node name="Sprite2D9" type="Sprite2D" parent="Pohon2" unique_id=1559717427]
+[node name="Sprite2D9" type="Sprite2D" parent="TileMap/Pohon2" unique_id=1559717427]
 position = Vector2(484, -126)
 texture = ExtResource("5_fljpw")
 
-[node name="Sprite2D10" type="Sprite2D" parent="Pohon2" unique_id=468414249]
+[node name="Sprite2D10" type="Sprite2D" parent="TileMap/Pohon2" unique_id=468414249]
 position = Vector2(452, 199)
 texture = ExtResource("5_fljpw")
 
-[node name="Details" type="Area2D" parent="." unique_id=1155008069]
+[node name="Details" type="Area2D" parent="TileMap" unique_id=1155008069]
 
-[node name="Sprite2D24" type="Sprite2D" parent="Details" unique_id=1806884950]
+[node name="Sprite2D24" type="Sprite2D" parent="TileMap/Details" unique_id=1806884950]
 z_index = 3
 position = Vector2(737, 113)
 texture = ExtResource("6_fljpw")
 
-[node name="Sprite2D25" type="Sprite2D" parent="Details" unique_id=1475186773]
+[node name="Sprite2D25" type="Sprite2D" parent="TileMap/Details" unique_id=1475186773]
 position = Vector2(988.99994, 213)
 scale = Vector2(0.71875, 0.725)
 texture = ExtResource("7_tuifp")
 
-[node name="Sprite2D" type="Sprite2D" parent="Details" unique_id=1216155301]
+[node name="Sprite2D" type="Sprite2D" parent="TileMap/Details" unique_id=1216155301]
 position = Vector2(63, 342)
 texture = ExtResource("6_gm6n8")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Details" unique_id=1637364480]
+[node name="Sprite2D2" type="Sprite2D" parent="TileMap/Details" unique_id=1637364480]
 position = Vector2(231, 312)
 texture = ExtResource("6_gm6n8")
 
-[node name="Sprite2D3" type="Sprite2D" parent="Details" unique_id=1184124428]
+[node name="Sprite2D3" type="Sprite2D" parent="TileMap/Details" unique_id=1184124428]
 position = Vector2(405, 325)
 texture = ExtResource("6_gm6n8")
 
-[node name="Sprite2D4" type="Sprite2D" parent="Details" unique_id=345736454]
+[node name="Sprite2D4" type="Sprite2D" parent="TileMap/Details" unique_id=345736454]
 position = Vector2(92, 240)
 texture = ExtResource("6_gm6n8")
 
-[node name="Sprite2D5" type="Sprite2D" parent="Details" unique_id=774923789]
+[node name="Sprite2D5" type="Sprite2D" parent="TileMap/Details" unique_id=774923789]
 position = Vector2(509, 317)
 texture = ExtResource("6_gm6n8")
 
-[node name="Sprite2D6" type="Sprite2D" parent="Details" unique_id=1217029668]
+[node name="Sprite2D6" type="Sprite2D" parent="TileMap/Details" unique_id=1217029668]
 position = Vector2(470, 79)
 texture = ExtResource("6_gm6n8")
 
-[node name="Sprite2D7" type="Sprite2D" parent="Details" unique_id=1456296778]
+[node name="Sprite2D7" type="Sprite2D" parent="TileMap/Details" unique_id=1456296778]
 position = Vector2(585, 3)
 texture = ExtResource("6_gm6n8")
 
-[node name="Sprite2D8" type="Sprite2D" parent="Details" unique_id=1534514349]
+[node name="Sprite2D8" type="Sprite2D" parent="TileMap/Details" unique_id=1534514349]
 position = Vector2(555, 56)
 texture = ExtResource("6_gm6n8")
 
-[node name="Sprite2D9" type="Sprite2D" parent="Details" unique_id=305174393]
+[node name="Sprite2D9" type="Sprite2D" parent="TileMap/Details" unique_id=305174393]
 position = Vector2(936, 154)
 texture = ExtResource("6_gm6n8")
 
-[node name="Sprite2D10" type="Sprite2D" parent="Details" unique_id=1211003482]
+[node name="Sprite2D10" type="Sprite2D" parent="TileMap/Details" unique_id=1211003482]
 position = Vector2(1113, 10)
 texture = ExtResource("6_gm6n8")
 
-[node name="Sprite2D11" type="Sprite2D" parent="Details" unique_id=324002739]
+[node name="Sprite2D11" type="Sprite2D" parent="TileMap/Details" unique_id=324002739]
 position = Vector2(1022, 237)
 texture = ExtResource("6_gm6n8")
 
-[node name="Sprite2D12" type="Sprite2D" parent="Details" unique_id=943449433]
+[node name="Sprite2D12" type="Sprite2D" parent="TileMap/Details" unique_id=943449433]
 position = Vector2(1003, 334)
 texture = ExtResource("6_gm6n8")
 
-[node name="Sprite2D13" type="Sprite2D" parent="Details" unique_id=2144141720]
+[node name="Sprite2D13" type="Sprite2D" parent="TileMap/Details" unique_id=2144141720]
 position = Vector2(720, 94)
 texture = ExtResource("7_fljpw")
 
-[node name="Sprite2D14" type="Sprite2D" parent="Details" unique_id=1470746240]
+[node name="Sprite2D14" type="Sprite2D" parent="TileMap/Details" unique_id=1470746240]
 position = Vector2(1018, 78)
 texture = ExtResource("8_tuifp")
 
-[node name="Sprite2D15" type="Sprite2D" parent="Details" unique_id=132319041]
+[node name="Sprite2D15" type="Sprite2D" parent="TileMap/Details" unique_id=132319041]
 position = Vector2(1033, 89)
 texture = ExtResource("9_22nj0")
 
-[node name="Sprite2D16" type="Sprite2D" parent="Details" unique_id=952986105]
+[node name="Sprite2D16" type="Sprite2D" parent="TileMap/Details" unique_id=952986105]
 position = Vector2(1001, 70)
 texture = ExtResource("9_22nj0")
 
-[node name="Sprite2D17" type="Sprite2D" parent="Details" unique_id=1138815209]
+[node name="Sprite2D17" type="Sprite2D" parent="TileMap/Details" unique_id=1138815209]
 position = Vector2(951, 10)
 texture = ExtResource("9_22nj0")
 
-[node name="Sprite2D18" type="Sprite2D" parent="Details" unique_id=1079542433]
+[node name="Sprite2D18" type="Sprite2D" parent="TileMap/Details" unique_id=1079542433]
 position = Vector2(761, 0)
 texture = ExtResource("9_22nj0")
 
-[node name="Sprite2D19" type="Sprite2D" parent="Details" unique_id=618172531]
+[node name="Sprite2D19" type="Sprite2D" parent="TileMap/Details" unique_id=618172531]
 position = Vector2(638, 71)
 texture = ExtResource("9_22nj0")
 
-[node name="Sprite2D20" type="Sprite2D" parent="Details" unique_id=1845365303]
+[node name="Sprite2D20" type="Sprite2D" parent="TileMap/Details" unique_id=1845365303]
 position = Vector2(543, 135)
 texture = ExtResource("9_22nj0")
 
-[node name="Sprite2D21" type="Sprite2D" parent="Details" unique_id=48322616]
+[node name="Sprite2D21" type="Sprite2D" parent="TileMap/Details" unique_id=48322616]
 position = Vector2(475, 250)
 texture = ExtResource("10_nyl8k")
 
-[node name="Sprite2D22" type="Sprite2D" parent="Details" unique_id=1527768050]
+[node name="Sprite2D22" type="Sprite2D" parent="TileMap/Details" unique_id=1527768050]
 position = Vector2(421, 245)
 texture = ExtResource("10_nyl8k")
 
-[node name="Sprite2D23" type="Sprite2D" parent="Details" unique_id=94538222]
+[node name="Sprite2D23" type="Sprite2D" parent="TileMap/Details" unique_id=94538222]
 position = Vector2(328, 328)
 texture = ExtResource("10_nyl8k")
+
+[node name="InvestigationArea" type="Area2D" parent="." unique_id=157924017]
+position = Vector2(833, 33)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InvestigationArea" unique_id=1656527223]
+position = Vector2(-5, 247)
+shape = SubResource("RectangleShape2D_cxf33")
+
+[node name="InvestigationCamera" type="Camera2D" parent="." unique_id=508034002]
+position = Vector2(1032, 428)
+
+[node name="SpotInvestigasi" type="Marker2D" parent="." unique_id=1697216521]
+
+[connection signal="dialogue_finished" from="UIDialogueLayer/SlantedDialogueBox" to="." method="_on_slanted_dialogue_box_dialogue_finished"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[connection signal="body_entered" from="InvestigationArea" to="." method="_on_investigation_area_body_entered"]
+[connection signal="body_exited" from="InvestigationArea" to="." method="_on_investigation_area_body_exited"]
