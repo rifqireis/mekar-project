@@ -8,9 +8,9 @@ extends Node2D
 # Gabungkan naskah ke dalam satu Dictionary agar mudah dipanggil
 var daftar_naskah = {
 	"pendaratan": [
-		{"nama": "Donga", "teks": "Level anomali sedang. Rutin."},
-		{"nama": "Donga", "teks": "Kalau lancar, jam segini besok udah di rumah. Orey pasti nanya lagi soal luka di lengan gue yang kemarin."},
-		{"nama": "Donga", "teks": "Fokus dulu. Cerita nanti aja."}
+		{"nama": "Donga", "teks": "Suspect 18. Mutasi Raflesia."},
+		{"nama": "Donga", "teks": "Kalau lancar, aku besok udah bisa pulang ke-rumah. Orey pasti nanya lagi soal luka di lenganku yang kemarin."},
+		{"nama": "Donga", "teks": "Aduduh, Fokus dulu. Nanti aja bayanginnya."}
 	],
 	"investigasi": [
 		{"nama": "Donga", "teks": "Bukan sisa perkelahian. Ini ditandain."},
