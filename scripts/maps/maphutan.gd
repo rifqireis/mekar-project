@@ -72,3 +72,9 @@ func selesai_investigasi():
 	player.set_physics_process(true)
 	if is_instance_valid(cinematic_camera):
 		cinematic_camera.queue_free()
+		
+func change_cam_player():
+	$Player/Camera2D.make_current()
+	
+func change_cam_investigation():
+	$InvestigationCamera.make_current()
