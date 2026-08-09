@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://c2g837cknk720"]
 
+[ext_resource type="Script" uid="uid://cig8lafr5iq1d" path="res://scripts/maps/maphutan.gd" id="1_5e8uq"]
 [ext_resource type="PackedScene" uid="uid://be73hmjac1rk3" path="res://scenes/entities/player.tscn" id="2_llsjw"]
 [ext_resource type="FontFile" uid="uid://ckgpk7nwhmai1" path="res://assets/fonts/Courier_Prime/CourierPrime-Regular.ttf" id="3_2sj4f"]
 [ext_resource type="Texture2D" uid="uid://bs84w7btmnu0" path="res://assets/tiles/forest/Grass_transition_02.png" id="3_fmtq5"]
@@ -17,107 +18,6 @@
 [ext_resource type="Texture2D" uid="uid://clm515aqpn2ky" path="res://assets/tiles/forest/stones/little stone_01.png" id="9_22nj0"]
 [ext_resource type="Texture2D" uid="uid://dqkqcq7v1hlku" path="res://assets/tiles/forest/stones/little stone_04.png" id="10_nyl8k"]
 [ext_resource type="Texture2D" uid="uid://d0hjlooeyhf21" path="res://assets/tiles/fantasy_world/characters/Rafflesia.png" id="14_nyl8k"]
-
-[sub_resource type="GDScript" id="GDScript_036b0"]
-script/source = "extends Node2D
-
-@onready var player = $Player
-@onready var dialogue_ui = $UIDialogueLayer/SlantedDialogueBox
-@onready var anim_player = $AnimationPlayer # Pastikan path ini benar
-
-
-# Gabungkan naskah ke dalam satu Dictionary agar mudah dipanggil
-var daftar_naskah = {
-	\"pendaratan\": [
-		{\"nama\": \"Donga\", \"teks\": \"Level anomali sedang. Rutin.\"},
-		{\"nama\": \"Donga\", \"teks\": \"Kalau lancar, jam segini besok udah di rumah. Orey pasti nanya lagi soal luka di lengan gue yang kemarin.\"},
-		{\"nama\": \"Donga\", \"teks\": \"Fokus dulu. Cerita nanti aja.\"}
-	],
-	\"investigasi\": [
-		{\"nama\": \"Donga\", \"teks\": \"Bukan sisa perkelahian. Ini ditandain.\"},
-		{\"nama\": \"Donga\", \"teks\": \"Dan lebih besar dari yang tertulis di laporan.\"}
-	],
-	\"konfrontasi\": [
-		{\"nama\": \"Donga\", \"teks\": \"Target teridentifikasi.\"},
-		{\"nama\": \"Arnoldios\", \"teks\": \"Kalian cabut akarku dari tanah ini. Kalian bakar rumahku buat batu dan besi. Sekarang kalian masih berdiri di sisa-sisanya.\"}
-	]
-}
-
-func _ready():
-	player.set_physics_process(false)
-	# Asumsi: anim_player.play(\"intro_sequence\") sudah berjalan otomatis
-
-# --- FUNGSI UNTUK DIPANGGIL OLEH ANIMATION PLAYER ---
-
-func picu_dialog(kunci_naskah: String):
-	# 1. Hentikan (Pause) timeline animasi saat dialog muncul
-	anim_player.pause() 
-	# 2. Kirim data naskah ke UI
-	dialogue_ui.start_dialogue(daftar_naskah[kunci_naskah])
-
-func lepaskan_pemain():
-	# Buka kunci fisika dan panggil tutorial melayang
-	player.set_physics_process(true)
-	var wasd = get_node_or_null(\"Player/TutorialWASD\")
-	if is_instance_valid(wasd):
-		wasd.tampilkan_indikator()
-
-# --- PENERIMA SINYAL DARI UI DIALOG ---
-
-func _on_slanted_dialogue_box_dialogue_finished():
-	# Saat UI selesai, lanjutkan (Resume) timeline animasi yang tadi di-pause
-	if anim_player.is_playing() == false:
-		anim_player.play()
-
-
-@onready var cinematic_camera = $CinematicCamera
-@onready var spot_investigasi = $SpotInvestigasi
-
-# Variabel penyimpan koordinat asli
-var posisi_sebelum_investigasi: Vector2 
-
-# --- LOGIKA TRIGGER ---
-func _on_investigation_area_body_entered(body: Node2D) -> void:
-	if body.name == \"Player\":
-		# 1. Kunci fisika pemain
-		player.set_physics_process(false)
-		
-		# 2. Rekam posisi X dan Y pemain saat ini
-		posisi_sebelum_investigasi = player.global_position
-		
-		# 3. Putar timeline transisi
-		anim_player.play(\"transisi_investigasi\")
-		
-		if has_node(\"InvestigationArea\"):
-			$InvestigationArea.set_deferred(\"monitoring\", false)
-			$InvestigationArea.queue_free()
-
-# --- FUNGSI JEMBATAN UNTUK ANIMATION PLAYER ---
-
-# Dipanggil saat layar hitam penuh pertama kali
-func pindah_ke_set_investigasi():
-	# Pindahkan tubuh Donga ke titik di depan Rafflesia
-	player.global_position = spot_investigasi.global_position
-	
-	# Paksa Donga menghadap ke arah yang benar (Sesuaikan nama animasi milikmu)
-	# player.get_node(\"AnimatedSprite2D\").play(\"idle_up\") 
-	
-	# Pindahkan kamera ke mode sinematik
-	cinematic_camera.make_current()
-
-# Dipanggil saat layar hitam penuh kedua kalinya (setelah dialog)
-func kembali_ke_posisi_awal():
-	# Kembalikan tubuh Donga ke tempat asalnya berpijak
-	player.global_position = posisi_sebelum_investigasi
-	
-	# Kembalikan pandangan ke kamera bawaan Donga
-	player.get_node(\"Camera2D\").make_current()
-
-func selesai_investigasi():
-	player.set_physics_process(true)
-	if is_instance_valid(cinematic_camera):
-		cinematic_camera.queue_free()
-"
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_orqae"]
 texture = ExtResource("3_fmtq5")
@@ -519,7 +419,7 @@ radius = 27.294687
 size = Vector2(52, 36)
 
 [node name="MapHutan" type="Node2D" unique_id=451014480]
-script = SubResource("GDScript_036b0")
+script = ExtResource("1_5e8uq")
 
 [node name="Ground" type="TileMapLayer" parent="." unique_id=1689723694]
 position = Vector2(20, 1)
@@ -611,10 +511,6 @@ modulate = Color(1, 1, 1, 0)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -32.0
-offset_top = -25.0
-offset_right = -32.0
-offset_bottom = -25.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
