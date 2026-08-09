@@ -1,0 +1,227 @@
+[gd_scene format=3 uid="uid://dnpnk8iewmyen"]
+
+[ext_resource type="Script" uid="uid://d0burbhxeeocl" path="res://scripts/ui/main_menu.gd" id="1_n4uci"]
+[ext_resource type="Texture2D" uid="uid://lw5nbypkvs4e" path="res://assets/ui/main_menu/preview.png" id="1_otr3d"]
+[ext_resource type="Texture2D" uid="uid://cgw1spagjqd3o" path="res://assets/ui/main_menu/left_gridpattern.png" id="2_8ekit"]
+[ext_resource type="Texture2D" uid="uid://by720x7riweev" path="res://assets/ui/main_menu/left_gridhightlight.png" id="3_8ekit"]
+[ext_resource type="Texture2D" uid="uid://biedbsm6uhn2k" path="res://assets/ui/main_menu/left_MEKAR.png" id="3_n4uci"]
+[ext_resource type="Texture2D" uid="uid://dd4yd8eyqb4sb" path="res://assets/ui/main_menu/right_panel.png" id="4_877pj"]
+[ext_resource type="Texture2D" uid="uid://bcqumcyt4l6ss" path="res://assets/ui/main_menu/right_topsword.png" id="5_ayp64"]
+[ext_resource type="Texture2D" uid="uid://d0n5gulayf414" path="res://assets/ui/main_menu/right_bottomsword.png" id="6_y2j7i"]
+[ext_resource type="Texture2D" uid="uid://o71alxdqug1p" path="res://assets/ui/main_menu/about_dev.png" id="7_y1h5l"]
+[ext_resource type="Texture2D" uid="uid://bfo0k6hiocv6u" path="res://assets/ui/main_menu/aboutdev_hover.png" id="8_pw24t"]
+[ext_resource type="Texture2D" uid="uid://bhdua6n0eq6v6" path="res://assets/ui/main_menu/exit.png" id="9_5dct7"]
+[ext_resource type="Texture2D" uid="uid://cdyw316sadkjm" path="res://assets/ui/main_menu/exit_hover.png" id="10_qilvv"]
+[ext_resource type="Texture2D" uid="uid://dnuoes4421322" path="res://assets/ui/main_menu/play.png" id="11_jbte4"]
+[ext_resource type="Texture2D" uid="uid://cplrnf4v8a6hl" path="res://assets/ui/main_menu/play_hover.png" id="12_e0hcc"]
+
+[sub_resource type="Animation" id="Animation_8ekit"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BottomSword:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1175, 292)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TopSword:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(929, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("VBoxContainer:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_877pj"]
+resource_name = "grid_loop"
+length = 20.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("VBoxContainer:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 20),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -1080)]
+}
+
+[sub_resource type="Animation" id="Animation_n4uci"]
+resource_name = "play_animation"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BottomSword:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1388, 939), Vector2(1175, 292)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TopSword:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(656, -596), Vector2(929, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_877pj"]
+_data = {
+&"RESET": SubResource("Animation_8ekit"),
+&"grid_loop": SubResource("Animation_877pj"),
+&"sword_animation": SubResource("Animation_n4uci")
+}
+
+[node name="MainMenu" type="Control" unique_id=1793601012]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_n4uci")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1967725509]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0, 0, 0, 1)
+
+[node name="Preview" type="TextureRect" parent="." unique_id=1818339494]
+visible = false
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+texture = ExtResource("1_otr3d")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1487603340]
+layout_mode = 0
+offset_right = 1644.0
+offset_bottom = 2164.0
+
+[node name="GridBackground" type="TextureRect" parent="VBoxContainer" unique_id=1187184435]
+layout_mode = 2
+texture = ExtResource("2_8ekit")
+
+[node name="GridBackground2" type="TextureRect" parent="VBoxContainer" unique_id=1721326244]
+layout_mode = 2
+texture = ExtResource("2_8ekit")
+
+[node name="GridHighlight" type="TextureRect" parent="." unique_id=238644718]
+layout_mode = 0
+offset_right = 1417.0
+offset_bottom = 1080.0
+texture = ExtResource("3_8ekit")
+
+[node name="GameLogo" type="TextureRect" parent="." unique_id=1099375023]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 71.0
+offset_right = 1064.0
+offset_bottom = 449.0
+texture = ExtResource("3_n4uci")
+
+[node name="RightPanel" type="TextureRect" parent="." unique_id=1337942854]
+layout_mode = 0
+offset_left = 1120.0
+offset_right = 1919.0
+offset_bottom = 1080.0
+mouse_filter = 0
+texture = ExtResource("4_877pj")
+
+[node name="TopSword" type="TextureRect" parent="." unique_id=1828592893]
+layout_mode = 0
+offset_left = 929.0
+offset_right = 1854.0
+offset_bottom = 815.0
+mouse_filter = 2
+texture = ExtResource("5_ayp64")
+
+[node name="BottomSword" type="TextureRect" parent="." unique_id=1437964579]
+layout_mode = 0
+offset_left = 1175.0
+offset_top = 292.0
+offset_right = 1918.0005
+offset_bottom = 1080.0017
+mouse_filter = 2
+texture = ExtResource("6_y2j7i")
+
+[node name="AboutDevButton" type="TextureButton" parent="." unique_id=979707127]
+layout_mode = 0
+offset_top = 604.0
+offset_right = 772.0
+offset_bottom = 706.0
+texture_normal = ExtResource("7_y1h5l")
+texture_hover = ExtResource("8_pw24t")
+texture_focused = ExtResource("8_pw24t")
+
+[node name="ExitButton" type="TextureButton" parent="." unique_id=1206520044]
+layout_mode = 0
+offset_top = 716.0
+offset_right = 612.0
+offset_bottom = 818.0
+texture_normal = ExtResource("9_5dct7")
+texture_hover = ExtResource("10_qilvv")
+texture_focused = ExtResource("10_qilvv")
+
+[node name="PlayButton" type="TextureButton" parent="." unique_id=243306016]
+layout_mode = 0
+offset_top = 485.0
+offset_right = 967.0
+offset_bottom = 587.0
+texture_normal = ExtResource("11_jbte4")
+texture_hover = ExtResource("12_e0hcc")
+texture_focused = ExtResource("12_e0hcc")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=936699934]
+libraries/ = SubResource("AnimationLibrary_877pj")
+autoplay = &"sword_animation"
+
+[node name="SwordClickArea" type="Control" parent="." unique_id=1754885641]
+anchors_preset = 0
+offset_left = 1178.0
+offset_top = 30.0
+offset_right = 1849.0
+offset_bottom = 1025.0
+
+[connection signal="gui_input" from="RightPanel" to="." method="_on_right_panel_gui_input"]
+[connection signal="mouse_entered" from="AboutDevButton" to="." method="_on_about_dev_button_mouse_entered"]
+[connection signal="pressed" from="AboutDevButton" to="." method="_on_about_dev_button_pressed"]
+[connection signal="mouse_entered" from="ExitButton" to="." method="_on_exit_button_mouse_entered"]
+[connection signal="pressed" from="ExitButton" to="." method="_on_exit_button_pressed"]
+[connection signal="mouse_entered" from="PlayButton" to="." method="_on_play_button_mouse_entered"]
+[connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="gui_input" from="SwordClickArea" to="." method="_on_sword_click_area_gui_input"]
