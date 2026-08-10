@@ -1,0 +1,263 @@
+[gd_scene format=3 uid="uid://b5u0sryybkoad"]
+
+[ext_resource type="Texture2D" uid="uid://cvgbs4rd0euuv" path="res://assets/ui/maphutan/paneltutorial.png" id="1_c5u2a"]
+[ext_resource type="Script" uid="uid://doly6y52dgyk2" path="res://scenes/maps/maphutan/tutorial_ui.gd" id="1_g33xm"]
+[ext_resource type="Texture2D" uid="uid://dxr3k87730ux7" path="res://assets/ui/maphutan/a.png" id="2_g33xm"]
+[ext_resource type="Texture2D" uid="uid://ds7nu5jodjiac" path="res://assets/ui/maphutan/w.png" id="3_8mej1"]
+[ext_resource type="Texture2D" uid="uid://cc1f4onsubchu" path="res://assets/ui/maphutan/s.png" id="4_fmkfu"]
+[ext_resource type="Texture2D" uid="uid://b44ofeipbha23" path="res://assets/ui/maphutan/d.png" id="5_110q8"]
+[ext_resource type="Texture2D" uid="uid://bdnu0vlm1234e" path="res://assets/ui/maphutan/arrow.png" id="6_wsixu"]
+[ext_resource type="Texture2D" uid="uid://dmoidk4ut78rg" path="res://assets/sprites/Donga 1.png" id="7_weu15"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_24lle"]
+atlas = ExtResource("7_weu15")
+region = Rect2(0, 194, 130, 194)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iq40y"]
+atlas = ExtResource("7_weu15")
+region = Rect2(130, 194, 130, 194)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lgsyk"]
+atlas = ExtResource("7_weu15")
+region = Rect2(260, 194, 130, 194)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aighs"]
+atlas = ExtResource("7_weu15")
+region = Rect2(390, 194, 130, 194)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fe65g"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_24lle")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iq40y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lgsyk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aighs")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_g33xm"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MarginContainer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_8mej1"]
+resource_name = "autoload_animation"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MarginContainer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_c5u2a"]
+resource_name = "fade_out"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MarginContainer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(2),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_g33xm"]
+_data = {
+&"RESET": SubResource("Animation_g33xm"),
+&"fade_in": SubResource("Animation_8mej1"),
+&"fade_out": SubResource("Animation_c5u2a")
+}
+
+[node name="TutorialUI" type="CanvasLayer" unique_id=1087050329]
+script = ExtResource("1_g33xm")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=140987394]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -202.0
+offset_top = -100.0
+offset_right = 202.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_bottom = 40
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=883697958]
+layout_mode = 2
+theme_override_constants/separation = 60
+
+[node name="PanelMovement" type="TextureRect" parent="MarginContainer/HBoxContainer" unique_id=1643918788]
+custom_minimum_size = Vector2(600, 300)
+layout_mode = 2
+texture = ExtResource("1_c5u2a")
+
+[node name="A_Key" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelMovement" unique_id=951564806]
+layout_mode = 0
+offset_left = 44.5
+offset_top = 137.0
+offset_right = 131.5
+offset_bottom = 223.0
+texture = ExtResource("2_g33xm")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="W_Key" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelMovement" unique_id=406489071]
+layout_mode = 0
+offset_left = 115.5
+offset_top = 42.0
+offset_right = 202.5
+offset_bottom = 128.0
+texture = ExtResource("3_8mej1")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="S_Key" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelMovement" unique_id=442621866]
+layout_mode = 0
+offset_left = 128.5
+offset_top = 137.0
+offset_right = 215.5
+offset_bottom = 223.0
+texture = ExtResource("4_fmkfu")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="D_Key" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelMovement" unique_id=500237344]
+layout_mode = 0
+offset_left = 213.5
+offset_top = 137.0
+offset_right = 300.5
+offset_bottom = 223.0
+texture = ExtResource("5_110q8")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Arrow" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelMovement" unique_id=803538652]
+layout_mode = 0
+offset_left = 323.5
+offset_top = 96.0
+offset_right = 410.5
+offset_bottom = 182.0
+texture = ExtResource("6_wsixu")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="MarginContainer/HBoxContainer/PanelMovement" unique_id=373323574]
+position = Vector2(492.5, 133)
+scale = Vector2(0.8, 0.8)
+sprite_frames = SubResource("SpriteFrames_fe65g")
+autoplay = "default"
+frame = 1
+frame_progress = 0.8557932
+
+[node name="PanelMovement2" type="TextureRect" parent="MarginContainer/HBoxContainer" unique_id=1740546371]
+custom_minimum_size = Vector2(600, 300)
+layout_mode = 2
+texture = ExtResource("1_c5u2a")
+
+[node name="A_Key" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=1120225449]
+layout_mode = 0
+offset_left = 44.5
+offset_top = 137.0
+offset_right = 131.5
+offset_bottom = 223.0
+texture = ExtResource("2_g33xm")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="W_Key" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=365423032]
+layout_mode = 0
+offset_left = 115.5
+offset_top = 42.0
+offset_right = 202.5
+offset_bottom = 128.0
+texture = ExtResource("3_8mej1")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="S_Key" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=873033011]
+layout_mode = 0
+offset_left = 128.5
+offset_top = 137.0
+offset_right = 215.5
+offset_bottom = 223.0
+texture = ExtResource("4_fmkfu")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="D_Key" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=156885887]
+layout_mode = 0
+offset_left = 213.5
+offset_top = 137.0
+offset_right = 300.5
+offset_bottom = 223.0
+texture = ExtResource("5_110q8")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Arrow" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=369358750]
+layout_mode = 0
+offset_left = 323.5
+offset_top = 96.0
+offset_right = 410.5
+offset_bottom = 182.0
+texture = ExtResource("6_wsixu")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=1131622853]
+position = Vector2(492.5, 133)
+scale = Vector2(0.8, 0.8)
+sprite_frames = SubResource("SpriteFrames_fe65g")
+autoplay = "default"
+frame = 1
+frame_progress = 0.8557932
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=580540137]
+libraries/ = SubResource("AnimationLibrary_g33xm")

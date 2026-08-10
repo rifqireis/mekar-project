@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dbu6qv5xb6tj2"]
+
+[ext_resource type="Texture2D" uid="uid://ditg16ul48xcv" path="res://assets/ui/maphutan/wood.png" id="1_47b17"]
+[ext_resource type="Script" uid="uid://d3y16x44gqlo3" path="res://scenes/maps/maphutan/wood_obstacle.gd" id="1_v07ee"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cxf33"]
+size = Vector2(147, 41)
+
+[node name="WoodObstacle" type="StaticBody2D" unique_id=1740150651]
+script = ExtResource("1_v07ee")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1849240590]
+texture = ExtResource("1_47b17")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=501848308]
+position = Vector2(-0.5, -0.5)
+shape = SubResource("RectangleShape2D_cxf33")

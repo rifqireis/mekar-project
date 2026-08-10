@@ -1,80 +1,54 @@
 extends Node2D
 
-@onready var player = $Player
-@onready var dialogue_ui = $UIDialogueLayer/SlantedDialogueBox
-@onready var anim_player = $AnimationPlayer # Pastikan path ini benar
+@onready var player: CharacterBody2D = $Player
+@onready var dialogue_ui: TextureRect = $UIDialogueLayer/SlantedDialogueBox
+@onready var anim_player: AnimationPlayer = $AnimationPlayer
 
-
-# Gabungkan naskah ke dalam satu Dictionary agar mudah dipanggil
-var daftar_naskah = {
-	"pendaratan": [
+var dialogue_data: Dictionary = {
+	"landing": [
 		{"nama": "Donga", "teks": "Suspect 18. Mutasi Raflesia."},
 		{"nama": "Donga", "teks": "Kalau lancar, aku besok udah bisa pulang ke-rumah. Orey pasti nanya lagi soal luka di lenganku yang kemarin."},
 		{"nama": "Donga", "teks": "Aduduh, Fokus dulu. Nanti aja bayanginnya."}
 	],
-	"investigasi": [
+	"wood_obstacle": [
+		{"nama": "Donga", "teks": "Kayu ini menghalangi jalan. Aku harus menyingkirkannya."},
+		{"nama": "Donga", "teks": "Ugh... lumayan berat juga."}
+	],
+	"investigation": [
 		{"nama": "Donga", "teks": "Bukan sisa perkelahian. Ini ditandain."},
 		{"nama": "Donga", "teks": "Dan lebih besar dari yang tertulis di laporan."}
 	],
-	"konfrontasi": [
+	"confrontation": [
 		{"nama": "Donga", "teks": "Target teridentifikasi."},
 		{"nama": "Arnoldios", "teks": "Kalian cabut akarku dari tanah ini. Kalian bakar rumahku buat batu dan besi. Sekarang kalian masih berdiri di sisa-sisanya."}
 	]
 }
 
-func _ready():
+func _ready() -> void:
 	player.set_physics_process(false)
 
-func picu_dialog(kunci_naskah: String):
+func trigger_dialogue(dialogue_key: String) -> void:
 	anim_player.pause() 
-	dialogue_ui.start_dialogue(daftar_naskah[kunci_naskah])
+	dialogue_ui.start_dialogue(dialogue_data[dialogue_key])
 
-func lepaskan_pemain():
+func release_player() -> void:
 	player.set_physics_process(true)
-	var wasd = get_node_or_null("Player/TutorialWASD")
-	if is_instance_valid(wasd):
-		wasd.tampilkan_indikator()
+	
+	var tutorial_ui = get_node_or_null("Player/TutorialUI")
+	if is_instance_valid(tutorial_ui):
+		tutorial_ui.show_tutorial()
 
-
-func _on_slanted_dialogue_box_dialogue_finished():
-	if anim_player.is_playing() == false:
+func _on_slanted_dialogue_box_dialogue_finished() -> void:
+	if not anim_player.is_playing():
+		anim_player.advance(0.1)
 		anim_player.play()
 
+func change_cam_intro() -> void:
+	var intro_cam = get_node_or_null("IntroCamera")
+	if is_instance_valid(intro_cam):
+		intro_cam.make_current()
 
-@onready var cinematic_camera = $CinematicCamera
-@onready var spot_investigasi = $SpotInvestigasi
-
-var posisi_sebelum_investigasi: Vector2 
-
-func _on_investigation_area_body_entered(body: Node2D) -> void:
-	if body.name == "Player":
-		player.set_physics_process(false)
-		
-		posisi_sebelum_investigasi = player.global_position
-		
-		anim_player.play("transisi_investigasi")
-		
-		if has_node("InvestigationArea"):
-			$InvestigationArea.set_deferred("monitoring", false)
-			$InvestigationArea.queue_free()
-
-func pindah_ke_set_investigasi():
-	player.global_position = spot_investigasi.global_position
-
-	cinematic_camera.make_current()
-
-func kembali_ke_posisi_awal():
-	player.global_position = posisi_sebelum_investigasi
-	
-	player.get_node("Camera2D").make_current()
-
-func selesai_investigasi():
-	player.set_physics_process(true)
-	if is_instance_valid(cinematic_camera):
-		cinematic_camera.queue_free()
-		
-func change_cam_player():
-	$Player/Camera2D.make_current()
-	
-func change_cam_investigation():
-	$InvestigationCamera.make_current()
+func change_cam_player() -> void:
+	var player_cam = get_node_or_null("Player/Camera2D")
+	if is_instance_valid(player_cam):
+		player_cam.make_current()
