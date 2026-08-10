@@ -1,9 +1,9 @@
 extends CharacterBody2D
 
-@onready var ray_interact : RayCast2D = $RayInteract
-@onready var animated_sprite : AnimatedSprite2D = $AnimatedSprite2D
+@onready var ray_interact: RayCast2D = $RayInteract
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
-const VELOCITY = 100
+const MOVEMENT_SPEED: float = 100.0
 
 func _ready() -> void:
 	add_to_group("player") 
@@ -13,22 +13,20 @@ func _ready() -> void:
 		PlayerRepository.should_restore_position = false
 
 func _physics_process(_delta: float) -> void:
-	move_player(_delta)
+	move_player()
 			
 	if ray_interact.is_colliding() and Input.is_action_just_pressed("interact"):
-		print("kena")
-		var target = ray_interact.get_collider()
+		var target: Node = ray_interact.get_collider()
 		
 		if target.has_method("interact"):
 			target.interact(self)
 		else:
-			print("Objek yang ditabrak tidak memiliki fungsi interact(): ", target.name)
+			print("Target has no interact() method: ", target.name)
 
-func move_player(_delta):
-	var direction = Input.get_vector("walk_left", "walk_right", "walk_up", "walk_down")
-	velocity = direction * VELOCITY
+func move_player() -> void:
+	var direction: Vector2 = Input.get_vector("walk_left", "walk_right", "walk_up", "walk_down")
+	velocity = direction * MOVEMENT_SPEED
 
-	# set animasi
 	if direction != Vector2.ZERO:
 		if direction.x != 0:
 			if direction.x > 0:
@@ -49,14 +47,14 @@ func move_player(_delta):
 		animated_sprite.play()
 	else:
 		animated_sprite.stop()
+		
 	move_and_slide()
 	
+func play_cutscene_animation(anim_name: String) -> void:
+	animated_sprite.play(anim_name)
 	
-func putar_animasi_cutscene(nama_animasi: String):
-	animated_sprite.play(nama_animasi)
-	
-func hentikan_animasi_cutscene():
+func stop_cutscene_animation() -> void:
 	animated_sprite.stop()
 
-func set_cam():
+func activate_camera() -> void:
 	$Camera2D.make_current()

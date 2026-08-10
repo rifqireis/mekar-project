@@ -4,8 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://be73hmjac1rk3" path="res://scenes/entities/player.tscn" id="2_llsjw"]
 [ext_resource type="FontFile" uid="uid://ckgpk7nwhmai1" path="res://assets/fonts/Courier_Prime/CourierPrime-Regular.ttf" id="3_2sj4f"]
 [ext_resource type="Texture2D" uid="uid://bs84w7btmnu0" path="res://assets/tiles/forest/Grass_transition_02.png" id="3_fmtq5"]
-[ext_resource type="Texture2D" uid="uid://l5oos8rpy1vi" path="res://assets/ui/battle/main/textbox.png" id="3_xxbdk"]
 [ext_resource type="Texture2D" uid="uid://dr2msafrbsphy" path="res://assets/tiles/forest/Tree_1.png" id="4_orqae"]
+[ext_resource type="Texture2D" uid="uid://8rnxisxxubpp" path="res://assets/ui/maphutan/donga_dialoguebox.png" id="5_363pt"]
 [ext_resource type="Texture2D" uid="uid://byxnuaphm6a28" path="res://assets/tiles/forest/Tree_2.png" id="5_fljpw"]
 [ext_resource type="Script" uid="uid://c1ctndvjganu3" path="res://scripts/maps/slanted_dialogue_box.gd" id="5_pwvdq"]
 [ext_resource type="Texture2D" uid="uid://bymiwjwojk26p" path="res://assets/tiles/forest/stones/Wall_02.png" id="6_fljpw"]
@@ -18,6 +18,8 @@
 [ext_resource type="Texture2D" uid="uid://clm515aqpn2ky" path="res://assets/tiles/forest/stones/little stone_01.png" id="9_22nj0"]
 [ext_resource type="Texture2D" uid="uid://dqkqcq7v1hlku" path="res://assets/tiles/forest/stones/little stone_04.png" id="10_nyl8k"]
 [ext_resource type="Texture2D" uid="uid://d0hjlooeyhf21" path="res://assets/tiles/fantasy_world/characters/Rafflesia.png" id="14_nyl8k"]
+[ext_resource type="PackedScene" uid="uid://b5u0sryybkoad" path="res://scenes/maps/maphutan/tutorial_ui.tscn" id="19_363pt"]
+[ext_resource type="PackedScene" uid="uid://dbu6qv5xb6tj2" path="res://scenes/maps/maphutan/wood_obstacle.tscn" id="20_v3oom"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_orqae"]
 texture = ExtResource("3_fmtq5")
@@ -252,6 +254,30 @@ tracks/5/keys = {
 "update": 1,
 "values": [true]
 }
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("TutorialUI/MarginContainer/HBoxContainer/PanelMovement:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("WoodObstacle:modulate")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
 
 [sub_resource type="Animation" id="Animation_2sj4f"]
 resource_name = "autoload_animation"
@@ -283,7 +309,7 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Animation_llsjw"]
 resource_name = "intro_sequence"
-length = 15.0
+length = 17.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -306,14 +332,14 @@ tracks/1/keys = {
 "times": PackedFloat32Array(6, 10, 14.5),
 "transitions": PackedFloat32Array(1, 1, 1),
 "values": [{
-"args": [],
-"method": &"play_cutscene_walk"
+"args": ["walk_right"],
+"method": &"play_cutscene_animation"
 }, {
 "args": [],
-"method": &"play_cutscene_idle"
+"method": &"stop_cutscene_animation"
 }, {
 "args": [],
-"method": &"set_cam"
+"method": &"activate_camera"
 }]
 }
 tracks/2/type = "method"
@@ -323,14 +349,14 @@ tracks/2/path = NodePath(".")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(14.5, 15),
+"times": PackedFloat32Array(14.5, 17),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
-"args": ["pendaratan"],
-"method": &"picu_dialog"
+"args": ["landing"],
+"method": &"trigger_dialogue"
 }, {
 "args": [],
-"method": &"lepaskan_pemain"
+"method": &"release_player"
 }]
 }
 tracks/3/type = "value"
@@ -356,6 +382,20 @@ tracks/4/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [0.0, 0.0, 1.0]
+}
+tracks/5/type = "method"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("TutorialUI")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(15),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"show_tutorial"
+}]
 }
 
 [sub_resource type="Animation" id="Animation_5e8uq"]
@@ -406,6 +446,53 @@ tracks/2/keys = {
 "values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_v3oom"]
+resource_name = "remove_wood_sequence"
+length = 1.5
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.3),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": ["wood_obstacle"],
+"method": &"trigger_dialogue"
+}, {
+"args": [],
+"method": &"release_player"
+}]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("WoodObstacle:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.1, 1.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("WoodObstacle")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(1.5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+
 [sub_resource type="Animation" id="Animation_pwvdq"]
 resource_name = "transisi_investigasi"
 length = 1.5
@@ -428,6 +515,7 @@ _data = {
 &"autoload_animation": SubResource("Animation_2sj4f"),
 &"intro_sequence": SubResource("Animation_llsjw"),
 &"investigasi": SubResource("Animation_5e8uq"),
+&"remove_wood_sequence": SubResource("Animation_v3oom"),
 &"transisi_investigasi": SubResource("Animation_pwvdq")
 }
 
@@ -530,20 +618,20 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -797.0
-offset_top = -399.0
-offset_right = 797.0
+offset_left = -960.0
+offset_top = -1015.0
+offset_right = 808.0
 grow_horizontal = 2
 grow_vertical = 0
-texture = ExtResource("3_xxbdk")
+texture = ExtResource("5_363pt")
 script = ExtResource("5_pwvdq")
 
 [node name="LogText" type="RichTextLabel" parent="UIDialogueLayer/SlantedDialogueBox" unique_id=1589032995]
 layout_mode = 0
-offset_left = 188.0
-offset_top = 147.99998
-offset_right = 1441.0
-offset_bottom = 286.3333
+offset_left = 340.0
+offset_top = 767.0
+offset_right = 1593.0
+offset_bottom = 905.3333
 theme_override_font_sizes/normal_font_size = 40
 theme_override_font_sizes/bold_font_size = 40
 theme_override_font_sizes/bold_italics_font_size = 40
@@ -553,10 +641,10 @@ text = "Lorem Ipsum Dolor Amet"
 
 [node name="LogName" type="RichTextLabel" parent="UIDialogueLayer/SlantedDialogueBox" unique_id=731386602]
 layout_mode = 0
-offset_left = 302.0
-offset_top = 36.999985
-offset_right = 475.0
-offset_bottom = 103.999985
+offset_left = 518.0
+offset_top = 656.0
+offset_right = 691.0
+offset_bottom = 723.0
 theme_override_font_sizes/normal_font_size = 40
 theme_override_font_sizes/bold_font_size = 40
 theme_override_font_sizes/bold_italics_font_size = 40
@@ -1783,6 +1871,13 @@ position = Vector2(107, 0)
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Path2D/CameraFollow" unique_id=2027922853]
 remote_path = NodePath("../../../IntroCamera")
+
+[node name="TutorialUI" parent="." unique_id=1087050329 instance=ExtResource("19_363pt")]
+
+[node name="WoodObstacle" parent="." unique_id=1740150651 instance=ExtResource("20_v3oom")]
+position = Vector2(665, 40.999996)
+rotation = 1.5707964
+scale = Vector2(0.3, 0.3)
 
 [connection signal="dialogue_finished" from="UIDialogueLayer/SlantedDialogueBox" to="." method="_on_slanted_dialogue_box_dialogue_finished"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
