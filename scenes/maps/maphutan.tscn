@@ -14,7 +14,7 @@
 [ext_resource type="Shader" uid="uid://cvyy48b5gxbk7" path="res://scenes/maps/maphutan.gdshader" id="7_fe65g"]
 [ext_resource type="Texture2D" uid="uid://d4fhkyiobstpo" path="res://assets/tiles/forest/bushes/bush_02.png" id="7_fljpw"]
 [ext_resource type="Texture2D" uid="uid://d0lmtt5a6fjlg" path="res://assets/tiles/forest/stones/Wall_01.png" id="7_tuifp"]
-[ext_resource type="Resource" uid="uid://bs11yvkr7lie7" path="res://resources/raflesia.tres" id="7_xxbdk"]
+[ext_resource type="Resource" uid="uid://bs11yvkr7lie7" path="res://resources/rafflesia.tres" id="7_xxbdk"]
 [ext_resource type="Texture2D" uid="uid://c4rgp856to2wa" path="res://assets/tiles/forest/bushes/bush_darkShadow_01.png" id="8_tuifp"]
 [ext_resource type="Texture2D" uid="uid://clm515aqpn2ky" path="res://assets/tiles/forest/stones/little stone_01.png" id="9_22nj0"]
 [ext_resource type="Texture2D" uid="uid://dqkqcq7v1hlku" path="res://assets/tiles/forest/stones/little stone_04.png" id="10_nyl8k"]
@@ -873,7 +873,6 @@ mouse_filter = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=523230879]
 libraries/ = SubResource("AnimationLibrary_pwvdq")
-autoplay = &"autoload_animation"
 next/autoload_animation = &"intro_sequence"
 
 [node name="TileMap" type="TileMap" parent="." unique_id=1024594798]

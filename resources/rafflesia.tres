@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://bs11yvkr7lie7"]
+
+[ext_resource type="PackedScene" uid="uid://cnsgh1ciy4vk5" path="res://scenes/minigames/minigame_dodge/scenes/attack_projectile.tscn" id="1_6jchr"]
+[ext_resource type="PackedScene" uid="uid://d1geipx7l7mdk" path="res://scenes/minigames/minigame_dodge/scenes/patterns/pattern_spore_wind.tscn" id="2_5ak5w"]
+[ext_resource type="Script" uid="uid://clh8s6xa7ml8y" path="res://resources/enemy_data.gd" id="3_tcic1"]
+
+[resource]
+script = ExtResource("3_tcic1")
+enemy_name = "Rafflesia"
+intro_text = "* Raflesia Arnoldi muncul menghalangi jalan!"
+turn_text = "* Raflesia Arnoldi bersiap menyerang..."
+normal_patterns = Array[PackedScene]([ExtResource("2_5ak5w")])
+minigame_duration = 10.0
+basic_attack_scene = ExtResource("1_6jchr")
+special_attack_scene = ExtResource("1_6jchr")
+metadata/_custom_type_script = "uid://clh8s6xa7ml8y"

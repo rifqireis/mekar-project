@@ -200,10 +200,51 @@ func _handle_enemy_turn() -> void:
 	
 func _handle_end_battle() -> void:
 	_switch_mode(BattleMode.DIALOGUE)
+	await get_tree().create_timer(2.0).timeout
+	speaker_name.text = "SISTEM"
 	
+	if enemy_hp <= 0:
+		log_text.text = enemy_resource.defeat_by_hp
+	elif enemy_trust >= 100:
+		log_text.text = enemy_resource.defeat_by_trust
+	elif enemy_stability >= 100:
+		log_text.text = enemy_resource.defeat_by_stability
+	else:
+		log_text.text = "* Pertempuran selesai."
+			
 	await get_tree().create_timer(3.0).timeout
 	
+	print(enemy_resource.enemy_name)
+	if enemy_resource.enemy_name == "Rafflesia":
+		_transition_to_house_cutscene()
+	else:
+		_return_to_map()
+
+func _transition_to_house_cutscene() -> void:
+	var transition_anim: AnimationPlayer = $AnimationPlayer
+	if transition_anim.has_animation("end_rafflesia"):
+		transition_anim.play("end_rafflesia")
+		await transition_anim.animation_finished
+	
+	var tree = get_tree()
+	
+	PlayerRepository.should_restore_position = false
 	PlayerRepository.end_battle(true)
+	
+	tree.change_scene_to_file("res://scenes/maps/rumahdonga.tscn")
+
+func _return_to_map() -> void:
+	PlayerRepository.end_battle(true)
+	PlayerRepository.should_restore_position = true
+	
+	var transition_anim: AnimationPlayer = $AnimationPlayer 
+	
+	if transition_anim != null and transition_anim.has_animation("circle_out"): 
+		transition_anim.play("circle_out")
+	
+		await transition_anim.animation_finished
+	
+	get_tree().change_scene_to_file(PlayerRepository.last_map_path)
 
 func _on_btn_strike_pressed() -> void:
 	_execute_attack_minigame(1.0, 1.0, enemy_resource.suppress_1_hp, enemy_resource.suppress_1_agit, enemy_resource.suppress_1_log)

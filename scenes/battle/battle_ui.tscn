@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ckvm8wref8lp2"]
 
 [ext_resource type="Script" uid="uid://dqsrhvojhc4it" path="res://scripts/battle/battle_ui.gd" id="1_lrjlg"]
-[ext_resource type="Resource" uid="uid://bs11yvkr7lie7" path="res://resources/raflesia.tres" id="2_t62lk"]
+[ext_resource type="Resource" uid="uid://bs11yvkr7lie7" path="res://resources/rafflesia.tres" id="2_t62lk"]
 [ext_resource type="Texture2D" uid="uid://c76o2uun0pdbw" path="res://assets/ui/battle/etc/Grid Pattern (1) 1.png" id="3_knf1m"]
 [ext_resource type="Texture2D" uid="uid://hmme0to040d0" path="res://assets/ui/battle/main/Rafflesia 1.png" id="4_6i8xx"]
 [ext_resource type="Texture2D" uid="uid://bi0yaj2ntbpjv" path="res://assets/ui/battle/main/Ellipse 68.png" id="5_e0vbk"]
@@ -31,6 +31,7 @@
 [ext_resource type="Texture2D" uid="uid://l5oos8rpy1vi" path="res://assets/ui/battle/main/textbox.png" id="29_bc15f"]
 [ext_resource type="PackedScene" uid="uid://cr1f3fqojpwiq" path="res://scenes/minigames/minigame_dodge/scenes/minigame_arena.tscn" id="30_ammb5"]
 [ext_resource type="PackedScene" uid="uid://hqhfujyr0d5u" path="res://scenes/minigames/minigame_attack/scenes/player_attack_game.tscn" id="31_ii2sy"]
+[ext_resource type="FontFile" uid="uid://ckgpk7nwhmai1" path="res://assets/fonts/Courier_Prime/CourierPrime-Regular.ttf" id="32_knf1m"]
 [ext_resource type="Shader" uid="uid://cvyy48b5gxbk7" path="res://scenes/maps/maphutan.gdshader" id="32_t62lk"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pokrw"]
@@ -111,6 +112,90 @@ tracks/0/keys = {
 "update": 0,
 "values": [1.20000004768372]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TransitionLayer/ColorRect:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("TransitionLayer/ColorRect:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("TransitionLayer/CircleRect:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("TransitionLayer/BottomBar:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("TransitionLayer/BottomBar/RichTextLabel:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("TransitionLayer/BottomBar/RichTextLabel:text")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": ["Di sebuah masa, jauh di depan sana..."]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("TransitionLayer/BottomBar/RichTextLabel:visible")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
 [sub_resource type="Animation" id="Animation_lrjlg"]
 resource_name = "autoload_animation"
@@ -126,11 +211,105 @@ tracks/0/keys = {
 "update": 0,
 "values": [1.20000004768372, 0.0]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TransitionLayer/CircleRect:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_knf1m"]
+resource_name = "circle_out"
+length = 1.5
+
+[sub_resource type="Animation" id="Animation_6i8xx"]
+resource_name = "end_rafflesia"
+length = 9.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TransitionLayer/ColorRect:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TransitionLayer/ColorRect:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("TransitionLayer/BottomBar:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(1),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("TransitionLayer/BottomBar/RichTextLabel:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(1, 2, 4, 5, 6, 8, 9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("TransitionLayer/BottomBar/RichTextLabel:text")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(1, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": ["Aku berhasil mengalahkannya ....", "Tapi terasa aneh."]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("TransitionLayer/BottomBar/RichTextLabel:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_t62lk"]
 _data = {
 &"RESET": SubResource("Animation_t62lk"),
-&"autoload_animation": SubResource("Animation_lrjlg")
+&"autoload_animation": SubResource("Animation_lrjlg"),
+&"circle_out": SubResource("Animation_knf1m"),
+&"end_rafflesia": SubResource("Animation_6i8xx")
 }
 
 [node name="BattleUI" type="Control" unique_id=729535227]
@@ -517,13 +696,13 @@ offset_bottom = 454.0
 [node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=1806456833]
 
 [node name="ColorRect" type="ColorRect" parent="TransitionLayer" unique_id=665141155]
-visible = false
 modulate = Color(1, 1, 1, 0)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="CircleRect" type="ColorRect" parent="TransitionLayer" unique_id=160589194]
@@ -534,6 +713,27 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="BottomBar" type="ColorRect" parent="TransitionLayer" unique_id=359062855]
+offset_top = 990.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TransitionLayer/BottomBar" unique_id=832676903]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_top = -990.0
+offset_right = 1920.0
+offset_bottom = 90.0
+theme_override_constants/line_separation = -2
+theme_override_fonts/normal_font = ExtResource("32_knf1m")
+theme_override_font_sizes/normal_font_size = 34
+text = "Di sebuah masa, jauh di depan sana..."
+horizontal_alignment = 1
+vertical_alignment = 1
+text_direction = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=78556686]
 libraries/ = SubResource("AnimationLibrary_t62lk")
