@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://bymiwjwojk26p" path="res://assets/tiles/forest/stones/Wall_02.png" id="6_fljpw"]
 [ext_resource type="Texture2D" uid="uid://wmbs6cscnml2" path="res://assets/tiles/forest/bushes/bush_01.png" id="6_gm6n8"]
 [ext_resource type="Script" uid="uid://cf6b36jd32m24" path="res://scripts/maps/encounter_trigger.gd" id="6_llsjw"]
+[ext_resource type="Shader" uid="uid://cvyy48b5gxbk7" path="res://scenes/maps/maphutan.gdshader" id="7_fe65g"]
 [ext_resource type="Texture2D" uid="uid://d4fhkyiobstpo" path="res://assets/tiles/forest/bushes/bush_02.png" id="7_fljpw"]
 [ext_resource type="Texture2D" uid="uid://d0lmtt5a6fjlg" path="res://assets/tiles/forest/stones/Wall_01.png" id="7_tuifp"]
 [ext_resource type="Resource" uid="uid://bs11yvkr7lie7" path="res://resources/raflesia.tres" id="7_xxbdk"]
@@ -18,6 +19,8 @@
 [ext_resource type="Texture2D" uid="uid://clm515aqpn2ky" path="res://assets/tiles/forest/stones/little stone_01.png" id="9_22nj0"]
 [ext_resource type="Texture2D" uid="uid://dqkqcq7v1hlku" path="res://assets/tiles/forest/stones/little stone_04.png" id="10_nyl8k"]
 [ext_resource type="Texture2D" uid="uid://d0hjlooeyhf21" path="res://assets/tiles/fantasy_world/characters/Rafflesia.png" id="14_nyl8k"]
+[ext_resource type="Script" uid="uid://cpcit2b6yuuj3" path="res://scenes/maps/maphutan/rafflesia_area.gd" id="16_rnn7i"]
+[ext_resource type="Script" uid="uid://ded1wyku4k135" path="res://scenes/maps/maphutan/raflesia_interactable.gd" id="18_ar36h"]
 [ext_resource type="PackedScene" uid="uid://b5u0sryybkoad" path="res://scenes/maps/maphutan/tutorial_ui.tscn" id="19_363pt"]
 [ext_resource type="PackedScene" uid="uid://dbu6qv5xb6tj2" path="res://scenes/maps/maphutan/wood_obstacle.tscn" id="20_v3oom"]
 
@@ -180,6 +183,10 @@ texture = ExtResource("3_fmtq5")
 [sub_resource type="TileSet" id="TileSet_fmtq5"]
 sources/0 = SubResource("TileSetAtlasSource_p3o1y")
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cxf33"]
+shader = ExtResource("7_fe65g")
+shader_parameter/circle_size = 0.0
+
 [sub_resource type="Animation" id="Animation_xxbdk"]
 length = 0.001
 tracks/0/type = "value"
@@ -221,7 +228,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Path2D/PlayerFollow:progress_ratio")
+tracks/3/path = NodePath("IntroPath/PlayerFollow:progress_ratio")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -233,7 +240,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Path2D/CameraFollow:progress_ratio")
+tracks/4/path = NodePath("IntroPath/CameraFollow:progress_ratio")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -278,6 +285,30 @@ tracks/7/keys = {
 "update": 0,
 "values": [Color(1, 1, 1, 1)]
 }
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("ObservationPath/PlayerFollow:progress_ratio")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("TransitionLayer/CircleRect:material:shader_parameter/circle_size")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
 
 [sub_resource type="Animation" id="Animation_2sj4f"]
 resource_name = "autoload_animation"
@@ -293,6 +324,33 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TransitionLayer/ColorRect:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_pwvdq"]
+resource_name = "fade_in"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TransitionLayer/ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -362,7 +420,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Path2D/PlayerFollow:progress_ratio")
+tracks/3/path = NodePath("IntroPath/PlayerFollow:progress_ratio")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -374,7 +432,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Path2D/CameraFollow:progress_ratio")
+tracks/4/path = NodePath("IntroPath/CameraFollow:progress_ratio")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -446,6 +504,156 @@ tracks/2/keys = {
 "values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_ar36h"]
+resource_name = "rafflesia_encounter"
+length = 22.5
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 14, 17.5, 18, 20),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"values": [{
+"args": [],
+"method": &"bind_observation_path"
+}, {
+"args": [],
+"method": &"unbind_observation_path"
+}, {
+"args": ["confrontation"],
+"method": &"trigger_dialogue"
+}, {
+"args": [],
+"method": &"trigger_startle_effect"
+}, {
+"args": ["pre_battle"],
+"method": &"trigger_dialogue"
+}]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Player")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1, 4, 5, 9, 10, 13, 13.933333, 14, 19.9, 20),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"values": [{
+"args": ["walk_right"],
+"method": &"play_cutscene_animation"
+}, {
+"args": ["idle_up"],
+"method": &"play_cutscene_animation"
+}, {
+"args": ["walk_right"],
+"method": &"play_cutscene_animation"
+}, {
+"args": ["idle_up"],
+"method": &"play_cutscene_animation"
+}, {
+"args": ["walk_right"],
+"method": &"play_cutscene_animation"
+}, {
+"args": ["idle_up"],
+"method": &"play_cutscene_animation"
+}, {
+"args": ["walk_left"],
+"method": &"play_cutscene_animation"
+}, {
+"args": ["idle_up"],
+"method": &"play_cutscene_animation"
+}, {
+"args": [],
+"method": &"stop_cutscene_animation"
+}, {
+"args": ["idle_up"],
+"method": &"play_cutscene_animation"
+}, {
+"args": ["idle_up"],
+"method": &"play_cutscene_animation"
+}]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("ObservationPath/PlayerFollow:progress_ratio")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1, 4, 5, 9, 10, 13, 14),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.25, 0.25, 0.5, 0.5, 0.7043, 0.7043, 1.0]
+}
+tracks/3/type = "method"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("RaflesiaInteractable")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(22.5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"execute_battle"
+}]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("TransitionLayer/ColorRect:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("TransitionLayer/ColorRect:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(1),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/6/type = "method"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Player")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [5.0],
+"method": &"set_camera_zoom"
+}]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("TransitionLayer/CircleRect:material:shader_parameter/circle_size")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(21, 21.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.20000004768372]
+}
+
 [sub_resource type="Animation" id="Animation_v3oom"]
 resource_name = "remove_wood_sequence"
 length = 1.5
@@ -493,33 +701,27 @@ tracks/2/keys = {
 }]
 }
 
-[sub_resource type="Animation" id="Animation_pwvdq"]
-resource_name = "transisi_investigasi"
-length = 1.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("TransitionLayer/ColorRect:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_pwvdq"]
 _data = {
 &"RESET": SubResource("Animation_xxbdk"),
 &"autoload_animation": SubResource("Animation_2sj4f"),
+&"fade_in": SubResource("Animation_pwvdq"),
 &"intro_sequence": SubResource("Animation_llsjw"),
 &"investigasi": SubResource("Animation_5e8uq"),
-&"remove_wood_sequence": SubResource("Animation_v3oom"),
-&"transisi_investigasi": SubResource("Animation_pwvdq")
+&"rafflesia_encounter": SubResource("Animation_ar36h"),
+&"remove_wood_sequence": SubResource("Animation_v3oom")
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_orqae"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cxf33"]
+size = Vector2(31, 37)
+
+[sub_resource type="Curve2D" id="Curve2D_5e8uq"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 107, 0, 0, 0, 0, 0, 232, 0)
+}
+point_count = 2
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_umjv5"]
 atlas = ExtResource("14_nyl8k")
@@ -553,14 +755,11 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_dgg5m"]
 radius = 27.294687
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_cxf33"]
-size = Vector2(118, 81)
-
-[sub_resource type="Curve2D" id="Curve2D_5e8uq"]
+[sub_resource type="Curve2D" id="Curve2D_ar36h"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 107, 0, 0, 0, 0, 0, 232, 0)
+"points": PackedVector2Array(0, 0, 0, 0, 984, 406, 0, 0, 0, 0, 1016, 425, 0, 0, 0, 0, 1052, 424, 0, 0, 0, 0, 1073, 405, 0, 0, 0, 0, 1031, 414)
 }
-point_count = 2
+point_count = 5
 
 [node name="MapHutan" type="Node2D" unique_id=451014480]
 modulate = Color(0.7871086, 0.7871086, 0.7871086, 0.7871086)
@@ -663,11 +862,19 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
+[node name="CircleRect" type="ColorRect" parent="TransitionLayer" unique_id=753930456]
+material = SubResource("ShaderMaterial_cxf33")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=523230879]
 libraries/ = SubResource("AnimationLibrary_pwvdq")
 autoplay = &"autoload_animation"
 next/autoload_animation = &"intro_sequence"
-next/transisi_investigasi = &"investigasi"
 
 [node name="TileMap" type="TileMap" parent="." unique_id=1024594798]
 format = 2
@@ -910,22 +1117,6 @@ texture = ExtResource("4_orqae")
 [node name="Sprite2D" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=466628200]
 position = Vector2(64.62714, -134.98085)
 texture = ExtResource("4_orqae")
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=150017114]
-position = Vector2(149.706, -103.076294)
-scale = Vector2(0.8180657, 0.8180657)
-sprite_frames = SubResource("SpriteFrames_4s15k")
-autoplay = "default"
-frame_progress = 0.029650645
-
-[node name="Area2D" type="Area2D" parent="TileMap/Pohon1/Area2D5/AnimatedSprite2D" unique_id=2029130489]
-script = ExtResource("6_llsjw")
-enemy_resource = ExtResource("7_xxbdk")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMap/Pohon1/Area2D5/AnimatedSprite2D/Area2D" unique_id=1401440245]
-position = Vector2(1, 4)
-scale = Vector2(0.9999998, 0.9999998)
-shape = SubResource("CircleShape2D_dgg5m")
 
 [node name="Sprite2D7" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=1494085751]
 position = Vector2(252.78226, -134.1628)
@@ -1843,43 +2034,77 @@ texture = ExtResource("10_nyl8k")
 position = Vector2(328, 328)
 texture = ExtResource("10_nyl8k")
 
-[node name="InvestigationArea" type="Area2D" parent="." unique_id=157924017]
+[node name="RafflesiaArea" type="Area2D" parent="." unique_id=157924017]
 position = Vector2(833, 33)
+script = ExtResource("16_rnn7i")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InvestigationArea" unique_id=1656527223]
-position = Vector2(198, 399)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RafflesiaArea" unique_id=1656527223]
+position = Vector2(203.5, 393.5)
 shape = SubResource("RectangleShape2D_cxf33")
 
-[node name="InvestigationCamera" type="Camera2D" parent="." unique_id=508034002]
-position = Vector2(1032, 428)
+[node name="RafflesiaCam" type="Camera2D" parent="." unique_id=508034002]
+position = Vector2(1030, 370)
 zoom = Vector2(5, 5)
 
 [node name="SpotInvestigasi" type="Marker2D" parent="." unique_id=1697216521]
 
-[node name="Path2D" type="Path2D" parent="." unique_id=1635259878]
+[node name="IntroPath" type="Path2D" parent="." unique_id=1635259878]
 position = Vector2(-68, 278)
 curve = SubResource("Curve2D_5e8uq")
 
-[node name="PlayerFollow" type="PathFollow2D" parent="Path2D" unique_id=7918077]
+[node name="PlayerFollow" type="PathFollow2D" parent="IntroPath" unique_id=7918077]
 position = Vector2(107, 0)
 
-[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Path2D/PlayerFollow" unique_id=723827326]
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="IntroPath/PlayerFollow" unique_id=723827326]
 remote_path = NodePath("../../../Player")
 
-[node name="CameraFollow" type="PathFollow2D" parent="Path2D" unique_id=2055109370]
+[node name="CameraFollow" type="PathFollow2D" parent="IntroPath" unique_id=2055109370]
 position = Vector2(107, 0)
 
-[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Path2D/CameraFollow" unique_id=2027922853]
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="IntroPath/CameraFollow" unique_id=2027922853]
 remote_path = NodePath("../../../IntroCamera")
 
 [node name="TutorialUI" parent="." unique_id=1087050329 instance=ExtResource("19_363pt")]
+visible = false
 
 [node name="WoodObstacle" parent="." unique_id=1740150651 instance=ExtResource("20_v3oom")]
 position = Vector2(665, 40.999996)
 rotation = 1.5707964
 scale = Vector2(0.3, 0.3)
 
+[node name="RaflesiaInteractable" type="StaticBody2D" parent="." unique_id=2050357488]
+script = ExtResource("18_ar36h")
+enemy_resource = ExtResource("7_xxbdk")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="RaflesiaInteractable" unique_id=150017114]
+position = Vector2(1030, 369)
+scale = Vector2(0.99999994, 0.99999994)
+sprite_frames = SubResource("SpriteFrames_4s15k")
+autoplay = "default"
+frame_progress = 0.029650645
+
+[node name="Area2D" type="Area2D" parent="RaflesiaInteractable/AnimatedSprite2D" unique_id=2029130489]
+script = ExtResource("6_llsjw")
+enemy_resource = ExtResource("7_xxbdk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RaflesiaInteractable" unique_id=1401440245]
+position = Vector2(1031, 373)
+scale = Vector2(0.99999976, 0.99999976)
+shape = SubResource("CircleShape2D_dgg5m")
+
+[node name="ObservationPath" type="Path2D" parent="." unique_id=1411399398]
+position = Vector2(-1, 10)
+curve = SubResource("Curve2D_ar36h")
+
+[node name="PlayerFollow" type="PathFollow2D" parent="ObservationPath" unique_id=2089734214]
+position = Vector2(984, 406)
+rotation = 0.53581125
+rotates = false
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="ObservationPath/PlayerFollow" unique_id=1238733457]
+update_rotation = false
+
 [connection signal="dialogue_finished" from="UIDialogueLayer/SlantedDialogueBox" to="." method="_on_slanted_dialogue_box_dialogue_finished"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
-[connection signal="body_entered" from="InvestigationArea" to="." method="_on_investigation_area_body_entered"]
-[connection signal="body_exited" from="InvestigationArea" to="." method="_on_investigation_area_body_exited"]
+[connection signal="body_entered" from="RafflesiaArea" to="." method="_on_investigation_area_body_entered"]
+[connection signal="body_exited" from="RafflesiaArea" to="." method="_on_investigation_area_body_exited"]

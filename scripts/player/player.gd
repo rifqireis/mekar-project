@@ -51,6 +51,16 @@ func move_player() -> void:
 	move_and_slide()
 	
 func play_cutscene_animation(anim_name: String) -> void:
+	if anim_name == "walk_left":
+		animated_sprite.flip_h = true
+		animated_sprite.play("walk_right")
+		return
+	if anim_name == "idle_left":
+		animated_sprite.flip_h = true
+		animated_sprite.play("idle_right")
+		return
+	
+	animated_sprite.flip_h = false
 	animated_sprite.play(anim_name)
 	
 func stop_cutscene_animation() -> void:
@@ -58,3 +68,6 @@ func stop_cutscene_animation() -> void:
 
 func activate_camera() -> void:
 	$Camera2D.make_current()
+	
+func set_camera_zoom(cam_zoom: float) -> void:
+	$Camera2D.zoom = Vector2(cam_zoom, cam_zoom)

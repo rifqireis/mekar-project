@@ -31,6 +31,7 @@
 [ext_resource type="Texture2D" uid="uid://l5oos8rpy1vi" path="res://assets/ui/battle/main/textbox.png" id="29_bc15f"]
 [ext_resource type="PackedScene" uid="uid://cr1f3fqojpwiq" path="res://scenes/minigames/minigame_dodge/scenes/minigame_arena.tscn" id="30_ammb5"]
 [ext_resource type="PackedScene" uid="uid://hqhfujyr0d5u" path="res://scenes/minigames/minigame_attack/scenes/player_attack_game.tscn" id="31_ii2sy"]
+[ext_resource type="Shader" uid="uid://cvyy48b5gxbk7" path="res://scenes/maps/maphutan.gdshader" id="32_t62lk"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pokrw"]
 atlas = ExtResource("4_6i8xx")
@@ -91,6 +92,46 @@ texture = ExtResource("27_t7l3b")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ruv1i"]
 texture = ExtResource("28_2p5iv")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_knf1m"]
+shader = ExtResource("32_t62lk")
+shader_parameter/circle_size = 1.20000004768372
+
+[sub_resource type="Animation" id="Animation_t62lk"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TransitionLayer/CircleRect:material:shader_parameter/circle_size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.20000004768372]
+}
+
+[sub_resource type="Animation" id="Animation_lrjlg"]
+resource_name = "autoload_animation"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TransitionLayer/CircleRect:material:shader_parameter/circle_size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.20000004768372, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_t62lk"]
+_data = {
+&"RESET": SubResource("Animation_t62lk"),
+&"autoload_animation": SubResource("Animation_lrjlg")
+}
 
 [node name="BattleUI" type="Control" unique_id=729535227]
 layout_mode = 3
@@ -472,6 +513,31 @@ offset_left = 382.0
 offset_top = 454.0
 offset_right = 382.0
 offset_bottom = 454.0
+
+[node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=1806456833]
+
+[node name="ColorRect" type="ColorRect" parent="TransitionLayer" unique_id=665141155]
+visible = false
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="CircleRect" type="ColorRect" parent="TransitionLayer" unique_id=160589194]
+material = SubResource("ShaderMaterial_knf1m")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=78556686]
+libraries/ = SubResource("AnimationLibrary_t62lk")
+autoplay = &"autoload_animation"
 
 [connection signal="pressed" from="Mode_Action/MainButtonContainer/BtnSuppress" to="." method="_on_btn_suppress_pressed"]
 [connection signal="pressed" from="Mode_Action/MainButtonContainer/BtnObserve" to="." method="_on_btn_observe_pressed"]
