@@ -3,7 +3,7 @@ extends Resource
 
 
 @export_category("Enemy Profile")
-@export var enemy_name: String = "*NamaEnemy*"
+@export var enemy_name: String = "lorem ipsum"
 @export_multiline var intro_text: String = "* *NamaEnemy* muncul menghalangi jalan!"
 @export_multiline var turn_text: String = "* *NamaEnemy* bersiap menyerang..."
 @export var base_damage: int = 15
@@ -78,3 +78,8 @@ extends Resource
 	{"text": "Donga menurunkan senjata dan memperlihatkan bibit...", "correct": true, "trust": 20},
 	{"text": "Dasar monster parasit pemakan beton!", "correct": false, "trust": 15}
 ]
+
+@export_group("Dialog Penutup")
+@export_multiline var defeat_by_hp: String = "* Target berhasil dikalahkan."
+@export_multiline var defeat_by_trust: String = "* Pendekatan damai berhasil. Target mundur."
+@export_multiline var defeat_by_stability: String = "* Ekosistem pulih! Anomali kehilangan alasannya untuk menyerang."

@@ -38,6 +38,7 @@ var dialogue_data: Dictionary = {
 }
 
 func _ready() -> void:
+	anim_player.play("autoload_animation")
 	player.set_physics_process(false)
 	dialogue_ui.speaker_changed.connect(_on_speaker_changed)
 
