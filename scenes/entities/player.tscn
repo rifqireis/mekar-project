@@ -86,7 +86,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_22nj0")
 }],
 "loop": 1,
-"name": &"idle_top",
+"name": &"idle_up",
 "speed": 5.0
 }, {
 "frames": [{
@@ -152,7 +152,7 @@ script = ExtResource("1_08t41")
 texture_filter = 1
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_dgg5m")
-animation = &"walk_right"
+animation = &"idle_up"
 
 [node name="RayInteract" type="RayCast2D" parent="." unique_id=305846055]
 target_position = Vector2(0, 20)

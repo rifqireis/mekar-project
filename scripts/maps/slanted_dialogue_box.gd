@@ -1,6 +1,7 @@
 extends TextureRect
 
 signal dialogue_finished
+signal speaker_changed(nama: String)
 
 @onready var log_text: RichTextLabel = $LogText 
 @onready var log_name: RichTextLabel = $LogName
@@ -27,6 +28,8 @@ func display_current_line() -> void:
 		var current_line: Dictionary = dialog_data[current_index]
 		log_name.text = current_line["nama"]
 		log_text.text = current_line["teks"]
+		
+		speaker_changed.emit(current_line["nama"])
 		
 		log_text.visible_ratio = 0.0
 		
