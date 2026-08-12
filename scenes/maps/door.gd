@@ -7,8 +7,8 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
-func interact(initiator: CharacterBody2D = null) -> void:
+func _interact(_initiator: CharacterBody2D = null) -> void:
 	get_tree().change_scene_to_file("res://scenes/maps/Prapto.tscn")

@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://cii28iqcptmdb"
+path="res://.godot/imported/prapto.dialogue-d8805f08afb64afaa20e132ede18f62e.tres"
+
+[deps]
+
+source_file="res://dialogues/prapto.dialogue"
+dest_files=["res://.godot/imported/prapto.dialogue-d8805f08afb64afaa20e132ede18f62e.tres"]
+
+[params]
+
+defaults=true

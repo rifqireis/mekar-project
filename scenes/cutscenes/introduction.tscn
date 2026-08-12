@@ -645,8 +645,7 @@ stretch_mode = 4
 
 [node name="img_4" type="TextureRect" parent="ImageContainer" unique_id=239608800]
 layout_mode = 0
-offset_left = -100.0
-offset_right = 1820.0
+offset_right = 1920.0
 offset_bottom = 1080.0
 scale = Vector2(1.1, 1.1)
 pivot_offset = Vector2(960, 540)

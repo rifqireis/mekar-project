@@ -1,0 +1,26 @@
+~ morning_part_1
+do camera_controller.focus_on("Chika")
+Chika: Tumben udah bangun jam segini.
+do camera_controller.focus_on("Donga")
+Donga: Iya, mau cari udara segar sekalian.
+=> END
+
+~ morning_part_2
+do camera_controller.focus_on("Donga")
+Donga: Iya, mau cari udara segar sekalian.
+do camera_controller.focus_on("Chika")
+Chika: Pas banget. Sini, sekalian beliin titipanku di pasar.
+do camera_controller.reset_to_player()
+=> END 
+
+~ interact_chika
+if is_list_taken == false:
+	do camera_controller.focus_on("Chika")
+	Chika: Ini daftar belanjanya. Jangan sampai ada yang kurang ya.
+	do camera_controller.focus_on("Donga")
+	Donga: Oke, aku berangkat sekarang.
+	set is_list_taken = true
+	do camera_controller.reset_to_player()
+else:
+	Chika: Hati-hati di jalan ya.
+=> END

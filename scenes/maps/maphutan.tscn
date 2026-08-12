@@ -13,8 +13,10 @@
 [ext_resource type="Script" uid="uid://cf6b36jd32m24" path="res://scripts/maps/encounter_trigger.gd" id="6_llsjw"]
 [ext_resource type="Shader" uid="uid://cvyy48b5gxbk7" path="res://scenes/maps/maphutan.gdshader" id="7_fe65g"]
 [ext_resource type="Texture2D" uid="uid://d4fhkyiobstpo" path="res://assets/tiles/forest/bushes/bush_02.png" id="7_fljpw"]
+[ext_resource type="Texture2D" uid="uid://b3ytso6f8bf63" path="res://assets/ui/maphutan/donga_dialogue.png" id="7_m7ymt"]
 [ext_resource type="Texture2D" uid="uid://d0lmtt5a6fjlg" path="res://assets/tiles/forest/stones/Wall_01.png" id="7_tuifp"]
 [ext_resource type="Resource" uid="uid://bs11yvkr7lie7" path="res://resources/rafflesia.tres" id="7_xxbdk"]
+[ext_resource type="Texture2D" uid="uid://bljxvodoat1wx" path="res://assets/ui/maphutan/rafflesia.png" id="8_24lle"]
 [ext_resource type="Texture2D" uid="uid://c4rgp856to2wa" path="res://assets/tiles/forest/bushes/bush_darkShadow_01.png" id="8_tuifp"]
 [ext_resource type="Texture2D" uid="uid://clm515aqpn2ky" path="res://assets/tiles/forest/stones/little stone_01.png" id="9_22nj0"]
 [ext_resource type="Texture2D" uid="uid://dqkqcq7v1hlku" path="res://assets/tiles/forest/stones/little stone_04.png" id="10_nyl8k"]
@@ -811,26 +813,27 @@ Target Suspect: Mutated Rafflesia (Arnoldos)"
 [node name="UIDialogueLayer" type="CanvasLayer" parent="." unique_id=119560982]
 
 [node name="SlantedDialogueBox" type="TextureRect" parent="UIDialogueLayer" unique_id=2112004615]
-visible = false
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -960.0
-offset_top = -1015.0
+offset_top = -486.0
 offset_right = 808.0
+offset_bottom = 120.0
 grow_horizontal = 2
 grow_vertical = 0
 texture = ExtResource("5_363pt")
+stretch_mode = 4
 script = ExtResource("5_pwvdq")
 
 [node name="LogText" type="RichTextLabel" parent="UIDialogueLayer/SlantedDialogueBox" unique_id=1589032995]
 layout_mode = 0
-offset_left = 340.0
-offset_top = 767.0
-offset_right = 1593.0
-offset_bottom = 905.3333
+offset_left = 207.0
+offset_top = 181.0
+offset_right = 1582.0
+offset_bottom = 319.3333
 theme_override_font_sizes/normal_font_size = 40
 theme_override_font_sizes/bold_font_size = 40
 theme_override_font_sizes/bold_italics_font_size = 40
@@ -840,16 +843,37 @@ text = "Lorem Ipsum Dolor Amet"
 
 [node name="LogName" type="RichTextLabel" parent="UIDialogueLayer/SlantedDialogueBox" unique_id=731386602]
 layout_mode = 0
-offset_left = 518.0
-offset_top = 656.0
-offset_right = 691.0
-offset_bottom = 723.0
+offset_left = 414.0
+offset_top = 53.0
+offset_right = 587.0
+offset_bottom = 120.0
 theme_override_font_sizes/normal_font_size = 40
 theme_override_font_sizes/bold_font_size = 40
 theme_override_font_sizes/bold_italics_font_size = 40
 theme_override_font_sizes/italics_font_size = 40
 theme_override_font_sizes/mono_font_size = 40
 text = "Raflesia"
+
+[node name="Donga" type="TextureRect" parent="UIDialogueLayer/SlantedDialogueBox" unique_id=511640431]
+visible = false
+show_behind_parent = true
+layout_mode = 0
+offset_left = -2.0
+offset_top = -567.0
+offset_right = 1180.0
+offset_bottom = 405.0
+texture = ExtResource("7_m7ymt")
+
+[node name="Rafflesia" type="TextureRect" parent="UIDialogueLayer/SlantedDialogueBox" unique_id=571635916]
+visible = false
+show_behind_parent = true
+layout_mode = 0
+offset_left = 942.0
+offset_top = -567.0
+offset_right = 2124.0
+offset_bottom = 405.0
+texture = ExtResource("8_24lle")
+stretch_mode = 4
 
 [node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=1601444571]
 

@@ -1,0 +1,40 @@
+~ npc0_seller
+if is_list_taken == true and is_groceries_bought == false:
+	Penjual: Halo Donga! Mau ambil pesanan Chika ya?
+	Donga: Iya Mang, ini daftar belanjanya.
+	Penjual: Siap, ini beras, telur, sama sayurnya sudah dibungkus rapi.
+	Donga: Terima kasih Mang!
+	set is_groceries_bought = true
+elif is_groceries_bought == true:
+	Penjual: Semua belanjaanmu sudah lengkap. Hati-hati di jalan ya Donga!
+else:
+	Penjual: Buah dan sayur segar! Ayo dibeli sebelum kehabisan!
+=> END
+
+~ npc1_citizen
+Warga: Udara di kota Prapto hari ini cerah banget ya.
+Warga: Cocok buat jalan-jalan santai.
+=> END
+
+~ npc2_teenage_boy
+Pemuda: Ssst... Kamu tahu gak? Vending machine di dekat ruko itu suka ngeluarin minuman gratis kalau ditekan dua kali.
+Donga: Mending jangan bikin rumor aneh-aneh deh...
+=> END
+
+~ npc3_man
+Bapak: Aduh, kaki tua bapak pegal-pegal habis jalan dari ujung ruko.
+Bapak: Anak muda, luangkan waktu buat istirahat ya, jangan kerja terus.
+=> END
+
+~ npc4_grand_mother
+Nenek: Eh, Donga... Salam ya buat Chika di rumah.
+Nenek: Anak rajin, sehat-sehat selalu ya nak.
+=> END
+
+~ phone_call
+Donga: (Kringgg... Kringgg... Suara HP Donga berbunyi)
+Donga: Halo? Ada apa?
+Voice: Donga! Ini darurat. Kami butuh bantuanmu di Hutan Larangan Bab 2!
+Voice: Monster-monster kembali mengamuk dan membahayakan warga.
+Donga: Baik, aku langsung meluncur ke sana sekarang!
+=> END

@@ -6,6 +6,8 @@ extends Node2D
 @onready var observation_remote: RemoteTransform2D = $ObservationPath/PlayerFollow/RemoteTransform2D
 @onready var player_cam: Camera2D = $Player/Camera2D
 @onready var rafflesia_cam: Camera2D = $RafflesiaCam
+@onready var rafflesia_dialogue: TextureRect = $UIDialogueLayer/SlantedDialogueBox/Rafflesia
+@onready var donga_dialogue: TextureRect = $UIDialogueLayer/SlantedDialogueBox/Donga
 
 var cam_tween: Tween
 
@@ -117,5 +119,10 @@ func _on_speaker_changed(speaker_name: String) -> void:
 	
 	if speaker_name == "Arnoldios":
 		cam_tween.tween_property(player_cam, "global_position", rafflesia_cam.global_position, 0.5)
+		rafflesia_dialogue.visible = true
+		donga_dialogue.visible = false
+		
 	else:
 		cam_tween.tween_property(player_cam, "global_position", player.global_position, 0.5)
+		rafflesia_dialogue.visible = false
+		donga_dialogue.visible = true

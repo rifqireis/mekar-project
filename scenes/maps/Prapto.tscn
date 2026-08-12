@@ -22,6 +22,7 @@
 [ext_resource type="PackedScene" uid="uid://be73hmjac1rk3" path="res://scenes/entities/player.tscn" id="20_uxoey"]
 [ext_resource type="Texture2D" uid="uid://c7tg755fw4lgy" path="res://assets/tiles/suprapto/Character/Apik.png" id="21_6315n"]
 [ext_resource type="Texture2D" uid="uid://lfqnap7te8om" path="res://assets/tiles/suprapto/Character/Ikal.png" id="22_33y7g"]
+[ext_resource type="Resource" uid="uid://cii28iqcptmdb" path="res://dialogues/prapto.dialogue" id="23_fypgi"]
 [ext_resource type="Texture2D" uid="uid://bycl5qkqqmf3o" path="res://assets/tiles/suprapto/Character/Kiki.png" id="23_rdkek"]
 [ext_resource type="Script" uid="uid://cqs4o0hprgafn" path="res://scenes/maps/static_body_2d.gd" id="23_uxoey"]
 [ext_resource type="Texture2D" uid="uid://dk6d7cnobgjja" path="res://assets/tiles/suprapto/Character/Bila_Indrajaya.png" id="24_rdkek"]
@@ -4542,42 +4543,6 @@ texture = ExtResource("3_1wcul")
 [sub_resource type="TileSet" id="TileSet_ih2t3"]
 sources/0 = SubResource("TileSetAtlasSource_jwu6f")
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_dyraw"]
-atlas = ExtResource("21_6315n")
-region = Rect2(0, 0, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_6smxe"]
-atlas = ExtResource("21_6315n")
-region = Rect2(32, 0, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_duyrc"]
-atlas = ExtResource("21_6315n")
-region = Rect2(64, 0, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_akoyd"]
-atlas = ExtResource("21_6315n")
-region = Rect2(96, 0, 32, 48)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_b56yv"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dyraw")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_6smxe")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_duyrc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_akoyd")
-}],
-"loop": 1,
-"name": &"default",
-"speed": 3.0
-}]
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_rm6q3"]
 atlas = ExtResource("22_33y7g")
 region = Rect2(0, 0, 32, 48)
@@ -4617,6 +4582,42 @@ animations = [{
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wfwfl"]
 radius = 16.0
 height = 48.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dyraw"]
+atlas = ExtResource("21_6315n")
+region = Rect2(0, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6smxe"]
+atlas = ExtResource("21_6315n")
+region = Rect2(32, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_duyrc"]
+atlas = ExtResource("21_6315n")
+region = Rect2(64, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_akoyd"]
+atlas = ExtResource("21_6315n")
+region = Rect2(96, 0, 32, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_b56yv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dyraw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6smxe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_duyrc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_akoyd")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 3.0
+}]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xbojd"]
 atlas = ExtResource("23_rdkek")
@@ -4726,8 +4727,17 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="Animation" id="Animation_hqwgu"]
+resource_name = "autoload_animation"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fypgi"]
+_data = {
+&"autoload_animation": SubResource("Animation_hqwgu")
+}
+
 [node name="Prapto" type="Node2D" unique_id=1286259869]
 script = ExtResource("1_7rg1e")
+dialogue_resource = ExtResource("23_fypgi")
 
 [node name="Building" type="Area2D" parent="." unique_id=2136406572]
 
@@ -4821,14 +4831,7 @@ texture = ExtResource("20_b56yv")
 [node name="Player" parent="." unique_id=414423822 instance=ExtResource("20_uxoey")]
 position = Vector2(110, 279)
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1904135728]
-position = Vector2(100, 259)
-scale = Vector2(0.6, 0.6)
-sprite_frames = SubResource("SpriteFrames_b56yv")
-autoplay = "default"
-frame_progress = 0.6517809
-
-[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="." unique_id=445762658]
+[node name="NPC0" type="AnimatedSprite2D" parent="." unique_id=445762658]
 position = Vector2(384, 152)
 scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_ojuk6")
@@ -4836,31 +4839,72 @@ autoplay = "default"
 frame = 2
 frame_progress = 0.035340656
 
-[node name="StaticBody2D" type="StaticBody2D" parent="AnimatedSprite2D2" unique_id=1192289932]
+[node name="StaticBody2D" type="StaticBody2D" parent="NPC0" unique_id=1192289932]
 script = ExtResource("23_uxoey")
+dialogue_resource = ExtResource("23_fypgi")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatedSprite2D2/StaticBody2D" unique_id=1733983327]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC0/StaticBody2D" unique_id=1733983327]
 shape = SubResource("CapsuleShape2D_wfwfl")
 
-[node name="AnimatedSprite2D3" type="AnimatedSprite2D" parent="." unique_id=1002767302]
+[node name="NPC1" type="AnimatedSprite2D" parent="." unique_id=1904135728]
+position = Vector2(100, 259)
+scale = Vector2(0.6, 0.6)
+sprite_frames = SubResource("SpriteFrames_b56yv")
+autoplay = "default"
+frame_progress = 0.6517809
+
+[node name="StaticBody2D" type="StaticBody2D" parent="NPC1" unique_id=1313361971]
+script = ExtResource("23_uxoey")
+dialogue_resource = ExtResource("23_fypgi")
+dialogue_title = "npc1_citizen"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC1/StaticBody2D" unique_id=91751590]
+shape = SubResource("CapsuleShape2D_wfwfl")
+
+[node name="NPC2" type="AnimatedSprite2D" parent="." unique_id=1002767302]
 position = Vector2(345, 260)
 scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_lr65m")
 autoplay = "default"
 
-[node name="AnimatedSprite2D4" type="AnimatedSprite2D" parent="." unique_id=1848283813]
+[node name="StaticBody2D" type="StaticBody2D" parent="NPC2" unique_id=1903541016]
+script = ExtResource("23_uxoey")
+dialogue_resource = ExtResource("23_fypgi")
+dialogue_title = "npc2_teenage_boy"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC2/StaticBody2D" unique_id=99058917]
+shape = SubResource("CapsuleShape2D_wfwfl")
+
+[node name="NPC3" type="AnimatedSprite2D" parent="." unique_id=1848283813]
 position = Vector2(188, 294)
 scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_a0ed7")
 autoplay = "default"
 
-[node name="AnimatedSprite2D5" type="AnimatedSprite2D" parent="." unique_id=898704375]
+[node name="StaticBody2D" type="StaticBody2D" parent="NPC3" unique_id=1050195201]
+script = ExtResource("23_uxoey")
+dialogue_resource = ExtResource("23_fypgi")
+dialogue_title = "npc3_man"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC3/StaticBody2D" unique_id=1997529503]
+shape = SubResource("CapsuleShape2D_wfwfl")
+
+[node name="NPC4" type="AnimatedSprite2D" parent="." unique_id=898704375]
 position = Vector2(431, 264)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_hu63o")
 autoplay = "default"
 
+[node name="StaticBody2D" type="StaticBody2D" parent="NPC4" unique_id=1567858738]
+script = ExtResource("23_uxoey")
+dialogue_resource = ExtResource("23_fypgi")
+dialogue_title = "npc4_grand_mother"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC4/StaticBody2D" unique_id=594539268]
+shape = SubResource("CapsuleShape2D_wfwfl")
+
 [node name="UIDialogueLayer" type="CanvasLayer" parent="." unique_id=1621095449]
+visible = false
 
 [node name="SlantedDialogueBox" type="TextureRect" parent="UIDialogueLayer" unique_id=531547821]
 anchors_preset = 7
@@ -4901,3 +4945,6 @@ theme_override_font_sizes/bold_italics_font_size = 40
 theme_override_font_sizes/italics_font_size = 40
 theme_override_font_sizes/mono_font_size = 40
 text = "Raflesia"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=722986946]
+libraries/ = SubResource("AnimationLibrary_fypgi")
