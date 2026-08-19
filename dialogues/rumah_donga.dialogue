@@ -7,11 +7,35 @@ Donga: Iya, mau cari udara segar sekalian.
 
 ~ morning_part_2
 do camera_controller.focus_on("Donga")
-Donga: Iya, mau cari udara segar sekalian.
+Donga: Kamu rajin banget bangun pagi".
 do camera_controller.focus_on("Chika")
-Chika: Pas banget. Sini, sekalian beliin titipanku di pasar.
+Chika: Aku mah emang biasa, kamu tuh yang tumben.
 do camera_controller.reset_to_player()
 => END 
+
+~ morning_part_3
+do camera_controller.focus_on("Chika")
+Chika: kalau gak bangun pagi entar siapa yang masakin.
+do camera_controller.focus_on("Donga")
+Donga: Hehe, iya juga sih.
+=> END
+
+~ morning_part_5
+do camera_controller.focus_on("Chika")
+Chika: kebetulan bahan lagi abis,  ini ada belanjaan. Tolong beliin ke pasar ya.
+do camera_controller.focus_on("Donga")
+Donga: Siap, laksanakan!
+=> END
+
+
+~ morning_part_6
+do camera_controller.focus_on("Donga")
+Donga: Btw, udah mau masak ya?.
+do camera_controller.focus_on("Chika")
+Chika: Iyaaa.
+do camera_controller.reset_to_player()
+=> END 
+
 
 ~ interact_chika
 if is_list_taken == false:
@@ -23,4 +47,16 @@ if is_list_taken == false:
 	do camera_controller.reset_to_player()
 else:
 	Chika: Hati-hati di jalan ya.
+=> END
+
+~ interact_orey
+if is_list_taken == false:
+	do camera_controller.focus_on("Chika")
+	Orey: Hati-hati dijalan Pa.
+	do camera_controller.focus_on("Donga")
+	Donga: Siap, aku akan kembali dengan cepatj.
+	set is_list_taken = true
+	do camera_controller.reset_to_player()
+else:
+	Orey: Belum pergi Pa? Mama nungguin tuh.
 => END

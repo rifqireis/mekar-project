@@ -1,6 +1,7 @@
 [gd_scene format=4 uid="uid://c2g837cknk720"]
 
 [ext_resource type="Script" uid="uid://cig8lafr5iq1d" path="res://scripts/maps/maphutan.gd" id="1_5e8uq"]
+[ext_resource type="Resource" uid="uid://cp67ivdw3ldr6" path="res://dialogues/map_hutan.dialogue" id="2_lgsyk"]
 [ext_resource type="PackedScene" uid="uid://be73hmjac1rk3" path="res://scenes/entities/player.tscn" id="2_llsjw"]
 [ext_resource type="FontFile" uid="uid://ckgpk7nwhmai1" path="res://assets/fonts/Courier_Prime/CourierPrime-Regular.ttf" id="3_2sj4f"]
 [ext_resource type="Texture2D" uid="uid://bs84w7btmnu0" path="res://assets/tiles/forest/Grass_transition_02.png" id="3_fmtq5"]
@@ -13,6 +14,7 @@
 [ext_resource type="Script" uid="uid://cf6b36jd32m24" path="res://scripts/maps/encounter_trigger.gd" id="6_llsjw"]
 [ext_resource type="Shader" uid="uid://cvyy48b5gxbk7" path="res://scenes/maps/maphutan.gdshader" id="7_fe65g"]
 [ext_resource type="Texture2D" uid="uid://d4fhkyiobstpo" path="res://assets/tiles/forest/bushes/bush_02.png" id="7_fljpw"]
+[ext_resource type="FontFile" uid="uid://dk74fmgjeermg" path="res://assets/fonts/raybees/Raybees-Regular.otf" id="7_iq40y"]
 [ext_resource type="Texture2D" uid="uid://b3ytso6f8bf63" path="res://assets/ui/maphutan/donga_dialogue.png" id="7_m7ymt"]
 [ext_resource type="Texture2D" uid="uid://d0lmtt5a6fjlg" path="res://assets/tiles/forest/stones/Wall_01.png" id="7_tuifp"]
 [ext_resource type="Resource" uid="uid://bs11yvkr7lie7" path="res://resources/rafflesia.tres" id="7_xxbdk"]
@@ -25,6 +27,8 @@
 [ext_resource type="Script" uid="uid://ded1wyku4k135" path="res://scenes/maps/maphutan/raflesia_interactable.gd" id="18_ar36h"]
 [ext_resource type="PackedScene" uid="uid://b5u0sryybkoad" path="res://scenes/maps/maphutan/tutorial_ui.tscn" id="19_363pt"]
 [ext_resource type="PackedScene" uid="uid://dbu6qv5xb6tj2" path="res://scenes/maps/maphutan/wood_obstacle.tscn" id="20_v3oom"]
+[ext_resource type="AudioStream" uid="uid://p3waycmdbrsj" path="res://assets/sounds/liecio-light-rain-109591.mp3" id="28_aighs"]
+[ext_resource type="Texture2D" uid="uid://xe270lyq62qy" path="res://assets/PRESS “E” TO INTERACT.png" id="29_veceg"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_orqae"]
 texture = ExtResource("3_fmtq5")
@@ -457,10 +461,22 @@ tracks/5/keys = {
 "method": &"show_tutorial"
 }]
 }
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("AudioStreamPlayer:playing")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 1,
+"values": []
+}
 
 [sub_resource type="Animation" id="Animation_5e8uq"]
 resource_name = "investigasi"
-length = 10.0
+length = 3.0000000000000004
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -480,17 +496,17 @@ tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 2, 3),
+"times": PackedFloat32Array(0, 0.8666667, 1.4),
 "transitions": PackedFloat32Array(1, 1, 1),
 "values": [{
 "args": [],
 "method": &"change_cam_investigation"
 }, {
-"args": ["investigasi"],
-"method": &"picu_dialog"
+"args": ["investigation"],
+"method": &"trigger_dialogue"
 }, {
 "args": [],
-"method": &"selesai_investigasi"
+"method": &"release_player"
 }]
 }
 tracks/2/type = "value"
@@ -766,6 +782,7 @@ point_count = 5
 [node name="MapHutan" type="Node2D" unique_id=451014480]
 modulate = Color(0.7871086, 0.7871086, 0.7871086, 0.7871086)
 script = ExtResource("1_5e8uq")
+dialogue_resource = ExtResource("2_lgsyk")
 
 [node name="Ground" type="TileMapLayer" parent="." unique_id=1689723694]
 position = Vector2(20, 1)
@@ -782,7 +799,7 @@ tile_set = SubResource("TileSet_fmtq5")
 
 [node name="IntroCamera" type="Camera2D" parent="." unique_id=1529999600]
 position = Vector2(39, 278)
-zoom = Vector2(4, 4)
+zoom = Vector2(5, 5)
 
 [node name="Player" parent="." unique_id=414423822 instance=ExtResource("2_llsjw")]
 position = Vector2(-94, 7)
@@ -831,9 +848,10 @@ script = ExtResource("5_pwvdq")
 [node name="LogText" type="RichTextLabel" parent="UIDialogueLayer/SlantedDialogueBox" unique_id=1589032995]
 layout_mode = 0
 offset_left = 207.0
-offset_top = 181.0
+offset_top = 196.0
 offset_right = 1582.0
-offset_bottom = 319.3333
+offset_bottom = 334.3333
+theme_override_fonts/normal_font = ExtResource("7_iq40y")
 theme_override_font_sizes/normal_font_size = 40
 theme_override_font_sizes/bold_font_size = 40
 theme_override_font_sizes/bold_italics_font_size = 40
@@ -844,9 +862,10 @@ text = "Lorem Ipsum Dolor Amet"
 [node name="LogName" type="RichTextLabel" parent="UIDialogueLayer/SlantedDialogueBox" unique_id=731386602]
 layout_mode = 0
 offset_left = 414.0
-offset_top = 53.0
+offset_top = 65.0
 offset_right = 587.0
-offset_bottom = 120.0
+offset_bottom = 132.0
+theme_override_fonts/normal_font = ExtResource("7_iq40y")
 theme_override_font_sizes/normal_font_size = 40
 theme_override_font_sizes/bold_font_size = 40
 theme_override_font_sizes/bold_italics_font_size = 40
@@ -897,6 +916,7 @@ mouse_filter = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=523230879]
 libraries/ = SubResource("AnimationLibrary_pwvdq")
+autoplay = &"autoload_animation"
 next/autoload_animation = &"intro_sequence"
 
 [node name="TileMap" type="TileMap" parent="." unique_id=1024594798]
@@ -1133,7 +1153,7 @@ scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
 [node name="Sprite2D21" type="Sprite2D" parent="TileMap/Pohon1/Area2D5" unique_id=331817768]
-position = Vector2(151.34212, -142.34344)
+position = Vector2(226.60416, -72.80786)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
@@ -2126,6 +2146,28 @@ rotates = false
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="ObservationPath/PlayerFollow" unique_id=1238733457]
 update_rotation = false
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="." unique_id=1208834818]
+position = Vector2(574, -117)
+scale = Vector2(-880.28, 50)
+amount = 250
+lifetime = 2.0
+emission_shape = 3
+emission_rect_extents = Vector2(1, 1)
+scale_amount_min = 5.0
+scale_amount_max = 5.0
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=2080269485]
+stream = ExtResource("28_aighs")
+autoplay = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1905900684]
+z_index = 3
+position = Vector2(630, 4)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("29_veceg")
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="." unique_id=1752537613]
 
 [connection signal="dialogue_finished" from="UIDialogueLayer/SlantedDialogueBox" to="." method="_on_slanted_dialogue_box_dialogue_finished"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

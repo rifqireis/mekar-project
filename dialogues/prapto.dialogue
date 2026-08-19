@@ -21,9 +21,9 @@ Pemuda: Ssst... Kamu tahu gak? Vending machine di dekat ruko itu suka ngeluarin 
 Donga: Mending jangan bikin rumor aneh-aneh deh...
 => END
 
-~ npc3_man
-Bapak: Aduh, kaki tua bapak pegal-pegal habis jalan dari ujung ruko.
-Bapak: Anak muda, luangkan waktu buat istirahat ya, jangan kerja terus.
+~ npc3_busy_man
+Freelancer: Hey, aku tidak punya waktu untuk berbicara.
+Freelancer: Kamu tahu berapa banyak yang dapat kuhasilkan dengan tidak berbicara dengan orang sepertimu.
 => END
 
 ~ npc4_grand_mother
@@ -34,7 +34,7 @@ Nenek: Anak rajin, sehat-sehat selalu ya nak.
 ~ phone_call
 Donga: (Kringgg... Kringgg... Suara HP Donga berbunyi)
 Donga: Halo? Ada apa?
-Voice: Donga! Ini darurat. Kami butuh bantuanmu di Hutan Larangan Bab 2!
-Voice: Monster-monster kembali mengamuk dan membahayakan warga.
-Donga: Baik, aku langsung meluncur ke sana sekarang!
+Bossman: Aku membutuhkanmu sekarang.
+Bossman: Misi baru untukmu, kembali ke hutan di.....
+Donga: Baiklah, aku akan segera kesana.
 => END

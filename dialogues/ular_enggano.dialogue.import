@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://d2prdbkdd0scv"
+path="res://.godot/imported/ular_enggano.dialogue-b0b0ae05d8271008b32e3dbf858d7d19.tres"
+
+[deps]
+
+source_file="res://dialogues/ular_enggano.dialogue"
+dest_files=["res://.godot/imported/ular_enggano.dialogue-b0b0ae05d8271008b32e3dbf858d7d19.tres"]
+
+[params]
+
+defaults=true

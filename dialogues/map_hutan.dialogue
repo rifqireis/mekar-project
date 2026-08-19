@@ -1,0 +1,33 @@
+~ landing
+Donga: Arnoldos.. Mutasi Raflesia.
+Donga: Kalau lancar, aku besok udah bisa pulang ke-rumah. Orey pasti nanya lagi soal luka di lenganku yang kemarin.
+Donga: Aduduh, Fokus dulu, pokoknya ini harus cepat selesai.
+=> END
+
+~ wood_obstacle
+Donga: Kayu ini menghalangi jalan. Aku harus menyingkirkannya.
+Donga: Ugh... lumayan berat juga.
+=> END
+
+~ pre_rafflesia
+Donga: Itu dia. Suspect 18.
+Donga: Ukurannya jauh lebih masif dari laporan awal. Aku harus memeriksanya lebih dekat.
+=> END
+
+~ investigation
+Donga: Bukan sisa perkelahian. Ini ditandain.
+Donga: Dan lebih besar dari yang tertulis di laporan.
+=> END
+
+~ confrontation
+Donga: Target teridentifikasi.
+do change_cam_rafflesia()
+Arnoldios: Kalian cabut akarku dari tanah ini. Kalian bakar rumahku buat batu dan besi. Sekarang kalian masih berdiri di sisa-sisanya.
+=> END
+
+~ pre_battle
+do change_cam_player()
+Donga: K...KAU BISA BICARA!!
+do change_cam_rafflesia()
+Arnoldios: MANUSIA, AKAN KUBINASAKAN KALIAN!!.
+=> END

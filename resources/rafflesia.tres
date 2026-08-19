@@ -1,19 +1,12 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://bs11yvkr7lie7"]
 
-[ext_resource type="PackedScene" uid="uid://cnsgh1ciy4vk5" path="res://scenes/minigames/minigame_dodge/scenes/attack_projectile.tscn" id="1_6jchr"]
-[ext_resource type="PackedScene" uid="uid://d1geipx7l7mdk" path="res://scenes/minigames/minigame_dodge/scenes/patterns/pattern_spore_wind.tscn" id="2_5ak5w"]
+[ext_resource type="PackedScene" uid="uid://bcblm84u3b2vl" path="res://scenes/minigames/minigame_dodge/scenes/patterns/pattern_arnoldos_attack.tscn" id="1_5mj4j"]
+[ext_resource type="Resource" uid="uid://c57g1fr3sfc0j" path="res://dialogues/battle_ui.dialogue" id="2_6jchr"]
 [ext_resource type="Script" uid="uid://clh8s6xa7ml8y" path="res://resources/enemy_data.gd" id="3_tcic1"]
 
 [resource]
 script = ExtResource("3_tcic1")
 enemy_name = "Rafflesia"
-intro_text = "* Raflesia Arnoldi muncul menghalangi jalan!"
-turn_text = "* Raflesia Arnoldi bersiap menyerang..."
-normal_patterns = Array[PackedScene]([ExtResource("2_5ak5w")])
-suppress_1_log = "* Donga melakakukan serangan"
-suppress_2_log = "* Donga Memukul berat"
-suppress_3_log = "* Donga mencoba menangkap"
-minigame_duration = 10.0
-basic_attack_scene = ExtResource("1_6jchr")
-special_attack_scene = ExtResource("1_6jchr")
+dialogue_resource = ExtResource("2_6jchr")
+normal_patterns = Array[PackedScene]([ExtResource("1_5mj4j")])
 metadata/_custom_type_script = "uid://clh8s6xa7ml8y"

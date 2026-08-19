@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://byt6s57ycts6"
+path="res://.godot/imported/Retro Low.mp3-6ff7c34b65171363f3190191cd6ddd32.mp3str"
+
+[deps]
+
+source_file="res://assets/sfx/Dialogue Sfx AmbroggioMusic/Retro Low.mp3"
+dest_files=["res://.godot/imported/Retro Low.mp3-6ff7c34b65171363f3190191cd6ddd32.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

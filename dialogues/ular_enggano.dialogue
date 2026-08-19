@@ -1,0 +1,117 @@
+~ intro
+Ular Enggano: Ssshh... tanah ini bergetar... siapa yang berani melangkah masuk wilayah sarangku?! [wait=5.0]
+DONGA: Ular ini sepertinya terpengaruh aura kegelapan hutan. [wait=3.5]
+=> END
+
+~ tree_enrage_intro
+Ular Enggano: SSSSHHH!! Seranganmu cuma bikin bisaku makin mendidih! [wait=3.0]
+DONGA: Sisiknya mengeras! Serangan fisik biasa nggak akan mempan lagi. Aku harus coba menenangkannya (Engage)! [wait=4.5]
+=> END
+
+~ tree_angry_turn
+Ular Enggano: Rasakan lilitan yang mencekik dari segala arah! [wait=2.5]
+=> END
+
+~ enemy_turn
+Ular Enggano: Tubuhnya mulai melata, merayap pelan dari balik semak... [wait=3.0]
+=> END
+
+~ defeat_by_hp
+Ular Enggano: SSSHHH... tubuhnya akhirnya melemas tak berdaya... [wait=3.0]
+=> END
+
+~ defeat_by_trust
+Ular Enggano: Kehangatan suaramu... meredakan desis kegelisahan dalam diriku... [wait=3.5]
+=> END
+
+~ defeat_by_stability
+Ular Enggano: Keseimbangan alam di sekitar sarang ini telah dipulihkan. [wait=3.0]
+=> END
+
+~ battle_finished_default
+Ular Enggano: Perlahan sosoknya menghilang, meresap kembali ke dalam bayang hutan. [wait=3.5]
+=> END
+
+~ suppress_1
+DONGA: Kamu menebas cepat ke arah tubuhnya yang melata! [wait=2.5]
+=> END
+
+~ suppress_2
+DONGA: Kamu menghantam keras bagian kepala ular itu! [wait=2.5]
+=> END
+
+~ capture_not_ready
+DONGA: Energinya masih terlalu liar untuk dinetralkan sekarang! [wait=3.0]
+=> END
+
+~ attack_miss
+DONGA: Seranganmu meleset, ularnya keburu menghindar! [wait=2.0]
+=> END
+
+~ enemy_damage_hit
+DONGA: Donga kena sabetan ekornya yang tajam! [wait=2.0]
+=> END
+
+~ enemy_damage_dodge
+DONGA: Donga berhasil berkelit dari lilitan mautnya! [wait=2.5]
+=> END
+
+~ observe_species
+DONGA: [AMATI SPESIES] Ular Enggano, penjaga tersembunyi dari kedalaman rimba Sumatera. [wait=4.0]
+=> END
+
+~ observe_status
+DONGA: [AMATI STATUS] Desisannya semakin keras, menunjukkan reaksi pertahanan diri yang agresif. [wait=4.0]
+=> END
+
+~ observe_cause
+DONGA: [AMATI PENYEBAB] Energi anomali mengganggu sarangnya, membuatnya mengira kita adalah ancaman. [wait=4.5]
+=> END
+
+~ observe_unlocked_info
+DONGA: Kamu telah memahami sifat Ular Enggano! Pilihan tindakan (Engage) kini terbuka. [wait=4.0]
+=> END
+
+~ observe_insufficient
+DONGA: Kamu belum cukup mengamati kebiasaan musuh ini. Lakukan Observe terlebih dahulu! [wait=3.5]
+=> END
+
+~ engage_choice_a
+DONGA: Kamu membungkuk hormat dan berbicara dengan nada yang tenang. [wait=3.0]
+Ular Enggano: Desisannya melembut, kemarahannya sedikit mereda. [wait=3.0]
+=> END
+
+~ engage_choice_b
+DONGA: Kamu berteriak menantang kekuatannya! [wait=2.0]
+Ular Enggano: Desisannya semakin menggelegar, siap menyerang! [wait=2.5]
+=> END
+
+~ engage_choice_c
+DONGA: Kamu mempersembahkan embun jernih ke tanah dekat sarangnya. [wait=3.0]
+Ular Enggano: Gerakannya melambat, menyerap ketulusan niatmu. [wait=3.0]
+=> END
+
+~ engage_choice_d
+DONGA: Kamu melangkah mundur tanpa mengucapkan sepatah kata pun. [wait=3.0]
+Ular Enggano: Ia tetap bersiaga, matanya mengawasi setiap gerak-gerikmu. [wait=3.0]
+=> END
+
+~ adapt_water
+DONGA: Kamu mengalirkan air jernih ke sekitar sarangnya. [wait=2.5]
+=> END
+
+~ adapt_plant
+DONGA: Kamu menanam benih pendamping di dekat sarangnya. [wait=2.5]
+=> END
+
+~ adapt_path
+DONGA: Kamu membersihkan semak belukar yang menyumbat jalur sarangnya. [wait=3.0]
+=> END
+
+~ adapt_trap
+DONGA: Kamu menetralkan energi korupsi yang menempel di tubuhnya. [wait=3.0]
+=> END
+
+~ item_ramuan_akar
+DONGA: Kamu meminum ramuan akar herbal, memulihkan 30 HP! [wait=2.5]
+=> END

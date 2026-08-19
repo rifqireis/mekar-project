@@ -23,7 +23,7 @@ func _input(event: InputEvent) -> void:
 		   event.is_action_pressed("walk_down") or \
 		   event.is_action_pressed("walk_left") or \
 		   event.is_action_pressed("walk_right") or \
-		   event.is_action_pressed("interact_action"):
+		   event.is_action_pressed("interact"):
 			
 			is_active = false
 			anim_player.play("fade_out")

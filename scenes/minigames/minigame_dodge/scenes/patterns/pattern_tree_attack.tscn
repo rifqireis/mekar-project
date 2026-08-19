@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://grj5nwkpdubs"]
+
+[ext_resource type="Script" uid="uid://cpm2po4nkd23v" path="res://scenes/minigames/minigame_dodge/scenes/patterns/pattern_tree_attack.gd" id="1_smc1q"]
+[ext_resource type="PackedScene" uid="uid://cy80h6olw78wq" path="res://scenes/minigames/minigame_dodge/scenes/patterns/root_hazard.tscn" id="2_jxtkq"]
+
+[sub_resource type="Animation" id="Animation_homkt"]
+resource_name = "attack_sequence"
+length = 11.0
+step = 0.1
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(1.1, 2.6, 4, 5.5, 7, 8.5, 10, 11),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"values": [{
+"args": ["1", 2.0, 3.0],
+"method": &"spawn_telegraph_root"
+}, {
+"args": ["4", 2.0, 3.0],
+"method": &"spawn_telegraph_root"
+}, {
+"args": ["2", 2.0, 3.0],
+"method": &"spawn_telegraph_root"
+}, {
+"args": ["1", 2.0, 3.0],
+"method": &"spawn_telegraph_root"
+}, {
+"args": ["3", 2.0, 3.0],
+"method": &"spawn_telegraph_root"
+}, {
+"args": ["2", 2.0, 3.0],
+"method": &"spawn_telegraph_root"
+}, {
+"args": ["4", 2.0, 3.0],
+"method": &"spawn_telegraph_root"
+}, {
+"args": [],
+"method": &"finish_pattern"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_u7gh3"]
+_data = {
+&"attack_sequence": SubResource("Animation_homkt")
+}
+
+[node name="PatternTreeAttack" type="Node2D" unique_id=1920425016]
+script = ExtResource("1_smc1q")
+root_hazard_scene = ExtResource("2_jxtkq")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=878816026]
+libraries/ = SubResource("AnimationLibrary_u7gh3")
+autoplay = &"attack_sequence"
+
+[node name="Spawners" type="Node2D" parent="." unique_id=1380322320]
+
+[node name="1" type="Marker2D" parent="Spawners" unique_id=203382873]
+position = Vector2(56, 256)
+
+[node name="2" type="Marker2D" parent="Spawners" unique_id=1209050229]
+position = Vector2(176, 0)
+
+[node name="3" type="Marker2D" parent="Spawners" unique_id=1651709221]
+position = Vector2(448, 280)
+
+[node name="4" type="Marker2D" parent="Spawners" unique_id=442556332]
+position = Vector2(232, 400)
+
+[node name="ReferenceRect" type="ReferenceRect" parent="." unique_id=1357544177]
+offset_right = 500.0
+offset_bottom = 500.0
+border_color = Color(0.47971916, 0.47971892, 2.8878452e-07, 1)
+border_width = 5.0

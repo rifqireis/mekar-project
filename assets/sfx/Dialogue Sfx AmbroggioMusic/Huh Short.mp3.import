@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dlwhi327ut86a"
+path="res://.godot/imported/Huh Short.mp3-2903a525feb8e3ec9feff6ee093d7f61.mp3str"
+
+[deps]
+
+source_file="res://assets/sfx/Dialogue Sfx AmbroggioMusic/Huh Short.mp3"
+dest_files=["res://.godot/imported/Huh Short.mp3-2903a525feb8e3ec9feff6ee093d7f61.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

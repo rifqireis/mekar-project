@@ -1,6 +1,6 @@
 extends CanvasLayer
 ## A basic dialogue balloon for use with Dialogue Manager.
-
+@export var portraits: Dictionary[String, Texture2D] = {}
 
 ## The dialogue resource
 @export var dialogue_resource: DialogueResource
@@ -74,7 +74,9 @@ var mutation_cooldown: Timer = Timer.new()
 func _ready() -> void:
 	balloon.hide()
 	Engine.get_singleton("DialogueManager").mutated.connect(_on_mutated)
-
+	
+	if dialogue_label:
+		dialogue_label.spoke.connect(_on_dialogue_label_spoke)
 	# If the responses menu doesn't have a next action set, use this one
 	if responses_menu.next_action.is_empty():
 		responses_menu.next_action = next_action
@@ -132,6 +134,9 @@ func apply_dialogue_line() -> void:
 
 	character_label.visible = not dialogue_line.character.is_empty()
 	character_label.text = tr(dialogue_line.character, "dialogue")
+
+## MY CUSTOM
+	update_portrait(dialogue_line.character)
 
 	dialogue_label.hide()
 	dialogue_label.dialogue_line = dialogue_line
@@ -215,3 +220,30 @@ func _on_responses_menu_response_selected(response: DialogueResponse) -> void:
 
 
 #endregion
+
+func update_portrait(character_name: String) -> void:
+	for child in balloon.get_children():
+		if child is TextureRect or child is Sprite2D:
+			if child.name.to_lower() == character_name.to_lower():
+				child.show()
+			elif child.name not in ["SlantedDialogueBox", "Background"]: 
+				child.hide()
+
+	if has_node("%Portrait"):
+		var portrait_node = %Portrait as TextureRect
+		if portraits.has(character_name):
+			portrait_node.texture = portraits[character_name]
+			portrait_node.show()
+		elif character_name.is_empty():
+			portrait_node.hide()
+
+
+func _on_dialogue_label_spoke(letter: String, letter_index: int, _speed: float) -> void:
+	# Abaikan spasi dan enter
+	if letter == " " or letter == "\n" or letter == "\t":
+		return
+
+	# Bunyikan suara setiap 2 huruf (ubah angka 2 sesuai selera kecepatan)
+	if letter_index % 2 == 0 and audio_stream_player.stream:
+		audio_stream_player.pitch_scale = randf_range(0.95, 1.05) # Variasi nada acak
+		audio_stream_player.play()

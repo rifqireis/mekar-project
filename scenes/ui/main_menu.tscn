@@ -14,6 +14,8 @@
 [ext_resource type="Texture2D" uid="uid://cdyw316sadkjm" path="res://assets/ui/main_menu/exit_hover.png" id="10_qilvv"]
 [ext_resource type="Texture2D" uid="uid://dnuoes4421322" path="res://assets/ui/main_menu/play.png" id="11_jbte4"]
 [ext_resource type="Texture2D" uid="uid://cplrnf4v8a6hl" path="res://assets/ui/main_menu/play_hover.png" id="12_e0hcc"]
+[ext_resource type="AudioStream" uid="uid://c3y3rld3pcuf8" path="res://assets/sounds/A Strange Night.mp3" id="15_877pj"]
+[ext_resource type="Animation" uid="uid://bpbkoc4kjh74" path="res://animation/autoload_animation.res" id="15_ayp64"]
 
 [sub_resource type="Animation" id="Animation_8ekit"]
 length = 0.001
@@ -66,22 +68,6 @@ tracks/3/keys = {
 "values": [Color(1, 1, 1, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_ayp64"]
-resource_name = "autoload_animation"
-length = 0.25
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ColorRect:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.25),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
-}
-
 [sub_resource type="Animation" id="Animation_877pj"]
 resource_name = "grid_loop"
 length = 20.0
@@ -129,7 +115,7 @@ tracks/1/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_877pj"]
 _data = {
 &"RESET": SubResource("Animation_8ekit"),
-&"autoload_animation": SubResource("Animation_ayp64"),
+&"autoload_animation": ExtResource("15_ayp64"),
 &"grid_loop": SubResource("Animation_877pj"),
 &"sword_animation": SubResource("Animation_n4uci")
 }
@@ -237,6 +223,11 @@ texture_focused = ExtResource("12_e0hcc")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=936699934]
 libraries/ = SubResource("AnimationLibrary_877pj")
+autoplay = &"grid_loop"
+next/autoload_animation = &"sword_animation"
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="." unique_id=1935235912]
+libraries/ = SubResource("AnimationLibrary_877pj")
 autoplay = &"autoload_animation"
 next/autoload_animation = &"sword_animation"
 
@@ -257,6 +248,10 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1247382333]
+stream = ExtResource("15_877pj")
+autoplay = true
 
 [connection signal="gui_input" from="RightPanel" to="." method="_on_right_panel_gui_input"]
 [connection signal="mouse_entered" from="AboutDevButton" to="." method="_on_about_dev_button_mouse_entered"]

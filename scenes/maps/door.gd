@@ -10,5 +10,5 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	pass
 
-func _interact(_initiator: CharacterBody2D = null) -> void:
-	get_tree().change_scene_to_file("res://scenes/maps/Prapto.tscn")
+func interact(_initiator: CharacterBody2D = null) -> void:
+	SceneTransition.change_scene("res://scenes/maps/Prapto.tscn")

@@ -7,9 +7,12 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+#func _process(delta: float) -> void:
+	#pass
 
 
-func _on_animation_player_animation_finished(anim_name: StringName) -> void:
-	get_tree().change_scene_to_file("res://scenes/maps/maphutan.tscn")
+#func _on_animation_player_animation_finished(anim_name: StringName) -> void:
+	#get_tree().change_scene_to_file("res://scenes/maps/maphutan.tscn")
+
+func change_scene() -> void:
+	SceneTransition.change_scene("res://scenes/maps/maphutan.tscn")

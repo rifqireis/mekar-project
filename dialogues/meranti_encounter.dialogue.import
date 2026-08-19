@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://ghu42gcrj3d2"
+path="res://.godot/imported/meranti_encounter.dialogue-386bc19d31a6b9be9d15aaef91c06719.tres"
+
+[deps]
+
+source_file="res://dialogues/meranti_encounter.dialogue"
+dest_files=["res://.godot/imported/meranti_encounter.dialogue-386bc19d31a6b9be9d15aaef91c06719.tres"]
+
+[params]
+
+defaults=true

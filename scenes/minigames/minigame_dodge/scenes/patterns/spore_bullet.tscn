@@ -2,14 +2,26 @@
 
 [ext_resource type="Texture2D" uid="uid://er0hhgbdkydb" path="res://assets/ui/battle/enemy_attack/icon.svg" id="1_8asc5"]
 [ext_resource type="Script" uid="uid://d1ip5jac61cub" path="res://scenes/minigames/minigame_dodge/scripts/patterns/spore_bullet.gd" id="1_nbenw"]
+[ext_resource type="Shader" uid="uid://c6nw1ewm5oxfu" path="res://scenes/minigames/minigame_dodge/scenes/patterns/spore_bullet.gdshader" id="2_r6pdl"]
+
+[sub_resource type="Curve" id="Curve_knf1m"]
+_data = [Vector2(0, 0.26966298), 0.0, 0.0, 0, 0, Vector2(1e-05, 0.24719107), 0.0, 0.0, 0, 0, Vector2(0.5, 0.44943827), 0.0, 0.0, 0, 0, Vector2(1, 0.75280905), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qn3y1"]
+shader = ExtResource("2_r6pdl")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cxf33"]
 radius = 12.369317
 
 [node name="SporeBullet" type="Area2D" unique_id=706408697]
+scale = Vector2(2, 2)
 script = ExtResource("1_nbenw")
+base_speed = 5000.0
+speed_curve = SubResource("Curve_knf1m")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1306197754]
+material = SubResource("ShaderMaterial_qn3y1")
 scale = Vector2(0.015, 0.015)
 texture = ExtResource("1_8asc5")
 

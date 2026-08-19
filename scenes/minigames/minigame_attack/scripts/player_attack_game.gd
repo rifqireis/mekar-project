@@ -6,10 +6,13 @@ signal minigame_finished(damage_multiplier: float)
 @export_group("Pengaturan Tingkat Kesulitan")
 @export var base_cursor_speed: float = 500.0
 
-@onready var background: ColorRect = $Background
-@onready var target_zone: ColorRect = $TargetZone
-@onready var cursor: ColorRect = $Cursor
+@onready var background: Panel = $Background
+@onready var target_zone: ColorRect = $Background/TargetZone
+@onready var cursor: Panel = $Background/Cursor
 
+@onready var tutorial_animation: AnimationPlayer = $TutorialAnimation
+
+			
 var is_playing: bool = false
 var current_speed: float = 0.0
 
@@ -65,11 +68,9 @@ func _finish_minigame(is_timeout: bool) -> void:
 	var multiplier: float = 0.0
 	
 	if not is_timeout:
-		# Hitung titik tengah kursor saat tombol ditekan
 		var cursor_center_x: float = cursor.position.x + (cursor.size.x / 2.0)
 		var distance: float = absf(cursor_center_x - target_center_x)
 		
-		# Jika kursor berhenti di dalam area kotak merah
 		if distance <= target_half_width:
 			var accuracy_ratio: float = 1.0 - (distance / target_half_width)
 			multiplier = lerpf(0.5, 1.0, accuracy_ratio)
@@ -78,3 +79,15 @@ func _finish_minigame(is_timeout: bool) -> void:
 			
 	hide()
 	minigame_finished.emit(multiplier)
+
+func play_tutorial() -> void:
+	if tutorial_animation and tutorial_animation.has_animation("tutorial_attack"):
+		tutorial_animation.play("tutorial_attack")
+	
+	while true:
+		await get_tree().process_frame
+		if Input.is_key_pressed(KEY_SPACE) or Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("interact"):
+			break
+			
+	if tutorial_animation and tutorial_animation.is_playing():
+		tutorial_animation.stop()

@@ -1,6 +1,7 @@
 [gd_scene format=4 uid="uid://irowy1ja037u"]
 
 [ext_resource type="PackedScene" uid="uid://be73hmjac1rk3" path="res://scenes/entities/player.tscn" id="1_6aoqt"]
+[ext_resource type="Script" uid="uid://su6e8eiik7oy" path="res://scenes/maps/maphutan_bab_2.gd" id="1_20531"]
 [ext_resource type="Texture2D" uid="uid://bs84w7btmnu0" path="res://assets/tiles/forest/Grass_transition_02.png" id="2_5e083"]
 [ext_resource type="Texture2D" uid="uid://wkf2fdg8qm6m" path="res://assets/tiles/home/livingroom_LRK.png" id="3_piggw"]
 [ext_resource type="Texture2D" uid="uid://d3ey6m3ms6om3" path="res://assets/tiles/fantasy_world/walls/walls.png" id="3_v1oeg"]
@@ -8,6 +9,16 @@
 [ext_resource type="Texture2D" uid="uid://dr2msafrbsphy" path="res://assets/tiles/forest/Tree_1.png" id="4_kxjp4"]
 [ext_resource type="Texture2D" uid="uid://ciijh7ryh75kh" path="res://assets/sprites/G'Hearld 1.png" id="7_aunlr"]
 [ext_resource type="Script" uid="uid://c3uvte50o1e4" path="res://scenes/maps/g'hearld_body.gd" id="7_hj46p"]
+[ext_resource type="Texture2D" uid="uid://6ej1p7j1ns2o" path="res://assets/sprites/Meranti(Biasa).png" id="9_pps4a"]
+[ext_resource type="Texture2D" uid="uid://bcxpn32dx7tmg" path="res://assets/sprites/Meranti(Marah).png" id="10_uwhn5"]
+[ext_resource type="Texture2D" uid="uid://dc7pcm1ylbo4l" path="res://assets/sprites/Ular.png" id="11_ne5qy"]
+[ext_resource type="Script" uid="uid://ddxtlauv0pk37" path="res://scenes/maps/ular_enggano.gd" id="11_uwhn5"]
+[ext_resource type="Resource" uid="uid://bsyxayx7omqi4" path="res://resources/ular_enggano.tres" id="12_ne5qy"]
+[ext_resource type="Script" uid="uid://bo18183tb2yxm" path="res://scenes/maps/meranti.gd" id="12_tg37o"]
+[ext_resource type="Resource" uid="uid://dsrekdk05vcft" path="res://resources/pohon_meranti.tres" id="13_daf2d"]
+[ext_resource type="Script" uid="uid://b2ur2aq2y6n1r" path="res://scripts/maps/wood_obstacle5.gd" id="17_xs2nl"]
+[ext_resource type="Resource" uid="uid://dvlvknpcunafs" path="res://dialogues/wood_obstacle.dialogue" id="18_6kdme"]
+[ext_resource type="Texture2D" uid="uid://ditg16ul48xcv" path="res://assets/ui/maphutan/wood.png" id="18_xs2nl"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pyx6f"]
 texture = ExtResource("2_5e083")
@@ -440,7 +451,131 @@ _data = {
 }
 point_count = 2
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_6suxt"]
+atlas = ExtResource("11_ne5qy")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o2ktc"]
+atlas = ExtResource("11_ne5qy")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p7kfg"]
+atlas = ExtResource("11_ne5qy")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_auuog"]
+atlas = ExtResource("11_ne5qy")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jiqn8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6suxt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o2ktc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p7kfg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_auuog")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pps4a"]
+radius = 18.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tg37o"]
+atlas = ExtResource("9_pps4a")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_daf2d"]
+atlas = ExtResource("9_pps4a")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t7hs1"]
+atlas = ExtResource("9_pps4a")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_20531"]
+atlas = ExtResource("9_pps4a")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_3t3a8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tg37o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_daf2d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t7hs1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_20531")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 4.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xs2nl"]
+atlas = ExtResource("10_uwhn5")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6kdme"]
+atlas = ExtResource("10_uwhn5")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w4js7"]
+atlas = ExtResource("10_uwhn5")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_esbow"]
+atlas = ExtResource("10_uwhn5")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jrvam"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xs2nl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6kdme")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w4js7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_esbow")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cxf33"]
+size = Vector2(244.5, 407)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_daf2d"]
+size = Vector2(806, 207)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t7hs1"]
+size = Vector2(283.25, 161.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6kdme"]
+size = Vector2(147, 41)
+
 [node name="Node2D" type="Node2D" unique_id=835398352]
+script = ExtResource("1_20531")
 
 [node name="Player" parent="." unique_id=414423822 instance=ExtResource("1_6aoqt")]
 z_index = 1
@@ -468,43 +603,103 @@ z_index = 2
 position = Vector2(1, 0)
 
 [node name="Tree1" type="Sprite2D" parent="Area2D" unique_id=981294621]
-position = Vector2(107, 109)
+position = Vector2(106, 58)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree2" type="Sprite2D" parent="Area2D" unique_id=1142983503]
-position = Vector2(164, 106)
+position = Vector2(163, 55)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree3" type="Sprite2D" parent="Area2D" unique_id=1575834242]
-position = Vector2(235, 107)
+position = Vector2(234, 56)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree4" type="Sprite2D" parent="Area2D" unique_id=568842030]
-position = Vector2(296, 103)
+position = Vector2(295, 52)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree5" type="Sprite2D" parent="Area2D" unique_id=1590441467]
-position = Vector2(357, 87)
+position = Vector2(356, 36)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree11" type="Sprite2D" parent="Area2D" unique_id=867758782]
-position = Vector2(430, 15)
+position = Vector2(434, -69)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree12" type="Sprite2D" parent="Area2D" unique_id=1204553023]
-position = Vector2(487, 12)
+position = Vector2(491, -72)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree13" type="Sprite2D" parent="Area2D" unique_id=1427726362]
-position = Vector2(558, 13)
+position = Vector2(562, -71)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree14" type="Sprite2D" parent="Area2D" unique_id=1263785051]
-position = Vector2(619, 9)
+position = Vector2(623, -75)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree15" type="Sprite2D" parent="Area2D" unique_id=101046476]
-position = Vector2(675, 12)
+position = Vector2(679, -72)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree104" type="Sprite2D" parent="Area2D" unique_id=1555147146]
+position = Vector2(436, -35)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree105" type="Sprite2D" parent="Area2D" unique_id=1217566037]
+position = Vector2(493, -38)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree106" type="Sprite2D" parent="Area2D" unique_id=426398929]
+position = Vector2(564, -37)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree107" type="Sprite2D" parent="Area2D" unique_id=448598297]
+position = Vector2(625, -41)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree108" type="Sprite2D" parent="Area2D" unique_id=1979309222]
+position = Vector2(681, -38)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree109" type="Sprite2D" parent="Area2D" unique_id=1901412220]
+position = Vector2(431, -10)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree110" type="Sprite2D" parent="Area2D" unique_id=1389352132]
+position = Vector2(488, -13)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree111" type="Sprite2D" parent="Area2D" unique_id=1449388450]
+position = Vector2(559, -12)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree112" type="Sprite2D" parent="Area2D" unique_id=2118336358]
+position = Vector2(620, -16)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree113" type="Sprite2D" parent="Area2D" unique_id=1055839172]
+position = Vector2(676, -13)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree114" type="Sprite2D" parent="Area2D" unique_id=1539850835]
+position = Vector2(435, 14)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree115" type="Sprite2D" parent="Area2D" unique_id=1320209619]
+position = Vector2(492, 11)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree116" type="Sprite2D" parent="Area2D" unique_id=881896773]
+position = Vector2(563, 12)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree117" type="Sprite2D" parent="Area2D" unique_id=1894707048]
+position = Vector2(624, 8)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree118" type="Sprite2D" parent="Area2D" unique_id=685330493]
+position = Vector2(680, 11)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree16" type="Sprite2D" parent="Area2D" unique_id=53423882]
@@ -540,23 +735,103 @@ position = Vector2(731, 253)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree6" type="Sprite2D" parent="Area2D" unique_id=1190679783]
-position = Vector2(102, 197)
+position = Vector2(115, 95)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree7" type="Sprite2D" parent="Area2D" unique_id=57117693]
-position = Vector2(159, 191)
+position = Vector2(172, 89)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree8" type="Sprite2D" parent="Area2D" unique_id=622783732]
-position = Vector2(223, 189)
+position = Vector2(236, 87)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree9" type="Sprite2D" parent="Area2D" unique_id=834907547]
-position = Vector2(295, 192)
+position = Vector2(308, 90)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree10" type="Sprite2D" parent="Area2D" unique_id=20440492]
-position = Vector2(350, 198)
+position = Vector2(363, 96)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree119" type="Sprite2D" parent="Area2D" unique_id=2071037566]
+position = Vector2(111, 142)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree120" type="Sprite2D" parent="Area2D" unique_id=1548353412]
+position = Vector2(168, 136)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree121" type="Sprite2D" parent="Area2D" unique_id=910313694]
+position = Vector2(232, 134)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree122" type="Sprite2D" parent="Area2D" unique_id=2008702622]
+position = Vector2(304, 137)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree123" type="Sprite2D" parent="Area2D" unique_id=1152206213]
+position = Vector2(359, 143)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree124" type="Sprite2D" parent="Area2D" unique_id=796983130]
+position = Vector2(111, 142)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree125" type="Sprite2D" parent="Area2D" unique_id=1404324798]
+position = Vector2(168, 136)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree126" type="Sprite2D" parent="Area2D" unique_id=1977617572]
+position = Vector2(232, 134)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree127" type="Sprite2D" parent="Area2D" unique_id=124739878]
+position = Vector2(304, 137)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree128" type="Sprite2D" parent="Area2D" unique_id=2079397926]
+position = Vector2(359, 143)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree129" type="Sprite2D" parent="Area2D" unique_id=281449069]
+position = Vector2(109, 177)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree130" type="Sprite2D" parent="Area2D" unique_id=116246470]
+position = Vector2(166, 171)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree131" type="Sprite2D" parent="Area2D" unique_id=823642548]
+position = Vector2(230, 169)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree132" type="Sprite2D" parent="Area2D" unique_id=271893901]
+position = Vector2(302, 172)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree133" type="Sprite2D" parent="Area2D" unique_id=510438507]
+position = Vector2(357, 178)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree134" type="Sprite2D" parent="Area2D" unique_id=1757257855]
+position = Vector2(112, 211)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree135" type="Sprite2D" parent="Area2D" unique_id=1569080456]
+position = Vector2(169, 205)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree136" type="Sprite2D" parent="Area2D" unique_id=912814791]
+position = Vector2(233, 203)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree137" type="Sprite2D" parent="Area2D" unique_id=1214563754]
+position = Vector2(305, 206)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree138" type="Sprite2D" parent="Area2D" unique_id=1363293999]
+position = Vector2(360, 212)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree24" type="Sprite2D" parent="Area2D" unique_id=1651324903]
@@ -600,23 +875,63 @@ position = Vector2(714, 329)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree34" type="Sprite2D" parent="Area2D" unique_id=73866648]
-position = Vector2(821, 13)
+position = Vector2(826, -73)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree35" type="Sprite2D" parent="Area2D" unique_id=934391693]
-position = Vector2(882, 15)
+position = Vector2(887, -71)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree36" type="Sprite2D" parent="Area2D" unique_id=2003079103]
-position = Vector2(945, 12)
+position = Vector2(950, -74)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree37" type="Sprite2D" parent="Area2D" unique_id=989822317]
-position = Vector2(1014, 11)
+position = Vector2(1019, -75)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree38" type="Sprite2D" parent="Area2D" unique_id=794481961]
-position = Vector2(1088, 11)
+position = Vector2(1093, -75)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree94" type="Sprite2D" parent="Area2D" unique_id=177777431]
+position = Vector2(814, -26)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree95" type="Sprite2D" parent="Area2D" unique_id=587305536]
+position = Vector2(875, -24)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree96" type="Sprite2D" parent="Area2D" unique_id=1678361593]
+position = Vector2(938, -27)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree97" type="Sprite2D" parent="Area2D" unique_id=509091065]
+position = Vector2(1007, -28)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree98" type="Sprite2D" parent="Area2D" unique_id=268219937]
+position = Vector2(1081, -28)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree99" type="Sprite2D" parent="Area2D" unique_id=1161937603]
+position = Vector2(811, 17)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree100" type="Sprite2D" parent="Area2D" unique_id=927417353]
+position = Vector2(872, 19)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree101" type="Sprite2D" parent="Area2D" unique_id=1429158422]
+position = Vector2(935, 16)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree102" type="Sprite2D" parent="Area2D" unique_id=33517276]
+position = Vector2(1004, 15)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree103" type="Sprite2D" parent="Area2D" unique_id=820994065]
+position = Vector2(1078, 15)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree39" type="Sprite2D" parent="Area2D" unique_id=1141551288]
@@ -639,11 +954,291 @@ texture = ExtResource("4_kxjp4")
 position = Vector2(1103, 132)
 texture = ExtResource("4_kxjp4")
 
+[node name="Tree44" type="Sprite2D" parent="Area2D" unique_id=2034431525]
+position = Vector2(800, 184)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree45" type="Sprite2D" parent="Area2D" unique_id=563419593]
+position = Vector2(860, 183)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree46" type="Sprite2D" parent="Area2D" unique_id=605392744]
+position = Vector2(931, 183)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree47" type="Sprite2D" parent="Area2D" unique_id=804046098]
+position = Vector2(1010, 179)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree48" type="Sprite2D" parent="Area2D" unique_id=1811485792]
+position = Vector2(1093, 180)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree49" type="Sprite2D" parent="Area2D" unique_id=1644601011]
+position = Vector2(795, 232)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree50" type="Sprite2D" parent="Area2D" unique_id=30599892]
+position = Vector2(855, 231)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree51" type="Sprite2D" parent="Area2D" unique_id=1349149057]
+position = Vector2(926, 231)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree52" type="Sprite2D" parent="Area2D" unique_id=1610213598]
+position = Vector2(1005, 227)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree53" type="Sprite2D" parent="Area2D" unique_id=2010997140]
+position = Vector2(1088, 228)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree54" type="Sprite2D" parent="Area2D" unique_id=1351876646]
+position = Vector2(793, 270)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree55" type="Sprite2D" parent="Area2D" unique_id=1015382326]
+position = Vector2(853, 269)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree56" type="Sprite2D" parent="Area2D" unique_id=55601219]
+position = Vector2(924, 269)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree57" type="Sprite2D" parent="Area2D" unique_id=1673103806]
+position = Vector2(1003, 265)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree58" type="Sprite2D" parent="Area2D" unique_id=695957631]
+position = Vector2(1086, 266)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree59" type="Sprite2D" parent="Area2D" unique_id=1821093543]
+position = Vector2(790, 325)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree60" type="Sprite2D" parent="Area2D" unique_id=2017663813]
+position = Vector2(850, 324)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree61" type="Sprite2D" parent="Area2D" unique_id=1552883409]
+position = Vector2(921, 324)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree62" type="Sprite2D" parent="Area2D" unique_id=1255693248]
+position = Vector2(1000, 320)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree63" type="Sprite2D" parent="Area2D" unique_id=708224100]
+position = Vector2(1083, 321)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree139" type="Sprite2D" parent="Area2D" unique_id=617155902]
+position = Vector2(1152, 320)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree140" type="Sprite2D" parent="Area2D" unique_id=1213803009]
+position = Vector2(1235, 321)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree141" type="Sprite2D" parent="Area2D" unique_id=1187814088]
+position = Vector2(1152, 265)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree142" type="Sprite2D" parent="Area2D" unique_id=1249102555]
+position = Vector2(1235, 266)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree143" type="Sprite2D" parent="Area2D" unique_id=293997799]
+position = Vector2(1152, 213)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree144" type="Sprite2D" parent="Area2D" unique_id=1141541634]
+position = Vector2(1235, 214)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree145" type="Sprite2D" parent="Area2D" unique_id=735764477]
+position = Vector2(1152, 149)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree146" type="Sprite2D" parent="Area2D" unique_id=1955413346]
+position = Vector2(1235, 150)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree147" type="Sprite2D" parent="Area2D" unique_id=1227899373]
+position = Vector2(1152, 109)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree148" type="Sprite2D" parent="Area2D" unique_id=1723896043]
+position = Vector2(1235, 110)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree149" type="Sprite2D" parent="Area2D" unique_id=1647676233]
+position = Vector2(1153, 61)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree150" type="Sprite2D" parent="Area2D" unique_id=2066171683]
+position = Vector2(1236, 62)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree151" type="Sprite2D" parent="Area2D" unique_id=60564555]
+position = Vector2(1153, 5)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree152" type="Sprite2D" parent="Area2D" unique_id=1012424248]
+position = Vector2(1236, 6)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree153" type="Sprite2D" parent="Area2D" unique_id=1282000537]
+position = Vector2(1153, -36)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree154" type="Sprite2D" parent="Area2D" unique_id=574696618]
+position = Vector2(1236, -35)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree155" type="Sprite2D" parent="Area2D" unique_id=2134176127]
+position = Vector2(1153, -36)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree156" type="Sprite2D" parent="Area2D" unique_id=186621114]
+position = Vector2(1236, -35)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree157" type="Sprite2D" parent="Area2D" unique_id=847311294]
+position = Vector2(1153, -77)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree158" type="Sprite2D" parent="Area2D" unique_id=1954640956]
+position = Vector2(1236, -76)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree64" type="Sprite2D" parent="Area2D" unique_id=596703950]
+position = Vector2(476, 371)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree65" type="Sprite2D" parent="Area2D" unique_id=721240979]
+position = Vector2(536, 370)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree66" type="Sprite2D" parent="Area2D" unique_id=20600637]
+position = Vector2(607, 370)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree67" type="Sprite2D" parent="Area2D" unique_id=1248557693]
+position = Vector2(686, 366)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree68" type="Sprite2D" parent="Area2D" unique_id=1005793120]
+position = Vector2(769, 367)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree69" type="Sprite2D" parent="Area2D" unique_id=752522498]
+position = Vector2(440, 412)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree70" type="Sprite2D" parent="Area2D" unique_id=1937318310]
+position = Vector2(500, 411)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree71" type="Sprite2D" parent="Area2D" unique_id=1310908489]
+position = Vector2(571, 411)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree72" type="Sprite2D" parent="Area2D" unique_id=1347232506]
+position = Vector2(650, 407)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree73" type="Sprite2D" parent="Area2D" unique_id=994830501]
+position = Vector2(733, 408)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree74" type="Sprite2D" parent="Area2D" unique_id=2110987286]
+position = Vector2(444, 449)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree75" type="Sprite2D" parent="Area2D" unique_id=924995954]
+position = Vector2(504, 448)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree76" type="Sprite2D" parent="Area2D" unique_id=400680785]
+position = Vector2(575, 448)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree77" type="Sprite2D" parent="Area2D" unique_id=160847081]
+position = Vector2(654, 444)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree78" type="Sprite2D" parent="Area2D" unique_id=1872528448]
+position = Vector2(737, 445)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree79" type="Sprite2D" parent="Area2D" unique_id=511267381]
+position = Vector2(104, 373)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree80" type="Sprite2D" parent="Area2D" unique_id=359205559]
+position = Vector2(164, 372)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree81" type="Sprite2D" parent="Area2D" unique_id=1451403447]
+position = Vector2(235, 372)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree82" type="Sprite2D" parent="Area2D" unique_id=1313965374]
+position = Vector2(314, 368)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree83" type="Sprite2D" parent="Area2D" unique_id=867795537]
+position = Vector2(397, 369)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree84" type="Sprite2D" parent="Area2D" unique_id=509134191]
+position = Vector2(89, 414)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree85" type="Sprite2D" parent="Area2D" unique_id=1282584286]
+position = Vector2(149, 413)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree86" type="Sprite2D" parent="Area2D" unique_id=480246920]
+position = Vector2(220, 413)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree87" type="Sprite2D" parent="Area2D" unique_id=1467782424]
+position = Vector2(299, 409)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree88" type="Sprite2D" parent="Area2D" unique_id=1279894561]
+position = Vector2(382, 410)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree89" type="Sprite2D" parent="Area2D" unique_id=772210539]
+position = Vector2(90, 452)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree90" type="Sprite2D" parent="Area2D" unique_id=1594971518]
+position = Vector2(150, 451)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree91" type="Sprite2D" parent="Area2D" unique_id=990992715]
+position = Vector2(221, 451)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree92" type="Sprite2D" parent="Area2D" unique_id=1959507120]
+position = Vector2(300, 447)
+texture = ExtResource("4_kxjp4")
+
+[node name="Tree93" type="Sprite2D" parent="Area2D" unique_id=1372304029]
+position = Vector2(383, 448)
+texture = ExtResource("4_kxjp4")
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=370319630]
 libraries/ = SubResource("AnimationLibrary_ne5qy")
 
 [node name="PlayerPath" type="Path2D" parent="." unique_id=228598708]
-position = Vector2(2, 7)
+position = Vector2(2, 8)
 curve = SubResource("Curve2D_tg37o")
 
 [node name="PlayerFollow" type="PathFollow2D" parent="PlayerPath" unique_id=973862879]
@@ -653,7 +1248,7 @@ position = Vector2(1020, 80)
 remote_path = NodePath("../../../Player")
 
 [node name="G\'HearldBody" type="CharacterBody2D" parent="." unique_id=1372909687]
-position = Vector2(824, 87)
+position = Vector2(824, 88)
 script = ExtResource("7_hj46p")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="G\'HearldBody" unique_id=1181942766]
@@ -672,7 +1267,7 @@ position = Vector2(769, 87)
 shape = SubResource("CapsuleShape2D_cxf33")
 
 [node name="G\'HearldPath" type="Path2D" parent="." unique_id=1834541016]
-position = Vector2(56, 0)
+position = Vector2(56, 1)
 curve = SubResource("Curve2D_hj46p")
 
 [node name="G\'HearldFollow" type="PathFollow2D" parent="G\'HearldPath" unique_id=619912070]
@@ -680,3 +1275,141 @@ position = Vector2(768, 87)
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="G\'HearldPath/G\'HearldFollow" unique_id=1795099099]
 remote_path = NodePath("../../../G\'HearldBody")
+
+[node name="UlarEnggano" type="Area2D" parent="." unique_id=753622414]
+script = ExtResource("11_uwhn5")
+enemy_data = ExtResource("12_ne5qy")
+
+[node name="Ular Enggano" type="AnimatedSprite2D" parent="UlarEnggano" unique_id=1515741246]
+position = Vector2(568, 170)
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_jiqn8")
+autoplay = "default"
+frame_progress = 0.367939
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UlarEnggano" unique_id=1438216913]
+position = Vector2(567, 172)
+shape = SubResource("CircleShape2D_pps4a")
+
+[node name="Meranti" type="Area2D" parent="." unique_id=1800019043]
+script = ExtResource("12_tg37o")
+enemy_data = ExtResource("13_daf2d")
+
+[node name="Meranti(Biasa)" type="AnimatedSprite2D" parent="Meranti" unique_id=203938815]
+position = Vector2(571, 139)
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_3t3a8")
+autoplay = "default"
+frame_progress = 0.41018623
+
+[node name="Pohon Meranti (Marah)" type="AnimatedSprite2D" parent="Meranti" unique_id=1806303057]
+position = Vector2(635, 140)
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_jrvam")
+autoplay = "default"
+frame_progress = 0.72110647
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Meranti" unique_id=2072343468]
+position = Vector2(522.75, 252.5)
+shape = SubResource("RectangleShape2D_cxf33")
+
+[node name="Collision global" type="StaticBody2D" parent="." unique_id=1541404469]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision global" unique_id=2051668430]
+position = Vector2(-14, 155)
+shape = SubResource("RectangleShape2D_daf2d")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Collision global" unique_id=65593307]
+position = Vector2(720, -34)
+shape = SubResource("RectangleShape2D_daf2d")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Collision global" unique_id=1692556963]
+position = Vector2(1255, 135)
+shape = SubResource("RectangleShape2D_t7hs1")
+
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="Collision global" unique_id=622092321]
+position = Vector2(623, 359)
+shape = SubResource("RectangleShape2D_t7hs1")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Collision global" unique_id=170756615]
+position = Vector2(597.375, 377)
+shape = SubResource("RectangleShape2D_t7hs1")
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="Collision global" unique_id=2108203024]
+position = Vector2(981, 199)
+shape = SubResource("RectangleShape2D_t7hs1")
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="Collision global" unique_id=824148120]
+position = Vector2(829, 199)
+shape = SubResource("RectangleShape2D_t7hs1")
+
+[node name="WoodObstacle" type="StaticBody2D" parent="." unique_id=1740150651]
+position = Vector2(464, 90.000015)
+rotation = -1.6109389
+scale = Vector2(0.3, 0.3)
+script = ExtResource("17_xs2nl")
+dialogue_resource = ExtResource("18_6kdme")
+
+[node name="Sprite2D" type="Sprite2D" parent="WoodObstacle" unique_id=1849240590]
+texture = ExtResource("18_xs2nl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WoodObstacle" unique_id=501848308]
+position = Vector2(-0.5, -0.5)
+shape = SubResource("RectangleShape2D_6kdme")
+
+[node name="WoodObstacle2" type="StaticBody2D" parent="." unique_id=673802371]
+position = Vector2(474.99994, 103)
+rotation = -1.288053
+scale = Vector2(0.3, 0.3)
+script = ExtResource("17_xs2nl")
+dialogue_resource = ExtResource("18_6kdme")
+
+[node name="Sprite2D" type="Sprite2D" parent="WoodObstacle2" unique_id=433956960]
+texture = ExtResource("18_xs2nl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WoodObstacle2" unique_id=1025036731]
+position = Vector2(-0.5, -0.5)
+shape = SubResource("RectangleShape2D_6kdme")
+
+[node name="WoodObstacle3" type="StaticBody2D" parent="." unique_id=325660275]
+position = Vector2(491, 95.00003)
+rotation = -1.6109389
+scale = Vector2(0.3, 0.3)
+script = ExtResource("17_xs2nl")
+dialogue_resource = ExtResource("18_6kdme")
+
+[node name="Sprite2D" type="Sprite2D" parent="WoodObstacle3" unique_id=197963197]
+texture = ExtResource("18_xs2nl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WoodObstacle3" unique_id=1691918086]
+position = Vector2(-0.5, -0.5)
+shape = SubResource("RectangleShape2D_6kdme")
+
+[node name="WoodObstacle4" type="StaticBody2D" parent="." unique_id=1059086513]
+position = Vector2(510.00006, 92.00003)
+rotation = -4.9951324
+scale = Vector2(0.3, 0.3)
+script = ExtResource("17_xs2nl")
+dialogue_resource = ExtResource("18_6kdme")
+
+[node name="Sprite2D" type="Sprite2D" parent="WoodObstacle4" unique_id=588732135]
+texture = ExtResource("18_xs2nl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WoodObstacle4" unique_id=658139106]
+position = Vector2(-0.5, -0.5)
+shape = SubResource("RectangleShape2D_6kdme")
+
+[node name="WoodObstacle5" type="StaticBody2D" parent="." unique_id=1175929342]
+position = Vector2(448.00006, 94.00002)
+rotation = 1.2880529
+scale = Vector2(0.3, 0.3)
+script = ExtResource("17_xs2nl")
+dialogue_resource = ExtResource("18_6kdme")
+target_scene_path = "uid://cqkrbrn7u2urg"
+
+[node name="Sprite2D" type="Sprite2D" parent="WoodObstacle5" unique_id=844896802]
+texture = ExtResource("18_xs2nl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WoodObstacle5" unique_id=282785981]
+position = Vector2(-0.5, -0.5)
+shape = SubResource("RectangleShape2D_6kdme")

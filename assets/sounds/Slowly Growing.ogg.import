@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://5jjo2uj5vn2e"
+path="res://.godot/imported/Slowly Growing.ogg-f7552d26905a84b36db97bb0e5fafa91.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/sounds/Slowly Growing.ogg"
+dest_files=["res://.godot/imported/Slowly Growing.ogg-f7552d26905a84b36db97bb0e5fafa91.oggvorbisstr"]
+
+[params]
+
+loop=true
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

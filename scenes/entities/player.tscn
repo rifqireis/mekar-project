@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cpwsuy1y2qdmp" path="res://scripts/player/player.gd" id="1_08t41"]
 [ext_resource type="Texture2D" uid="uid://cswugukyicxf5" path="res://assets/tiles/fantasy_world/characters/spritesheet (1).png" id="2_1ie0h"]
+[ext_resource type="Texture2D" uid="uid://dp2x48xfadlxq" path="res://assets/ui/etc/d.png" id="3_1ie0h"]
+[ext_resource type="AudioStream" uid="uid://bifxej4kpyy22" path="res://assets/sounds/freesound_community-footsteps-in-a-hallway-47842.mp3" id="4_42nxq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nyl8k"]
 atlas = ExtResource("2_1ie0h")
@@ -152,7 +154,7 @@ script = ExtResource("1_08t41")
 texture_filter = 1
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_dgg5m")
-animation = &"idle_up"
+animation = &"walk_right"
 
 [node name="RayInteract" type="RayCast2D" parent="." unique_id=305846055]
 target_position = Vector2(0, 20)
@@ -161,6 +163,14 @@ collide_with_areas = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=941045567]
 shape = SubResource("RectangleShape2D_g6aeh")
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=700999112]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=700999112 groups=["player"]]
 scale = Vector2(4, -20.741)
-zoom = Vector2(4, 4)
+zoom = Vector2(5, 5)
+
+[node name="InteractPrompt" type="Sprite2D" parent="." unique_id=225837337]
+position = Vector2(0, -20)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("3_1ie0h")
+
+[node name="walking_sfx" type="AudioStreamPlayer" parent="." unique_id=1828531099]
+stream = ExtResource("4_42nxq")

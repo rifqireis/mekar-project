@@ -201,56 +201,6 @@ custom_minimum_size = Vector2(600, 300)
 layout_mode = 2
 texture = ExtResource("1_c5u2a")
 
-[node name="A_Key" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=1120225449]
-layout_mode = 0
-offset_left = 44.5
-offset_top = 137.0
-offset_right = 131.5
-offset_bottom = 223.0
-texture = ExtResource("2_g33xm")
-expand_mode = 1
-stretch_mode = 4
-
-[node name="W_Key" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=365423032]
-layout_mode = 0
-offset_left = 115.5
-offset_top = 42.0
-offset_right = 202.5
-offset_bottom = 128.0
-texture = ExtResource("3_8mej1")
-expand_mode = 1
-stretch_mode = 4
-
-[node name="S_Key" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=873033011]
-layout_mode = 0
-offset_left = 128.5
-offset_top = 137.0
-offset_right = 215.5
-offset_bottom = 223.0
-texture = ExtResource("4_fmkfu")
-expand_mode = 1
-stretch_mode = 4
-
-[node name="D_Key" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=156885887]
-layout_mode = 0
-offset_left = 213.5
-offset_top = 137.0
-offset_right = 300.5
-offset_bottom = 223.0
-texture = ExtResource("5_110q8")
-expand_mode = 1
-stretch_mode = 4
-
-[node name="Arrow" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=369358750]
-layout_mode = 0
-offset_left = 323.5
-offset_top = 96.0
-offset_right = 410.5
-offset_bottom = 182.0
-texture = ExtResource("6_wsixu")
-expand_mode = 1
-stretch_mode = 4
-
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=1131622853]
 position = Vector2(492.5, 133)
 scale = Vector2(0.8, 0.8)
@@ -258,6 +208,16 @@ sprite_frames = SubResource("SpriteFrames_fe65g")
 autoplay = "default"
 frame = 1
 frame_progress = 0.8557932
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=470224149]
+layout_mode = 0
+offset_left = 115.0
+offset_top = 43.0
+offset_right = 381.0
+offset_bottom = 226.0
+theme_override_font_sizes/font_size = 65
+text = "\"E\" To
+Interact."
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=580540137]
 libraries/ = SubResource("AnimationLibrary_g33xm")

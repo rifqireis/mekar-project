@@ -5,7 +5,8 @@ signal minigame_finished(total_hits: int)
 
 var arena_size: Vector2 = Vector2.ZERO
 
-@onready var background: ColorRect = $Background
+@onready var background: Panel = $Background
+@onready var texture_rect: TextureRect = $TextureRect
 @onready var projectile_container: Node2D = $ProjectileContainer
 @onready var player: MinigamePlayer = $MinigamePlayer
 
@@ -22,8 +23,8 @@ func _ready() -> void:
 
 func _update_arena_bounds() -> void:
 	arena_size = get_viewport_rect().size
-	if background:
-		background.size = arena_size
+	#if background:
+		#background.size = arena_size
 	if player and player.has_method("set_bounds"):
 		player.set_bounds(Rect2(Vector2.ZERO, arena_size))
 

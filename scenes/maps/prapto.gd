@@ -1,7 +1,7 @@
 extends Node2D
 
 @export var dialogue_resource: DialogueResource
-@export_file("*.tscn") var next_map_path: String = "res://scenes/maps/maphutan_bab2(3).tscn"
+@export_file("*.tscn") var next_map_path: String = "res://scenes/maps/maphutan_bab2.tscn"
 
 @onready var player: CharacterBody2D = $Player
 
@@ -9,6 +9,10 @@ var is_list_taken: bool = true
 var is_groceries_bought: bool = false
 var is_cutscene_running: bool = false
 
+func _ready() -> void:
+	if player.has_method("set_camera_zoom"):
+		player.set_camera_zoom(6.0)
+		
 func start_phone_call_cutscene() -> void:
 	if is_cutscene_running:
 		return
@@ -24,4 +28,4 @@ func start_phone_call_cutscene() -> void:
 	await DialogueManager.dialogue_ended
 	
 	PlayerRepository.should_restore_position = false
-	get_tree().change_scene_to_file(next_map_path)
+	SceneTransition.change_scene(next_map_path)

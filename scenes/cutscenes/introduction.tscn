@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://dfchyctb2rg6r" path="res://assets/ui/intro_backgrounds/EXP_Cinematic Cutscene Mekar 6.png" id="6_yu1x5"]
 [ext_resource type="AudioStream" uid="uid://d1uhf3be4ldfb" path="res://assets/audio/introduction.mp3" id="8_d7182"]
 [ext_resource type="FontFile" uid="uid://ckgpk7nwhmai1" path="res://assets/fonts/Courier_Prime/CourierPrime-Regular.ttf" id="9_8bhm3"]
+[ext_resource type="Animation" uid="uid://bvqsyqx4fyjqk" path="res://animation/play_cinematic.res" id="10_v5jfm"]
 
 [sub_resource type="Animation" id="Animation_d7182"]
 length = 0.001
@@ -594,7 +595,8 @@ tracks/23/keys = {
 _data = {
 &"RESET": SubResource("Animation_d7182"),
 &"autoload_animation": SubResource("Animation_8bhm3"),
-&"play_cinematic": SubResource("Animation_yu1x5")
+&"play_cinematic": SubResource("Animation_yu1x5"),
+&"play_cinematic 2": ExtResource("10_v5jfm")
 }
 
 [node name="Introduction" type="Control" unique_id=573154112]
@@ -607,7 +609,6 @@ grow_vertical = 2
 script = ExtResource("1_8bhm3")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=212385962]
-volume_db = 24.0
 autoplay = true
 
 [node name="MainBackground" type="ColorRect" parent="." unique_id=1771085355]
@@ -677,7 +678,7 @@ texture = ExtResource("6_7wly1")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=600152707]
 libraries/ = SubResource("AnimationLibrary_d7182")
-autoplay = &"play_cinematic"
+autoplay = &"play_cinematic 2"
 next/autoload_animation = &"play_cinematic"
 
 [node name="TopBar" type="ColorRect" parent="." unique_id=1702031753]

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c0ix325c7fjta"
+path="res://.godot/imported/Ah Short.mp3-3ec38c103aef638d83956d3cd3d6a8d5.mp3str"
+
+[deps]
+
+source_file="res://assets/sfx/Dialogue Sfx AmbroggioMusic/Ah Short.mp3"
+dest_files=["res://.godot/imported/Ah Short.mp3-3ec38c103aef638d83956d3cd3d6a8d5.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

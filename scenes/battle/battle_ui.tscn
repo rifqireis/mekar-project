@@ -1,15 +1,20 @@
 [gd_scene format=3 uid="uid://ckvm8wref8lp2"]
 
 [ext_resource type="Script" uid="uid://dqsrhvojhc4it" path="res://scripts/battle/battle_ui.gd" id="1_lrjlg"]
+[ext_resource type="Resource" uid="uid://c57g1fr3sfc0j" path="res://dialogues/battle_ui.dialogue" id="2_e0vbk"]
 [ext_resource type="Resource" uid="uid://bs11yvkr7lie7" path="res://resources/rafflesia.tres" id="2_t62lk"]
 [ext_resource type="Texture2D" uid="uid://c76o2uun0pdbw" path="res://assets/ui/battle/etc/Grid Pattern (1) 1.png" id="3_knf1m"]
 [ext_resource type="Texture2D" uid="uid://hmme0to040d0" path="res://assets/ui/battle/main/Rafflesia 1.png" id="4_6i8xx"]
 [ext_resource type="Texture2D" uid="uid://bi0yaj2ntbpjv" path="res://assets/ui/battle/main/Ellipse 68.png" id="5_e0vbk"]
 [ext_resource type="Texture2D" uid="uid://djbitnv3wm46u" path="res://assets/ui/battle/main/Group 630.png" id="6_n00t7"]
+[ext_resource type="Texture2D" uid="uid://dc7pcm1ylbo4l" path="res://assets/sprites/Ular.png" id="6_p52d2"]
+[ext_resource type="Texture2D" uid="uid://bcxpn32dx7tmg" path="res://assets/sprites/Meranti(Marah).png" id="7_0dpdb"]
 [ext_resource type="Texture2D" uid="uid://yor154m7dvd6" path="res://assets/ui/battle/main/Group 627.png" id="7_3ejmi"]
+[ext_resource type="Texture2D" uid="uid://6ej1p7j1ns2o" path="res://assets/sprites/Meranti(Biasa).png" id="8_mavpd"]
 [ext_resource type="Texture2D" uid="uid://dwwdkr0ougflv" path="res://assets/ui/battle/main/Group 643_big.png" id="8_mc4s3"]
 [ext_resource type="Texture2D" uid="uid://dhgx08c3lv6ov" path="res://assets/ui/battle/main/Group 626.png" id="9_p52d2"]
 [ext_resource type="Texture2D" uid="uid://ce0x2325qe8am" path="res://assets/ui/battle/main/Group 644_big.png" id="10_0dpdb"]
+[ext_resource type="Texture2D" uid="uid://t1s7u6h20u3o" path="res://assets/ui/battle/main/Group 642_big.png" id="11_53kxk"]
 [ext_resource type="Texture2D" uid="uid://bhr2c7bgghgic" path="res://assets/ui/battle/main/Group 625.png" id="11_mavpd"]
 [ext_resource type="Texture2D" uid="uid://cfcph2ydrs6k1" path="res://assets/ui/battle/main/Group 645_big.png" id="12_a8y6e"]
 [ext_resource type="Texture2D" uid="uid://dnshi1pf38y3x" path="res://assets/ui/battle/main/Group 631.png" id="13_ewcu4"]
@@ -25,14 +30,30 @@
 [ext_resource type="FontFile" uid="uid://dk74fmgjeermg" path="res://assets/fonts/raybees/Raybees-Regular.otf" id="23_btoqn"]
 [ext_resource type="Texture2D" uid="uid://bkvkq1kh07gy5" path="res://assets/ui/battle/main/Group 646.png" id="24_53kxk"]
 [ext_resource type="Texture2D" uid="uid://bricvf5c5etf3" path="res://assets/ui/battle/main/Vector 126.png" id="25_7gnc1"]
+[ext_resource type="Texture2D" uid="uid://dr7thdnkawa2l" path="res://assets/ui/spesies.png" id="26_0dpdb"]
 [ext_resource type="Texture2D" uid="uid://dtyfdekjtco78" path="res://assets/ui/battle/main/Vector 128 1.png" id="26_kfdnx"]
+[ext_resource type="Texture2D" uid="uid://dlfcyk0p7i5v0" path="res://assets/ui/spesies1.png" id="27_mavpd"]
 [ext_resource type="Texture2D" uid="uid://dd86oa52bcw52" path="res://assets/ui/battle/main/Vector 127.png" id="27_t7l3b"]
 [ext_resource type="Texture2D" uid="uid://cpuodcitvm6af" path="res://assets/ui/battle/main/Vector 128 2.png" id="28_2p5iv"]
+[ext_resource type="Texture2D" uid="uid://curnckluav7t1" path="res://assets/ui/status.png" id="28_mavpd"]
 [ext_resource type="Texture2D" uid="uid://l5oos8rpy1vi" path="res://assets/ui/battle/main/textbox.png" id="29_bc15f"]
+[ext_resource type="Texture2D" uid="uid://0ym5ybjxic41" path="res://assets/ui/status1.png" id="29_ewcu4"]
+[ext_resource type="Texture2D" uid="uid://1k7dkrptay17" path="res://assets/ui/battle/etc/blue.png" id="30_6i8xx"]
 [ext_resource type="PackedScene" uid="uid://cr1f3fqojpwiq" path="res://scenes/minigames/minigame_dodge/scenes/minigame_arena.tscn" id="30_ammb5"]
+[ext_resource type="Texture2D" uid="uid://c0c02ia5axpbw" path="res://assets/ui/penyebab.png" id="30_svjkv"]
 [ext_resource type="PackedScene" uid="uid://hqhfujyr0d5u" path="res://scenes/minigames/minigame_attack/scenes/player_attack_game.tscn" id="31_ii2sy"]
+[ext_resource type="Texture2D" uid="uid://btqlqy845j1y8" path="res://assets/ui/penyebab1.png" id="31_svjkv"]
 [ext_resource type="FontFile" uid="uid://ckgpk7nwhmai1" path="res://assets/fonts/Courier_Prime/CourierPrime-Regular.ttf" id="32_knf1m"]
+[ext_resource type="Texture2D" uid="uid://0ojctqkosxo4" path="res://assets/ui/pilA.png" id="32_kxmd2"]
 [ext_resource type="Shader" uid="uid://cvyy48b5gxbk7" path="res://scenes/maps/maphutan.gdshader" id="32_t62lk"]
+[ext_resource type="Texture2D" uid="uid://bfs0t0a8ht2nk" path="res://assets/ui/pilA1.png" id="33_fsf1p"]
+[ext_resource type="Texture2D" uid="uid://byiqhjec2rpkx" path="res://assets/ui/pilB.png" id="34_btoqn"]
+[ext_resource type="Texture2D" uid="uid://dr8vesiyn0xn" path="res://assets/ui/pilB1.png" id="35_53kxk"]
+[ext_resource type="Texture2D" uid="uid://bda2aw0j5hwyx" path="res://assets/ui/pilC.png" id="36_7gnc1"]
+[ext_resource type="AudioStream" uid="uid://cy03xqo4cl6oh" path="res://assets/audio/WhatsApp Audio 2026-08-14 at 23.28.38.mp3" id="36_n00t7"]
+[ext_resource type="Texture2D" uid="uid://cvnqq6y38b8ww" path="res://assets/ui/pilC1.png" id="37_kfdnx"]
+[ext_resource type="Texture2D" uid="uid://dpd1ynhomqw0y" path="res://assets/ui/pilD.png" id="38_t7l3b"]
+[ext_resource type="Texture2D" uid="uid://ctdfv2xn3m2no" path="res://assets/ui/pilD1.png" id="39_2p5iv"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pokrw"]
 atlas = ExtResource("4_6i8xx")
@@ -45,6 +66,54 @@ region = Rect2(64, 0, 64, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_552vw"]
 atlas = ExtResource("4_6i8xx")
 region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a8y6e"]
+atlas = ExtResource("6_p52d2")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ewcu4"]
+atlas = ExtResource("6_p52d2")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_svjkv"]
+atlas = ExtResource("6_p52d2")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kxmd2"]
+atlas = ExtResource("6_p52d2")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2ngny"]
+atlas = ExtResource("7_0dpdb")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8abqs"]
+atlas = ExtResource("7_0dpdb")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ffg3k"]
+atlas = ExtResource("7_0dpdb")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jon1h"]
+atlas = ExtResource("7_0dpdb")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rbfdq"]
+atlas = ExtResource("8_mavpd")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2gwsl"]
+atlas = ExtResource("8_mavpd")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fsf1p"]
+atlas = ExtResource("8_mavpd")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_btoqn"]
+atlas = ExtResource("8_mavpd")
+region = Rect2(192, 0, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_cxf33"]
 animations = [{
@@ -59,12 +128,60 @@ animations = [{
 "texture": SubResource("AtlasTexture_552vw")
 }],
 "loop": 1,
-"name": &"default",
+"name": &"arnoldos",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a8y6e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ewcu4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_svjkv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kxmd2")
+}],
+"loop": 1,
+"name": &"enggano_snake",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2ngny")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8abqs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ffg3k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jon1h")
+}],
+"loop": 1,
+"name": &"meranti_mad_tree",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rbfdq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2gwsl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fsf1p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_btoqn")
+}],
+"loop": 1,
+"name": &"meranti_tree",
 "speed": 5.0
 }]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_iai2c"]
-load_path = "res://.godot/imported/Group 642_big.png-20f52f218f6cf44414f8d4cb4e855bf1.ctex"
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_45w4l"]
 
@@ -251,6 +368,42 @@ tracks/2/keys = {
 [sub_resource type="Animation" id="Animation_knf1m"]
 resource_name = "circle_out"
 length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TransitionLayer/CircleRect:material:shader_parameter/circle_size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.20000004768372]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TransitionLayer:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("TransitionLayer/CircleRect:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
 [sub_resource type="Animation" id="Animation_6i8xx"]
 resource_name = "end_rafflesia"
@@ -327,6 +480,18 @@ tracks/5/keys = {
 "update": 1,
 "values": [true]
 }
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("TransitionLayer:visible")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_t62lk"]
 _data = {
@@ -336,6 +501,17 @@ _data = {
 &"end_rafflesia": SubResource("Animation_6i8xx")
 }
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e0vbk"]
+size = Vector2(806, 207)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n00t7"]
+size = Vector2(76.5, 161.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p52d2"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p52d2"]
+
 [node name="BattleUI" type="Control" unique_id=729535227]
 layout_mode = 3
 anchors_preset = 15
@@ -344,8 +520,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_lrjlg")
+dialogue_resource = ExtResource("2_e0vbk")
 enemy_resource = ExtResource("2_t62lk")
 enemy_dialogue_offset = Vector2(0, -150)
+enemy_minigame_offset = Vector2(640, 50)
 
 [node name="ArenaBackground" type="TextureRect" parent="." unique_id=638468887]
 layout_mode = 0
@@ -360,10 +538,12 @@ texture = ExtResource("3_knf1m")
 expand_mode = 1
 
 [node name="EnemySprite" type="AnimatedSprite2D" parent="." unique_id=1152933131]
-position = Vector2(892.99994, 444)
+position = Vector2(960, 450)
 scale = Vector2(9.2375, 8.315624)
 sprite_frames = SubResource("SpriteFrames_cxf33")
-autoplay = "default"
+animation = &"enggano_snake"
+autoplay = "enggano_snake"
+frame_progress = 0.27939424
 
 [node name="TextureRect" type="TextureRect" parent="EnemySprite" unique_id=1858292830]
 show_behind_parent = true
@@ -393,7 +573,7 @@ offset_top = 763.0
 offset_right = 832.0
 offset_bottom = 994.0
 texture_normal = ExtResource("6_n00t7")
-texture_hover = SubResource("CompressedTexture2D_iai2c")
+texture_hover = ExtResource("11_53kxk")
 
 [node name="BtnObserve" type="TextureButton" parent="Mode_Action/MainButtonContainer" unique_id=760849644]
 layout_mode = 0
@@ -470,18 +650,18 @@ offset_bottom = 74.0
 
 [node name="BtnSpecies" type="TextureButton" parent="Mode_Action/SubActionPanel/ObserveBox" unique_id=1997166686]
 layout_mode = 2
-texture_normal = ExtResource("16_2ngny")
-texture_hover = ExtResource("17_8abqs")
+texture_normal = ExtResource("26_0dpdb")
+texture_hover = ExtResource("27_mavpd")
 
 [node name="BtnStatus" type="TextureButton" parent="Mode_Action/SubActionPanel/ObserveBox" unique_id=2139971973]
 layout_mode = 2
-texture_normal = ExtResource("18_ffg3k")
-texture_hover = ExtResource("19_jon1h")
+texture_normal = ExtResource("28_mavpd")
+texture_hover = ExtResource("29_ewcu4")
 
 [node name="BtnCause" type="TextureButton" parent="Mode_Action/SubActionPanel/ObserveBox" unique_id=1410292984]
 layout_mode = 2
-texture_normal = ExtResource("20_rbfdq")
-texture_hover = ExtResource("21_2gwsl")
+texture_normal = ExtResource("30_svjkv")
+texture_hover = ExtResource("31_svjkv")
 
 [node name="EngageBox" type="HBoxContainer" parent="Mode_Action/SubActionPanel" unique_id=261547777]
 layout_mode = 0
@@ -492,23 +672,23 @@ offset_bottom = 74.0
 
 [node name="BtnChoiceA" type="TextureButton" parent="Mode_Action/SubActionPanel/EngageBox" unique_id=85774716]
 layout_mode = 2
-texture_normal = ExtResource("16_2ngny")
-texture_hover = ExtResource("17_8abqs")
+texture_normal = ExtResource("32_kxmd2")
+texture_hover = ExtResource("33_fsf1p")
 
 [node name="BtnChoiceB" type="TextureButton" parent="Mode_Action/SubActionPanel/EngageBox" unique_id=2012018738]
 layout_mode = 2
-texture_normal = ExtResource("18_ffg3k")
-texture_hover = ExtResource("19_jon1h")
+texture_normal = ExtResource("34_btoqn")
+texture_hover = ExtResource("35_53kxk")
 
 [node name="BtnChoiceC" type="TextureButton" parent="Mode_Action/SubActionPanel/EngageBox" unique_id=2132598306]
 layout_mode = 2
-texture_normal = ExtResource("16_2ngny")
-texture_hover = ExtResource("17_8abqs")
+texture_normal = ExtResource("36_7gnc1")
+texture_hover = ExtResource("37_kfdnx")
 
 [node name="BtnChoiceD" type="TextureButton" parent="Mode_Action/SubActionPanel/EngageBox" unique_id=365684774]
 layout_mode = 2
-texture_normal = ExtResource("18_ffg3k")
-texture_hover = ExtResource("19_jon1h")
+texture_normal = ExtResource("38_t7l3b")
+texture_hover = ExtResource("39_2p5iv")
 
 [node name="AdaptBox" type="HBoxContainer" parent="Mode_Action/SubActionPanel" unique_id=1912046100]
 layout_mode = 0
@@ -538,16 +718,12 @@ texture_normal = ExtResource("16_2ngny")
 texture_hover = ExtResource("17_8abqs")
 
 [node name="ItemBox" type="HBoxContainer" parent="Mode_Action/SubActionPanel" unique_id=563060810]
+visible = false
 layout_mode = 0
-offset_left = 184.0
+offset_left = -16.0
 offset_top = 23.0
-offset_right = 368.0
+offset_right = 168.0
 offset_bottom = 70.0
-
-[node name="BtnRamuanAkar" type="TextureButton" parent="Mode_Action/SubActionPanel/ItemBox" unique_id=994329053]
-layout_mode = 2
-texture_normal = ExtResource("16_2ngny")
-texture_hover = ExtResource("17_8abqs")
 
 [node name="FloatingBar" type="Control" parent="." unique_id=193511023]
 anchors_preset = 0
@@ -646,7 +822,6 @@ theme_override_styles/background = SubResource("StyleBoxTexture_k0jd0")
 theme_override_styles/fill = SubResource("StyleBoxTexture_ruv1i")
 
 [node name="Mode_Dialogue" type="Control" parent="." unique_id=703083307]
-visible = false
 top_level = true
 anchors_preset = 0
 offset_right = 40.0
@@ -663,9 +838,10 @@ texture = ExtResource("29_bc15f")
 [node name="LogText" type="RichTextLabel" parent="Mode_Dialogue/SlantedDialogueBox" unique_id=788431630]
 layout_mode = 0
 offset_left = 188.0
-offset_top = 147.99998
+offset_top = 158.0
 offset_right = 1228.0
-offset_bottom = 286.3333
+offset_bottom = 296.3333
+theme_override_fonts/normal_font = ExtResource("23_btoqn")
 theme_override_font_sizes/normal_font_size = 40
 theme_override_font_sizes/bold_font_size = 40
 theme_override_font_sizes/bold_italics_font_size = 40
@@ -676,9 +852,10 @@ text = "Lorem Ipsum Dolor Amet"
 [node name="LogName" type="RichTextLabel" parent="Mode_Dialogue/SlantedDialogueBox" unique_id=583179408]
 layout_mode = 0
 offset_left = 302.0
-offset_top = 36.999985
-offset_right = 475.0
-offset_bottom = 103.999985
+offset_top = 53.999985
+offset_right = 648.0
+offset_bottom = 97.999985
+theme_override_fonts/normal_font = ExtResource("23_btoqn")
 theme_override_font_sizes/normal_font_size = 40
 theme_override_font_sizes/bold_font_size = 40
 theme_override_font_sizes/bold_italics_font_size = 40
@@ -687,28 +864,34 @@ theme_override_font_sizes/mono_font_size = 40
 text = "Raflesia"
 
 [node name="Mode_Minigame" type="Control" parent="." unique_id=355259112]
-visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
+[node name="ArenaDecoration" type="TextureRect" parent="Mode_Minigame" unique_id=820975192]
+layout_mode = 0
+offset_left = 737.0
+offset_top = 329.0
+offset_right = 1236.0
+offset_bottom = 814.0
+texture = ExtResource("30_6i8xx")
+expand_mode = 1
+
 [node name="SubViewportContainer" type="SubViewportContainer" parent="Mode_Minigame" unique_id=1005779873]
 layout_mode = 0
-offset_left = 592.0
-offset_top = 503.0
-offset_right = 1297.0
-offset_bottom = 955.0
-stretch = true
+offset_left = 710.0
+offset_top = 290.0
+offset_right = 1210.0
+offset_bottom = 790.0
 
 [node name="SubViewport" type="SubViewport" parent="Mode_Minigame/SubViewportContainer" unique_id=1778611240]
 disable_3d = true
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(705, 452)
-render_target_update_mode = 0
+size = Vector2i(500, 500)
+render_target_update_mode = 4
 
 [node name="MinigameArena" parent="Mode_Minigame/SubViewportContainer/SubViewport" unique_id=935506465 instance=ExtResource("30_ammb5")]
-position = Vector2(-41, 8)
 
 [node name="PlayerAttackGame" parent="Mode_Minigame" unique_id=1541002712 instance=ExtResource("31_ii2sy")]
 layout_mode = 0
@@ -763,6 +946,109 @@ text_direction = 1
 libraries/ = SubResource("AnimationLibrary_t62lk")
 autoplay = &"autoload_animation"
 
+[node name="Collision global" type="Area2D" parent="." unique_id=8145843]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision global" unique_id=459333763]
+position = Vector2(-50, 151.5)
+shape = SubResource("RectangleShape2D_e0vbk")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Collision global" unique_id=1369762616]
+position = Vector2(662, 21)
+shape = SubResource("RectangleShape2D_e0vbk")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Collision global" unique_id=1425525158]
+position = Vector2(450.75, 183.25)
+shape = SubResource("RectangleShape2D_n00t7")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Collision global" unique_id=1883730699]
+position = Vector2(724, 172)
+shape = SubResource("RectangleShape2D_n00t7")
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="Collision global" unique_id=1251388400]
+position = Vector2(789, 174)
+shape = SubResource("RectangleShape2D_n00t7")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=876755216]
+stream = ExtResource("36_n00t7")
+autoplay = true
+
+[node name="TutorialPanel" type="Panel" parent="." unique_id=791965394]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_p52d2")
+
+[node name="DodgePanel" type="Panel" parent="TutorialPanel" unique_id=1075476166]
+visible = false
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_p52d2")
+
+[node name="Label" type="Label" parent="TutorialPanel/DodgePanel" unique_id=1489692107]
+layout_mode = 0
+offset_left = 686.0
+offset_top = 216.0
+offset_right = 1229.0
+offset_bottom = 250.0
+theme_override_fonts/font = ExtResource("23_btoqn")
+theme_override_font_sizes/font_size = 36
+text = "Tahan WASD untuk Menghindar"
+
+[node name="AttackPanel" type="Panel" parent="TutorialPanel" unique_id=1957154478]
+visible = false
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="TutorialPanel/AttackPanel" unique_id=2112669467]
+layout_mode = 0
+offset_left = 502.0
+offset_top = 576.0
+offset_right = 1259.0
+offset_bottom = 610.0
+theme_override_fonts/font = ExtResource("23_btoqn")
+theme_override_font_sizes/font_size = 36
+text = "Tekan space untuk melancarkan serangan"
+
+[node name="EngagePanel" type="Panel" parent="TutorialPanel" unique_id=1530065464]
+visible = false
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="TutorialPanel/EngagePanel" unique_id=1256552495]
+layout_mode = 0
+offset_left = 119.0
+offset_top = 320.0
+offset_right = 661.0
+offset_bottom = 391.0
+theme_override_fonts/font = ExtResource("23_btoqn")
+theme_override_font_sizes/font_size = 36
+text = "opsi ajak bicara sekarang tersedia !!!"
+
+[node name="ObservePanel" type="Panel" parent="TutorialPanel" unique_id=2137326407]
+visible = false
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="TutorialPanel/ObservePanel" unique_id=1754276586]
+layout_mode = 0
+offset_left = 119.0
+offset_top = 320.0
+offset_right = 661.0
+offset_bottom = 391.0
+theme_override_fonts/font = ExtResource("23_btoqn")
+theme_override_font_sizes/font_size = 36
+text = "Amati dan ajak bicara untuk
+ menyelesaikan secara damai"
+
 [connection signal="pressed" from="Mode_Action/MainButtonContainer/BtnSuppress" to="." method="_on_btn_suppress_pressed"]
 [connection signal="pressed" from="Mode_Action/MainButtonContainer/BtnObserve" to="." method="_on_btn_observe_pressed"]
 [connection signal="pressed" from="Mode_Action/MainButtonContainer/BtnEngage" to="." method="_on_btn_engage_pressed"]
@@ -782,4 +1068,3 @@ autoplay = &"autoload_animation"
 [connection signal="pressed" from="Mode_Action/SubActionPanel/AdaptBox/BtnPlant" to="." method="_on_btn_plant_pressed"]
 [connection signal="pressed" from="Mode_Action/SubActionPanel/AdaptBox/BtnPath" to="." method="_on_btn_path_pressed"]
 [connection signal="pressed" from="Mode_Action/SubActionPanel/AdaptBox/BtnTrap" to="." method="_on_btn_trap_pressed"]
-[connection signal="pressed" from="Mode_Action/SubActionPanel/ItemBox/BtnRamuanAkar" to="." method="_on_btn_ramuan_akar_pressed"]

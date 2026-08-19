@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cy03xqo4cl6oh"
+path="res://.godot/imported/WhatsApp Audio 2026-08-14 at 23.28.38.mp3-e6821c3e9cb990131fbc566415b18ec2.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/WhatsApp Audio 2026-08-14 at 23.28.38.mp3"
+dest_files=["res://.godot/imported/WhatsApp Audio 2026-08-14 at 23.28.38.mp3-e6821c3e9cb990131fbc566415b18ec2.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -19,3 +19,5 @@ const LOG_VICTORY_HP: String = "* Anomali berhasil dilumpuhkan secara fisik. (Ja
 const LOG_VICTORY_TRUST: String = "* Target berhenti menyerang. Ia merasa dipahami dan percaya padamu! (Jalur Damai)"
 const LOG_VICTORY_STABILITY: String = "* Ekosistem pulih! Target tenang kembali karena habitatnya terestorasi. (Jalur Restorasi)"
 const LOG_DEFEAT: String = "* Donga kehabisan energi... Investigasi Gagal!"
+
+AnimationPl

@@ -1,0 +1,115 @@
+~ intro
+DONGA: * ..... [wait=3.5]
+Arnoldos: * Kelopaknya bergetar. Spora mulai beterbangan dari pangkal batangnya. [wait=4.0]
+=> END
+
+~ enemy_turn
+Arnoldos: : * Akarnya menghantam tanah, menyebarkan spora ke segala arah. [wait=3.5]
+=> END
+
+~ suppress_1
+DONGA: * Menerjang, melancarkan tebasan cepat ke sulur terluar. [wait=2.5]
+=> END
+
+~ suppress_2
+DONGA: * Memusatkan tenaga, menghantam pangkal akarnya. [wait=2.5]
+=> END
+
+~ capture_not_ready
+DONGA: (Akarnya masih terlalu liar. Belum bisa dikunci sekarang.) [wait=3.0]
+=> END
+
+~ attack_miss
+DONGA: * Ayunan senjata meleset, hanya menyabet tanah kosong. [wait=2.0]
+Arnoldos: : * Batangnya menggeram rendah. [wait=2.0]
+=> END
+
+~ enemy_damage_hit
+DONGA: "Khh... sporanya menembus pelindung." [wait=2.5]
+=> END
+
+~ enemy_damage_dodge
+DONGA: * Melompat mundur tepat saat sulur itu menyabet tempatnya berdiri. [wait=2.5]
+=> END
+
+~ observe_insufficient
+DONGA: (Anomali ini tidak bergerak dengan pola biasa. Harus diamati lebih teliti.) [wait=3.5]
+=> END
+
+~ observe_species
+DONGA: * Memperhatikan serat kelopaknya. Ini mutasi Rafflesia Arnoldii terparah yang pernah dilihatnya. [wait=4.0]
+=> END
+
+~ observe_status
+DONGA: * Memperhatikan batangnya. Banyak seratnya layu, tapi bagian puncaknya mengeras seperti logam. [wait=4.0]
+=> END
+
+~ observe_cause
+DONGA: * Memeriksa tanah di bawahnya. Bukan tanah asli — sisa limbah kimia dan fondasi beton. [wait=4.0]
+=> END
+
+~ observe_unlocked_info
+DONGA: (Dia bukan monster liar biasa. Tempat hidupnya dihancurkan. Mungkin bisa diajak bicara.) [wait=4.0]
+=> END
+
+~ engage_choice_a
+DONGA: "Kami tahu pembangunan kota merusak tanahmu. Kami ingin cari jalan tengah." [wait=3.5]
+Arnoldos: : * Getarannya menyurut. Batangnya berhenti bergerak liar. [wait=3.0]
+=> END
+
+~ engage_choice_b
+DONGA: "Kembali ke hutan sekarang, atau kami bakar akarmu!" [wait=3.0]
+Arnoldos: : * Menggeram keras. Sulurnya memanjang. [wait=2.5]
+=> END
+
+~ engage_choice_c
+DONGA: * Menurunkan senjata, memperlihatkan bibit tanaman dari tasnya. [wait=3.5]
+Arnoldos: : * Kelopaknya mengendur. Diam, mengamati bibit itu. [wait=3.0]
+=> END
+
+~ engage_choice_d
+DONGA: "Dasar parasit pemakan beton!" [wait=2.0]
+Arnoldos: : * Raungan bergema dari pangkal batangnya. [wait=2.5]
+=> END
+
+~ adapt_water
+DONGA: * Mengalirkan air bersih ke retakan tanah yang kering. [wait=2.5]
+Arnoldos: : * Akarnya menyerap air itu perlahan. [wait=2.5]
+=> END
+
+~ adapt_plant
+DONGA: * Menanam bibit restorasi di sekitar akarnya. [wait=2.5]
+Arnoldos: : * Pergerakannya melunak. [wait=2.0]
+=> END
+
+~ adapt_path
+DONGA: * Membuka sumbatan gorong-gorong agar akarnya bisa bermigrasi. [wait=3.0]
+Arnoldos: : * Akarnya menjangkau celah baru itu. [wait=2.5]
+=> END
+
+~ adapt_trap
+DONGA: * Membongkar rangka besi yang menjepit pangkal batangnya. [wait=3.0]
+Arnoldos: : * Akarnya menghentak pelan saat jepitan itu lepas. [wait=2.5]
+=> END
+
+~ item_ramuan_akar
+DONGA: * Meneguk Ramuan Akar. Staminanya kembali, lukanya menutup. [wait=2.5]
+=> END
+
+~ defeat_by_hp
+Arnoldos: : * Kelopaknya terkulai, menyentuh tanah. [wait=2.5]
+DONGA: * Menyarungkan senjata, menatap tubuh anomali yang tumbang. [wait=3.0]
+=> END
+
+~ defeat_by_trust
+Arnoldos: : "Kalian manusia... selalu merebut rumah kami..." [wait=3.5]
+DONGA: * Terdiam mendengar suara itu keluar dari kelopaknya. [wait=3.0]
+=> END
+
+~ defeat_by_stability
+DONGA: * Getaran tanah mereda. Target-18 kembali tenang. [wait=3.0]
+=> END
+
+~ battle_finished_default
+DONGA: * Pertempuran berakhir. Hutan Bukit Kaba kembali hening. [wait=3.5]
+=> END

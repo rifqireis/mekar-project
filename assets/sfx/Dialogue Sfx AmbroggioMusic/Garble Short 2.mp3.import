@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dbynekarx6a1p"
+path="res://.godot/imported/Garble Short 2.mp3-7837ac9d0d4500812f1f0fb6645c9a84.mp3str"
+
+[deps]
+
+source_file="res://assets/sfx/Dialogue Sfx AmbroggioMusic/Garble Short 2.mp3"
+dest_files=["res://.godot/imported/Garble Short 2.mp3-7837ac9d0d4500812f1f0fb6645c9a84.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

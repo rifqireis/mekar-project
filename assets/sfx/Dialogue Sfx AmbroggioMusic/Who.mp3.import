@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dxaiaw1qpna5o"
+path="res://.godot/imported/Who.mp3-285fc5fd595b0f20e12c24fcedf4e428.mp3str"
+
+[deps]
+
+source_file="res://assets/sfx/Dialogue Sfx AmbroggioMusic/Who.mp3"
+dest_files=["res://.godot/imported/Who.mp3-285fc5fd595b0f20e12c24fcedf4e428.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

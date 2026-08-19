@@ -1,0 +1,117 @@
+~ intro
+Pohon Meranti: Ssshh... Tanah bergetar... Siapa yang berani menginjakkan kaki di akar suci ini?! [wait=5.0]
+DONGA: Pohon ini tampaknya terdistorsi oleh aura kegelapan hutan. [wait=3.5]
+=> END
+
+~ tree_enrage_intro
+Pohon Meranti: KRAAAKKK!! Seranganmu hanya membuat getah amarahku mendidih! [wait=3.0]
+DONGA: Kulit kayunya mengeras! Serangan fisik biasa tidak akan mempan lagi. Aku harus mencoba menenangkannya (Engage)! [wait=4.5]
+=> END
+
+~ tree_angry_turn
+Pohon Meranti: Rasakan amukan akar yang mencengkeram bumi! [wait=2.5]
+=> END
+
+~ enemy_turn
+Pohon Meranti: Sulur-sulur kayu mulai bergerak merayap dari dalam tanah... [wait=3.0]
+=> END
+
+~ defeat_by_hp
+Pohon Meranti: KRRSHH... Batang kayunya akhirnya tumbang tak berdaya... [wait=3.0]
+=> END
+
+~ defeat_by_trust
+Pohon Meranti: Kehangatan suaramu... meredakan kegelisahan akar-akar kami... [wait=3.5]
+=> END
+
+~ defeat_by_stability
+Pohon Meranti: Keseimbangan alam di sekitar pohon ini telah dipulihkan. [wait=3.0]
+=> END
+
+~ battle_finished_default
+Pohon Meranti: Perlahan kehadiran roh pohon meresap kembali ke dalam tanah. [wait=3.5]
+=> END
+
+~ suppress_1
+DONGA: Kamu memukul dahan kering dengan tebasan cepat! [wait=2.5]
+=> END
+
+~ suppress_2
+DONGA: Kamu menghantam keras bagian pangkal akar pohon! [wait=2.5]
+=> END
+
+~ capture_not_ready
+DONGA: Energi roh pohon masih terlalu liar untuk dinetralkan sekarang! [wait=3.0]
+=> END
+
+~ attack_miss
+DONGA: Seranganmu meleset mengenai angin kosong! [wait=2.0]
+=> END
+
+~ enemy_damage_hit
+DONGA: Donga terkena sabetan ranting tajam! [wait=2.0]
+=> END
+
+~ enemy_damage_dodge
+DONGA: Donga berhasil berkelit dari jebakan akar! [wait=2.5]
+=> END
+
+~ observe_species
+DONGA: [AMATI SPESIES] Pohon Meranti Merah tua, pilar penyangga ekosistem rimba Sumatera. [wait=4.0]
+=> END
+
+~ observe_status
+DONGA: [AMATI STATUS] Getahnya mengalir deras, menunjukkan reaksi pertahanan diri yang agresif. [wait=4.0]
+=> END
+
+~ observe_cause
+DONGA: [AMATI PENYEBAB] Energi anomali merusak akarnya, membuatnya mengira kita adalah perusak hutan. [wait=4.5]
+=> END
+
+~ observe_unlocked_info
+DONGA: Kamu telah memahami sifat Pohon Meranti! Pilihan tindakan (Engage) kini terbuka. [wait=4.0]
+=> END
+
+~ observe_insufficient
+DONGA: Kamu belum cukup mengamati kebiasaan musuh ini. Lakukan Observe terlebih dahulu! [wait=3.5]
+=> END
+
+~ engage_choice_a
+DONGA: Kamu membungkuk hormat dan berbicara dengan nada yang tenang. [wait=3.0]
+Pohon Meranti: Angin di dedaunannya berbisik lembut, kemarahannya sedikit mereda. [wait=3.5]
+=> END
+
+~ engage_choice_b
+DONGA: Kamu berteriak menantang kekuatannya! [wait=2.0]
+Pohon Meranti: Desisan dedaunan semakin menggelegar! [wait=2.5]
+=> END
+
+~ engage_choice_c
+DONGA: Kamu mempersembahkan embun jernih ke tanah di bawah akarnya. [wait=3.0]
+Pohon Meranti: Getaran tanah melambat, menyerap ketulusan niatmu. [wait=3.0]
+=> END
+
+~ engage_choice_d
+DONGA: Kamu melangkah mundur tanpa mengucapkan sepatah kata pun. [wait=3.0]
+Pohon Meranti: Pohon itu tetap bersiaga mengawasi setiap gerak-gerikmu. [wait=3.0]
+=> END
+
+~ adapt_water
+DONGA: Kamu mengalirkan air jernih ke tanah sekitar pohon. [wait=2.5]
+=> END
+
+~ adapt_plant
+DONGA: Kamu menanam benih pendamping di dekat akarnya. [wait=2.5]
+=> END
+
+~ adapt_path
+DONGA: Kamu membersihkan semak belukar yang menyumbat aliran energinya. [wait=3.0]
+=> END
+
+~ adapt_trap
+DONGA: Kamu menetralkan energi korupsi yang menempel di batangnya. [wait=3.0]
+=> END
+
+~ item_ramuan_akar
+DONGA: Kamu meminum ramuan akar herbal, memulihkan 30 HP! [wait=2.5]
+=> END

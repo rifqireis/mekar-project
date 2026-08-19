@@ -14,6 +14,9 @@
 [ext_resource type="Script" uid="uid://bs12w4xlap5un" path="res://scenes/maps/chika.gd" id="11_5isi1"]
 [ext_resource type="Script" uid="uid://bsaskwjnamxlg" path="res://scenes/maps/door.gd" id="11_v5tgj"]
 [ext_resource type="Texture2D" uid="uid://c7u6jdixvt0yf" path="res://assets/sprites/Chica 1.png" id="13_6tk5g"]
+[ext_resource type="Script" uid="uid://djcut8shg2003" path="res://scenes/maps/orey.gd" id="14_s0kde"]
+[ext_resource type="Texture2D" uid="uid://nruqeeqbtj8w" path="res://assets/sprites/Orey 1.png" id="15_btmcf"]
+[ext_resource type="AudioStream" uid="uid://5jjo2uj5vn2e" path="res://assets/sounds/Slowly Growing.ogg" id="15_fbv17"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_l86s1"]
 texture = ExtResource("3_p6kby")
@@ -3088,7 +3091,7 @@ tracks/4/keys = {
 
 [sub_resource type="Animation" id="Animation_vdlha"]
 resource_name = "autoload_animation"
-length = 11.6
+length = 11.7
 step = 0.1
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -3145,10 +3148,10 @@ tracks/4/path = NodePath("PlayerPath/PlayerFollow:progress_ratio")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 2.4, 3.1, 4.8, 5.5, 6.4666667, 7.5, 8.566667, 9.100001),
+"times": PackedFloat32Array(0, 2.4, 3.2, 4.8, 5.5, 6.5, 7.5, 8.566667, 9.100001),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, 0.316, 0.316, 0.4298, 0.4298, 0.6016, 0.6016, 1.0, 1.0]
+"values": [0.0, 0.4464, 0.4464, 0.7449, 0.7449, 0.9508, 0.9508, 1.0, 1.0]
 }
 tracks/5/type = "method"
 tracks/5/imported = false
@@ -3157,7 +3160,7 @@ tracks/5/path = NodePath(".")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
-"times": PackedFloat32Array(3.3, 5.4, 7.2, 9.3, 11.5),
+"times": PackedFloat32Array(3.2, 5.4, 7.2, 9.3, 11.6),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "values": [{
 "args": ["morning_part_1"],
@@ -3166,13 +3169,13 @@ tracks/5/keys = {
 "args": ["morning_part_2"],
 "method": &"trigger_dialogue"
 }, {
-"args": ["morning_part_1"],
+"args": ["morning_part_3"],
 "method": &"trigger_dialogue"
 }, {
-"args": ["morning_part_2"],
+"args": ["morning_part_6"],
 "method": &"trigger_dialogue"
 }, {
-"args": ["morning_part_1"],
+"args": ["morning_part_5"],
 "method": &"trigger_dialogue"
 }]
 }
@@ -3183,34 +3186,34 @@ tracks/6/path = NodePath("Player")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0, 2.4, 3.1, 3.3, 3.4, 4.8, 5.5, 6.4333334, 7.5, 8.566667, 9.1),
+"times": PackedFloat32Array(0, 2.4, 3.1, 3.2, 3.4, 4.8, 5.5, 6.5, 7.5, 8.566667, 9.1),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "values": [{
+"args": ["walk_right"],
+"method": &"play_cutscene_animation"
+}, {
+"args": ["idle_right"],
+"method": &"play_cutscene_animation"
+}, {
+"args": ["walk_right"],
+"method": &"play_cutscene_animation"
+}, {
+"args": ["idle_up"],
+"method": &"play_cutscene_animation"
+}, {
+"args": ["walk_right"],
+"method": &"play_cutscene_animation"
+}, {
+"args": ["idle_up"],
+"method": &"play_cutscene_animation"
+}, {
+"args": ["walk_left"],
+"method": &"play_cutscene_animation"
+}, {
+"args": ["idle_up"],
+"method": &"play_cutscene_animation"
+}, {
 "args": ["walk_up"],
-"method": &"play_cutscene_animation"
-}, {
-"args": ["idle_right"],
-"method": &"play_cutscene_animation"
-}, {
-"args": ["walk_right"],
-"method": &"play_cutscene_animation"
-}, {
-"args": ["idle_up"],
-"method": &"play_cutscene_animation"
-}, {
-"args": ["walk_right"],
-"method": &"play_cutscene_animation"
-}, {
-"args": ["idle_right"],
-"method": &"play_cutscene_animation"
-}, {
-"args": ["walk_left"],
-"method": &"play_cutscene_animation"
-}, {
-"args": ["idle_up"],
-"method": &"play_cutscene_animation"
-}, {
-"args": ["walk_left"],
 "method": &"play_cutscene_animation"
 }, {
 "args": ["idle_up"],
@@ -3227,7 +3230,7 @@ tracks/7/path = NodePath("Player")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
-"times": PackedFloat32Array(5.4, 7.2, 9.3, 11.5),
+"times": PackedFloat32Array(5.4, 7.2, 9.3, 11.7),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "values": [{
 "args": [],
@@ -3284,8 +3287,6 @@ _data = {
 &"RESET": SubResource("Animation_qwntv"),
 &"autoload_animation": SubResource("Animation_vdlha")
 }
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_u0del"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_w8fcy"]
 atlas = ExtResource("13_6tk5g")
@@ -3474,6 +3475,25 @@ animations = [{
 radius = 56.45166
 height = 193.54883
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_6bfu7"]
+atlas = ExtResource("15_btmcf")
+region = Rect2(0, 194, 129, 194)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cxf33"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6bfu7")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cxf33"]
+radius = 7.0
+height = 26.0
+
 [sub_resource type="Curve2D" id="Curve2D_58ehj"]
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 41, 175.00002, 0, 0, 0, 0, 80, 176.00002, 0, 0, 0, 0, 108, 175.00002, 0, 0, 0, 0, 104, 205.00002, 0, 0, 0, 0, 56, 238.00002)
@@ -3482,9 +3502,12 @@ point_count = 5
 
 [sub_resource type="Curve2D" id="Curve2D_5isi1"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 64, 375, 0, 0, 0, 0, 61, 314, 0, 0, 0, 0, 80, 301, 0, 0, 0, 0, 58, 279, 0, 0, 0, 0, -21, 281)
+"points": PackedVector2Array(0, 0, 0, 0, -56, 281, 0, 0, 0, 0, 46, 290, 0, 0, 0, 0, 101, 250, 0, 0, 0, 0, 56, 261, 0, 0, 0, 0, 56, 250)
 }
 point_count = 5
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u0del"]
+size = Vector2(157, 48)
 
 [node name="RumahDonga" type="Node2D" unique_id=903293741]
 script = ExtResource("1_bbygi")
@@ -3570,15 +3593,8 @@ theme_override_font_sizes/italics_font_size = 40
 theme_override_font_sizes/mono_font_size = 40
 text = "Raflesia"
 
-[node name="Door" type="Area2D" parent="." unique_id=1015511769]
-script = ExtResource("11_v5tgj")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=2134815972]
-position = Vector2(-48, 266)
-shape = SubResource("RectangleShape2D_u0del")
-
 [node name="Chika" type="CharacterBody2D" parent="." unique_id=924721675 node_paths=PackedStringArray("kitchen_marker")]
-position = Vector2(41, 173)
+position = Vector2(106.814606, 181.89049)
 scale = Vector2(0.124, 0.124)
 script = ExtResource("11_5isi1")
 dialogue_resource = ExtResource("1_5isi1")
@@ -3593,6 +3609,20 @@ animation = &"walk_left"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Chika" unique_id=820957807]
 position = Vector2(0, -0.00024414063)
 shape = SubResource("CapsuleShape2D_w8fcy")
+
+[node name="Orey" type="CharacterBody2D" parent="." unique_id=885253481]
+position = Vector2(-18, 35)
+script = ExtResource("14_s0kde")
+dialogue_resource = ExtResource("1_5isi1")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Orey" unique_id=63411211]
+position = Vector2(25.000004, 173)
+scale = Vector2(0.124, 0.124)
+sprite_frames = SubResource("SpriteFrames_cxf33")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Orey" unique_id=1684133456]
+position = Vector2(25, 173)
+shape = SubResource("CapsuleShape2D_cxf33")
 
 [node name="ChikaPath" type="Path2D" parent="." unique_id=1382977974]
 position = Vector2(0, -2.0000153)
@@ -3612,7 +3642,7 @@ update_rotation = false
 curve = SubResource("Curve2D_5isi1")
 
 [node name="PlayerFollow" type="PathFollow2D" parent="PlayerPath" unique_id=895917340]
-position = Vector2(64, 375)
+position = Vector2(-56, 281)
 rotates = false
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="PlayerPath/PlayerFollow" unique_id=1307910225]
@@ -3620,3 +3650,15 @@ remote_path = NodePath("../../../Player")
 
 [node name="KitchenMarker" type="Marker2D" parent="." unique_id=559467594]
 position = Vector2(51, 178)
+
+[node name="Door" type="Area2D" parent="." unique_id=1015511769]
+position = Vector2(0, 21)
+script = ExtResource("11_v5tgj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=2134815972]
+position = Vector2(69, 385)
+shape = SubResource("RectangleShape2D_u0del")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1401709624]
+stream = ExtResource("15_fbv17")
+autoplay = true

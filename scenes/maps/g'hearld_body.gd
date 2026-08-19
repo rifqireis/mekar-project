@@ -4,14 +4,21 @@ extends CharacterBody2D
 
 const MOVEMENT_SPEED: float = 100.0
 
+var is_in_cutscene: bool = false
+
 func _ready() -> void:
 	add_to_group("player") 
 	
 	if PlayerRepository.should_restore_position:
 		global_position = PlayerRepository.last_player_position
 		PlayerRepository.should_restore_position = false
-	
+
+func _physics_process(_delta: float) -> void:
+	if is_in_cutscene:
+		return
+
 func play_cutscene_animation(anim_name: String) -> void:
+	is_in_cutscene = true
 	if anim_name == "walk_left":
 		animated_sprite.flip_h = true
 		animated_sprite.play("walk_right")
@@ -25,6 +32,7 @@ func play_cutscene_animation(anim_name: String) -> void:
 	animated_sprite.play(anim_name)
 	
 func stop_cutscene_animation() -> void:
+	is_in_cutscene = false
 	animated_sprite.stop()
 
 func activate_camera() -> void:

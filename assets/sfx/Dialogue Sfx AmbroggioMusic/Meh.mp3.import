@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://5gg5lky5knpa"
+path="res://.godot/imported/Meh.mp3-1beb2af47cd0a398a6483edf15e9ff4d.mp3str"
+
+[deps]
+
+source_file="res://assets/sfx/Dialogue Sfx AmbroggioMusic/Meh.mp3"
+dest_files=["res://.godot/imported/Meh.mp3-1beb2af47cd0a398a6483edf15e9ff4d.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
