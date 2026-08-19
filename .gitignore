@@ -6,3 +6,5 @@
 *.godot/editor/
 .DS_Store
 Thumbs.db
+
+.git/
