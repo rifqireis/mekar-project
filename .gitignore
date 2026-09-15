@@ -1,10 +1,9 @@
 # Godot 4+ specific ignores
 .godot/
+assets/
 /android/
 .godot/
 *.godot/imported/
 *.godot/editor/
 .DS_Store
 Thumbs.db
-
-.git/
