@@ -6,29 +6,29 @@ Game narrative-adventure dan tactical RPG berbasis Godot Engine. Pemain berperan
 
 ```
 res://
-├── assets/                  # Aset biner (nama file dipertahankan, di-sync via R2)
-├── data/                    # Resource yang di-set lewat Inspector
-│   ├── animations/          # *.res (AnimationLibrary / Animation)
-│   └── enemies/             # EnemyData *.tres (arnoldios, meranti, ular_enggano)
+├── assets/                  
+├── data/                    
+│   ├── animations/          
+│   └── enemies/             
 ├── game/
-│   ├── autoload/            # Singleton global (player_repository, scene_transition, pause_menu)
-│   ├── player/              # Kontrol pemain (Donga)
-│   ├── systems/             # Mekanik inti
-│   │   ├── resolve/         # Resolve System — battle non-kekerasan
-│   │   ├── enemy/           # EnemyData.gd (HP/Trust/Stability/Agitation)
-│   │   └── minigames/       # attack, dodge (pola serangan musuh)
-│   ├── world/               # Lokasi & konten level
-│   │   ├── common/          # Node dunia reusable (camera, door, encounter, npc)
-│   │   ├── characters/      # NPC/makhluk (chicha, orey, ghearld, meranti, ular_enggano)
-│   │   ├── interactables/   # Objek bisa diinteraksi (arnoldios, wood_obstacle)
-│   │   ├── bukit_kaba/      # Bab 1 — Hutan Bukit Kaba (tutorial + boss)
-│   │   ├── rumah_donga/     # Hub naratif (Rumah Bubungan Lima)
-│   │   └── suprapto/        # Hub kota (Distrik Suprapto)
-│   ├── narrative/           # Cerita
-│   │   ├── dialogue/        # Balloon, dialogue box, lines/*.dialogue
-│   │   └── cutscenes/       # Cutscene (introduction)
-│   └── ui/                  # menus (main_menu, about_dev), hud (tutorial_ui)
-├── addons/                  # Plugin eksternal (dialogue_manager)
+│   ├── autoload/            
+│   ├── player/              # donga
+│   ├── systems/             
+│   │   ├── resolve/         
+│   │   ├── enemy/           
+│   │   └── minigames/       # attack, dodge
+│   ├── world/               # lokasi level
+│   │   ├── common/          # semua yg reusable
+│   │   ├── characters/      
+│   │   ├── interactables/   
+│   │   ├── bukit_kaba/      # bab 1
+│   │   ├── rumah_donga/     
+│   │   └── suprapto/        
+│   ├── narrative/           # building plot/cerita
+│   │   ├── dialogue/        
+│   │   └── cutscenes/       
+│   └── ui/                  
+├── addons/                  
 └── project.godot
 ```
 
