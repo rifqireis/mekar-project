@@ -24,6 +24,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          lfs: true
 
       # .import/.uid stay in git (they hold UIDs); everything else ships to R2.
       - name: Build assets archive
