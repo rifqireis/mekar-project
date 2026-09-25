@@ -1,9 +1,67 @@
-# Godot 4+ specific ignores
+# ============================================================
+#  Mekar — Godot 4.x
+#  Aset biner di-host di Cloudflare R2 (bukan di Git).
+#  Metadata Godot (.import / .uid) TETAP di Git karena menyimpan UID.
+#  JANGAN hapus/ignore *.import dan *.uid — scene .tscn/.tres
+#  mereferensikan aset lewat UID di dalam file .import.
+# ============================================================
+
+# --- Godot 4+ cache, import cache & export ---
 .godot/
-assets/
-/android/
-.godot/
-*.godot/imported/
-*.godot/editor/
+*.translation
+
+# --- OS metadata ---
 .DS_Store
 Thumbs.db
+desktop.ini
+__MACOSX/
+._*
+
+# ============================================================
+#  Aset biner -> ada di R2, jangan di-commit
+# ============================================================
+# Gambar
+assets/**/*.png
+assets/**/*.jpg
+assets/**/*.jpeg
+assets/**/*.webp
+assets/**/*.svg
+assets/**/*.bmp
+assets/**/*.tga
+
+# Audio
+assets/**/*.mp3
+assets/**/*.ogg
+assets/**/*.wav
+
+# Video
+assets/**/*.mp4
+assets/**/*.ogv
+assets/**/*.webm
+
+# Font
+assets/**/*.ttf
+assets/**/*.otf
+assets/**/*.woff
+assets/**/*.woff2
+
+# 3D / model
+assets/**/*.glb
+assets/**/*.gltf
+assets/**/*.blend
+assets/**/*.fbx
+assets/**/*.obj
+
+# Arsip / source mentah
+assets/**/*.zip
+
+# ============================================================
+#  PENGECUALIAN (urutan penting: harus di bawah pola di atas)
+#  File .import & .uid WAJIB ikut Git -> menyimpan UID aset.
+# ============================================================
+!assets/**/*.import
+!assets/**/*.uid
+
+# --- Local tool state & dokumen internal (jangan di-commit) ---
+assets.lock
+docs/
