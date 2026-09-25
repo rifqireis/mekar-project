@@ -1,27 +1,15 @@
-# Godot cache & export
 .godot/
 *.translation
-
-# OS metadata
+*.pck
+*.zip
+/build/
+/export/
+addons/*
+!addons/dialogue_manager/
+docs/
+push.sh
 .DS_Store
 Thumbs.db
 desktop.ini
 __MACOSX/
 ._*
-
-# Arsip junk di dalam assets (tidak dipakai)
-assets/**/*.zip
-
-# Addons berat (dialogue_manager tetap dilacak)
-addons/*
-!addons/dialogue_manager/
-
-# Local tool state & dokumen internal
-assets.lock
-assets.manifest
-assets.tar.gz
-assets.sha256
-docs/
-
-# Alat pribadi
-push.sh
