@@ -236,6 +236,9 @@ EOF
 }
 
 main() {
+  case "$BASE_URL" in
+    *example.com*|*xxxx*) die "MEKAR_ASSET_BASE_URL looks like a placeholder: '$BASE_URL'. Unset it or set the real bucket URL." ;;
+  esac
   case "${1:-sync}" in
     sync|install|"") do_sync false ;;
     update|pull)     do_sync true  ;;

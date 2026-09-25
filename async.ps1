@@ -209,6 +209,10 @@ function Show-Usage {
   Write-Host ''
 }
 
+if ($BaseUrl -match 'example\.com|xxxx') {
+  Die "MEKAR_ASSET_BASE_URL looks like a placeholder: '$BaseUrl'. Unset it or set the real bucket URL."
+}
+
 switch ($Command.ToLower()) {
   { $_ -in 'sync', 'install' } { Invoke-Sync $false }
   { $_ -in 'update', 'pull' }  { Invoke-Sync $true }
