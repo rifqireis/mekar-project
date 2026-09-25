@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - "assets/**"
-      - ".github/workflows/as_updater.yml"
+      - ".github/workflows/async.yml"
   workflow_dispatch:
 
 concurrency:
@@ -25,6 +25,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # .import/.uid stay in git (they hold UIDs); everything else ships to R2.
       - name: Build assets archive
         run: |
           set -euo pipefail

@@ -64,4 +64,6 @@ assets/**/*.zip
 
 # --- Local tool state & dokumen internal (jangan di-commit) ---
 assets.lock
+assets.tar.gz
+assets.sha256
 docs/
