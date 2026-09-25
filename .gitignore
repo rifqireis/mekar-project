@@ -22,3 +22,6 @@ assets.manifest
 assets.tar.gz
 assets.sha256
 docs/
+
+# Alat pribadi
+push.sh
