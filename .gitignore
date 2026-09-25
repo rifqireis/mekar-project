@@ -62,6 +62,10 @@ assets/**/*.zip
 !assets/**/*.import
 !assets/**/*.uid
 
+# --- Addons berat (godot_vim + zip). dialogue_manager tetap dilacak. ---
+addons/*
+!addons/dialogue_manager/
+
 # --- Local tool state & dokumen internal (jangan di-commit) ---
 assets.lock
 assets.tar.gz
