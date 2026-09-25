@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://baosrk40326ru"
+path="res://.godot/imported/pohon_meranti.dialogue-f9cfdf260167d2bb9cd40c729379f8c0.tres"
+
+[deps]
+
+source_file="res://game/narrative/dialogue/lines/pohon_meranti.dialogue"
+dest_files=["res://.godot/imported/pohon_meranti.dialogue-f9cfdf260167d2bb9cd40c729379f8c0.tres"]
+
+[params]
+
+defaults=true

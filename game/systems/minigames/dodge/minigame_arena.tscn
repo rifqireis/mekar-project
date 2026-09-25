@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://cr1f3fqojpwiq"]
+
+[ext_resource type="Script" uid="uid://b5u6h313a5t1u" path="res://game/systems/minigames/dodge/minigame_arena.gd" id="1_6ml4e"]
+[ext_resource type="PackedScene" uid="uid://rsgvp3mc2uy1" path="res://game/systems/minigames/dodge/minigame_player.tscn" id="2_j5upo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cxf33"]
+bg_color = Color(0.13725491, 0.13725491, 0.13725491, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 1, 1, 1)
+
+[node name="MinigameArena" type="Node2D" unique_id=935506465]
+script = ExtResource("1_6ml4e")
+
+[node name="Background" type="Panel" parent="." unique_id=1678639501]
+offset_right = 500.0
+offset_bottom = 500.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_cxf33")
+
+[node name="ProjectileContainer" type="Node2D" parent="." unique_id=1461959899]
+
+[node name="MinigamePlayer" parent="." unique_id=1155234502 instance=ExtResource("2_j5upo")]
+
+[node name="ReferenceRect" type="ReferenceRect" parent="." unique_id=87978438]
+offset_right = 500.0
+offset_bottom = 500.0
+border_width = 5.0

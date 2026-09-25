@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://dl7xwrr83igdf"
+path="res://.godot/imported/rumah_donga.dialogue-b212b8a4df421251089d1dab8fc3a7c8.tres"
+
+[deps]
+
+source_file="res://game/narrative/dialogue/lines/rumah_donga.dialogue"
+dest_files=["res://.godot/imported/rumah_donga.dialogue-b212b8a4df421251089d1dab8fc3a7c8.tres"]
+
+[params]
+
+defaults=true

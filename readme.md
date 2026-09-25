@@ -22,30 +22,41 @@ Proyek ini menekankan arsitektur modular dan pemisahan logika dari data, sehingg
 
 ## Struktur Folder
 
+Struktur berbasis fitur/domain (feature-first): setiap sistem & lokasi berisi
+scene + script-nya sendiri. Nama folder mengikuti konteks game (Bab, lokasi,
+karakter) dari proposal.
+
 ```
 res://
-├── assets/
-│   ├── sprites/            # Aset visual karakter, musuh, UI
-│   └── fonts/              # Tipografi antarmuka
-├── scenes/
-│   ├── map/                # Scene eksplorasi dan objek interaktif
-│   ├── battle/
-│   │   ├── battle_ui.tscn  # Antarmuka battle
-│   │   └── minigames/      # Arena minigame (MinigameArena)
-│   └── autoload/           # PlayerRepository.tscn
-├── scripts/
-│   ├── autoload/
-│   │   └── PlayerRepository.gd
-│   ├── battle/
-│   │   ├── battle_ui.gd
-│   │   └── BattleConfig.gd
-│   └── resources/
-│       └── EnemyData.gd
-├── resources/
-│   └── enemies/
-│       └── rafflesia_urbanis.tres
-└── .gitignore
+├── assets/                  # Aset biner (nama file dipertahankan, di-sync via R2)
+├── data/                    # Resource yang di-set lewat Inspector
+│   ├── animations/          # *.res (AnimationLibrary / Animation)
+│   └── enemies/             # EnemyData *.tres (arnoldios, meranti, ular_enggano)
+├── game/
+│   ├── autoload/            # Singleton global (player_repository, scene_transition, pause_menu)
+│   ├── player/              # Kontrol pemain (Donga)
+│   ├── systems/             # Mekanik inti
+│   │   ├── resolve/         # Resolve System — battle non-kekerasan
+│   │   ├── enemy/           # EnemyData.gd (HP/Trust/Stability/Agitation)
+│   │   └── minigames/       # attack, dodge (pola serangan musuh)
+│   ├── world/               # Lokasi & konten level
+│   │   ├── common/          # Node dunia reusable (camera, door, encounter, npc)
+│   │   ├── characters/      # NPC/makhluk (chicha, orey, ghearld, meranti, ular_enggano)
+│   │   ├── interactables/   # Objek bisa diinteraksi (arnoldios, wood_obstacle)
+│   │   ├── bukit_kaba/      # Bab 1 — Hutan Bukit Kaba (tutorial + boss)
+│   │   ├── rumah_donga/     # Hub naratif (Rumah Bubungan Lima)
+│   │   └── suprapto/        # Hub kota (Distrik Suprapto)
+│   ├── narrative/           # Cerita
+│   │   ├── dialogue/        # Balloon, dialogue box, lines/*.dialogue
+│   │   └── cutscenes/       # Cutscene (introduction)
+│   └── ui/                  # menus (main_menu, about_dev), hud (tutorial_ui)
+├── addons/                  # Plugin eksternal (dialogue_manager)
+└── project.godot
 ```
+
+> Konvensi penamaan: `snake_case`, ASCII, tanpa spasi/tanda kurung, scene & script
+> satu nama batang. Ejaan karakter/lokasi mengikuti proposal (mis. `chicha`,
+> `suprapto`, `arnoldios`, `bukit_kaba`).
 
 ## Instalasi
 

@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://cp67ivdw3ldr6"
+path="res://.godot/imported/bukit_kaba.dialogue-52a997ea778235ce4a4d4679ed6f60e5.tres"
+
+[deps]
+
+source_file="res://game/narrative/dialogue/lines/bukit_kaba.dialogue"
+dest_files=["res://.godot/imported/bukit_kaba.dialogue-52a997ea778235ce4a4d4679ed6f60e5.tres"]
+
+[params]
+
+defaults=true

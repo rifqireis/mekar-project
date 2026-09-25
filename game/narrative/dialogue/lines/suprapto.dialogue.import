@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://cii28iqcptmdb"
+path="res://.godot/imported/suprapto.dialogue-f34febff18d927e43b28adb35605b525.tres"
+
+[deps]
+
+source_file="res://game/narrative/dialogue/lines/suprapto.dialogue"
+dest_files=["res://.godot/imported/suprapto.dialogue-f34febff18d927e43b28adb35605b525.tres"]
+
+[params]
+
+defaults=true

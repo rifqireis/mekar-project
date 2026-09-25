@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://dvlvknpcunafs"
+path="res://.godot/imported/wood_obstacle.dialogue-084f7cbc2aa8ed0a763cd71a0f426c26.tres"
+
+[deps]
+
+source_file="res://game/narrative/dialogue/lines/wood_obstacle.dialogue"
+dest_files=["res://.godot/imported/wood_obstacle.dialogue-084f7cbc2aa8ed0a763cd71a0f426c26.tres"]
+
+[params]
+
+defaults=true
