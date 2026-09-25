@@ -68,6 +68,7 @@ addons/*
 
 # --- Local tool state & dokumen internal (jangan di-commit) ---
 assets.lock
+assets.manifest
 assets.tar.gz
 assets.sha256
 docs/

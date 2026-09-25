@@ -6,6 +6,7 @@ BASE_URL="${MEKAR_ASSET_BASE_URL:-https://pub-a7a75b256f2a45ea9e266a6ed801466d.r
 ARCHIVE_NAME="assets.tar.gz"
 CHECKSUM_NAME="assets.sha256"
 LOCK_FILE="assets.lock"
+MANIFEST_FILE="assets.manifest"
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT"
@@ -13,6 +14,7 @@ BASE_URL="${BASE_URL%/}"
 ARCHIVE_URL="${BASE_URL}/${ARCHIVE_NAME}"
 CHECKSUM_URL="${BASE_URL}/${CHECKSUM_NAME}"
 LOCK_PATH="${ROOT}/${LOCK_FILE}"
+MANIFEST_PATH="${ROOT}/${MANIFEST_FILE}"
 
 REMOTE_ETAG=""
 REMOTE_SIZE=""
@@ -60,6 +62,16 @@ asset_files() {
 }
 
 count_files() { asset_files | wc -l | tr -d ' '; }
+
+stale_files() {
+  [ -f "$MANIFEST_PATH" ] || return 0
+  local lf mf
+  lf="$(mktemp)"; mf="$(mktemp)"
+  asset_files | LC_ALL=C sort > "$lf"
+  LC_ALL=C sort "$MANIFEST_PATH" > "$mf"
+  LC_ALL=C comm -23 "$lf" "$mf" | git check-ignore --stdin 2>/dev/null || true
+  rm -f "$lf" "$mf"
+}
 
 size_human() { LC_ALL=C du -sh assets 2>/dev/null | awk '{print $1}' || true; }
 
@@ -205,6 +217,7 @@ do_sync() {
 
   step "extracting"
   tar -xzf "$TMP_FILE" -C "$ROOT"
+  tar -tzf "$TMP_FILE" | grep -v '/$' | grep -vE '\.(import|uid)$' | LC_ALL=C sort > "$MANIFEST_PATH"
   rm -f "$TMP_FILE"; TMP_FILE=""
 
   files="$(count_files)"
@@ -213,6 +226,40 @@ do_sync() {
 
   elapsed=$((SECONDS - start))
   ok "done — ${files} files, $(size_human), ${elapsed}s"
+
+  local stale_count
+  stale_count="$(stale_files | wc -l | tr -d ' ')"
+  if [ "$stale_count" -gt 0 ]; then
+    step "${stale_count} stale file(s) not in archive — run: ./async.sh clean"
+  fi
+  echo
+}
+
+do_clean() {
+  local stale count total
+  [ -f "$MANIFEST_PATH" ] || die "no manifest yet — run ./async.sh first."
+  stale="$(stale_files)"
+  count="$(printf '%s\n' "$stale" | grep -c . || true)"
+  total="$(count_files)"
+  title "clean"; echo
+  if [ "$count" -eq 0 ]; then
+    ok "nothing to clean"
+    echo
+    return 0
+  fi
+  if [ "$total" -gt 0 ] && [ "$count" -gt "$((total / 2))" ]; then
+    warn "refusing: ${count}/${total} files flagged stale — manifest is suspect, run './async.sh update'."
+    echo
+    return 1
+  fi
+  while IFS= read -r f; do
+    [ -n "$f" ] || continue
+    rm -f "$f"
+    printf '  %s %s\n' "${C_DIM}removed${C_OFF}" "$f"
+  done <<< "$stale"
+  find assets -type d -empty -delete 2>/dev/null || true
+  echo
+  ok "removed ${count} stale file(s)"
   echo
 }
 
@@ -224,6 +271,7 @@ ${C_BOLD}Usage${C_OFF}
   ./async.sh            sync assets (default)
   ./async.sh status     show local vs remote state
   ./async.sh update     force re-download
+  ./async.sh clean      remove local assets not in the R2 archive
   ./async.sh help       show this help
 
 ${C_BOLD}Config${C_OFF}
@@ -243,6 +291,7 @@ main() {
     sync|install|"") do_sync false ;;
     update|pull)     do_sync true  ;;
     status|st)       print_status  ;;
+    clean|prune)     do_clean      ;;
     help|-h|--help)  usage         ;;
     *) die "unknown command: $1 (try: ./async.sh help)" ;;
   esac
