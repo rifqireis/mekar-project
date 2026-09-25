@@ -32,10 +32,6 @@ func finish_pattern() -> void:
 	queue_free()
 
 
-# ==============================================================================
-# SPANWER UTAMA: TELEGRAPH ROOT (PREVIEW -> ACTIVE STRIKE)
-# ==============================================================================
-
 ## Memunculkan akar dengan indikator preview di satu atau banyak Marker2D.
 ## Contoh marker_name_or_csv: "1" atau "1, 2, Target1"
 func spawn_telegraph_root(marker_name_or_csv: String, preview_time: float = 0.8, strike_time: float = 0.4) -> void:
@@ -62,10 +58,6 @@ func spawn_telegraph_root(marker_name_or_csv: String, preview_time: float = 0.8,
 		if root_obj.has_method("trigger"):
 			root_obj.trigger(preview_time, strike_time)
 
-
-# ==============================================================================
-# SPAWNER TAMBAHAN (PROYEKTIL STANDAR)
-# ==============================================================================
 
 ## Menembak peluru lurus ke bawah dari marker
 func spawn_from_marker(marker_name_or_csv: String, speed: float = 1200.0) -> void:

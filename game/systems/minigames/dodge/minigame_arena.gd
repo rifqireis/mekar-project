@@ -23,8 +23,6 @@ func _ready() -> void:
 
 func _update_arena_bounds() -> void:
 	arena_size = get_viewport_rect().size
-	#if background:
-		#background.size = arena_size
 	if player and player.has_method("set_bounds"):
 		player.set_bounds(Rect2(Vector2.ZERO, arena_size))
 

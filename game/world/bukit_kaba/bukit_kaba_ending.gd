@@ -16,15 +16,12 @@ func _ready() -> void:
 	start_cutscene_sequence()
 
 func start_cutscene_sequence() -> void:
-	# 1. Mulai animasi jalan
 	if anim_player and anim_player.has_animation("donga_walk"):
 		anim_player.play("donga_walk")
 	
-	# 2. Eksekusi Dialog Monolog dengan Validasi Balon
 	if dialogue_resource:
 		var balloon_node = DialogueManager.show_dialogue_balloon(dialogue_resource, "monologue", [self])
 		
-		# Jika balon dialog berhasil dibuat, tunggu sampai selesai
 		if is_instance_valid(balloon_node):
 			await DialogueManager.dialogue_ended
 		else:
@@ -34,12 +31,10 @@ func start_cutscene_sequence() -> void:
 	else:
 		await get_tree().create_timer(2.0).timeout
 	
-	# 3. Animasi G'Hearld
 	if anim_player and anim_player.has_animation("G'Hearld"):
 		anim_player.play("G'Hearld")
 		await anim_player.animation_finished
 	
-	# 4. Lanjut ke Video & Main Menu
 	await play_cutscene_video()		
 			
 func play_cutscene_video() -> void:
@@ -48,7 +43,6 @@ func play_cutscene_video() -> void:
 		video_player.play()
 		
 		await video_player.finished
-		# get_tree().change_scene_to_file("res://scenes/menus/main_menu.tscn")
 		anim_player.play("end")
 		await anim_player.animation_finished
 				

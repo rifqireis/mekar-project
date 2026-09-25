@@ -5,7 +5,7 @@ var max_hp: int = 100
 var str: int = 15
 
 var current_enemy: EnemyData = null
-var last_map_path: String = "" # <-- Ganti nama last_map_scene menjadi last_map_path
+var last_map_path: String = ""
 var last_player_position: Vector2 = Vector2.ZERO
 
 var should_restore_position: bool = false

@@ -42,7 +42,6 @@ func spawn_from_marker(marker_name_or_csv: String, speed: float = 1200.0) -> voi
 
 
 func spawn_aimed_from_marker(marker_name_or_csv: String, speed: float = 1200.0) -> void:
-	# 1. Cari player jika belum ada referensinya
 	if not is_instance_valid(player_node):
 		player_node = get_tree().get_first_node_in_group("player")
 
@@ -66,11 +65,10 @@ func spawn_aimed_from_marker(marker_name_or_csv: String, speed: float = 1200.0) 
 		add_child(bullet)
 		bullet.global_position = marker.global_position
 
-		# 2. Tentukan arah: jika player ada arahkan ke player, jika tidak ada tembak lurus ke bawah
 		if is_instance_valid(player_node):
 			bullet.direction = marker.global_position.direction_to(player_node.global_position)
 		else:
-			bullet.direction = Vector2.DOWN # Fallback agar saat di-test peluru tetap jalan
+			bullet.direction = Vector2.DOWN
 			
 		bullet.base_speed = speed
 

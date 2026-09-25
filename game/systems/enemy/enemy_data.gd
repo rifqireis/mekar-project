@@ -6,22 +6,12 @@ class_name EnemyData
 @export var base_damage: int = 10
 @export var rage_damage: int = 20
 
-
-# ==============================================================================
-# DIALOGUE RESOURCE
-# ==============================================================================
 @export var dialogue_resource: DialogueResource
 
-# ==============================================================================
-# MINIGAME PATTERNS (NORMAL & RAGE)
-# ==============================================================================
 @export_group("Attack Patterns (Minigame)")
 @export var normal_patterns: Array[PackedScene] = []
 @export var rage_patterns: Array[PackedScene] = []
 
-# ==============================================================================
-# SUPPRESS ACTION (TOMBOL SERANG)
-# ==============================================================================
 @export_group("Suppress Actions")
 @export var suppress_1_name: String = "Pukul"
 @export var suppress_1_hp: int = 20
@@ -33,17 +23,11 @@ class_name EnemyData
 
 @export var suppress_3_name: String = "Tangkap"
 
-# ==============================================================================
-# OBSERVE STATS
-# ==============================================================================
 @export_group("Observe Values")
 @export var observe_species_trust: int = 10
 @export var observe_status_trust: int = 10
 @export var observe_cause_trust: int = 15
 
-# ==============================================================================
-# ENGAGE STATS & LOGIC
-# ==============================================================================
 @export_group("Engage Values")
 @export var choice_a_is_correct: bool = true
 @export var choice_a_trust: int = 25
@@ -57,9 +41,6 @@ class_name EnemyData
 @export var choice_d_is_correct: bool = false
 @export var choice_d_trust: int = 15
 
-# ==============================================================================
-# ADAPT STATS
-# ==============================================================================
 @export_group("Adapt Values")
 @export var adapt_water_stability: int = 25
 @export var adapt_water_trust: int = 10

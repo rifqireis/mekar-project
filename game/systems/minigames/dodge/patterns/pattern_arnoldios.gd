@@ -65,7 +65,6 @@ func spawn_aimed_from_marker(marker_name_or_csv: String, speed: float = 1200.0) 
 			push_warning("spawn_aimed GAGAL: Node Marker '%s' tidak ditemukan di Spawners!" % m_name)
 			continue
 
-		# spawn
 		var dir_to_player = marker.global_position.direction_to(player_node.global_position)
 		var bullet = bullet_scene.instantiate()
 		add_child(bullet)    

@@ -50,17 +50,6 @@ func release_player() -> void:
 	if is_instance_valid(tutorial_ui):
 		tutorial_ui.show_tutorial()
 
-#func change_cam_intro() -> void:
-	#var intro_cam = get_node_or_null("IntroCamera")
-	#if is_instance_valid(intro_cam):
-		#intro_cam.make_current()
-
-#func change_cam_player() -> void:
-	#player_cam.make_current()
-
-#func change_cam_rafflesia() -> void:
-	#rafflesia_cam.make_current()
-
 func change_cam_intro(duration: float = 1.2) -> void:
 	var intro_cam = get_node_or_null("IntroCamera")
 	if is_instance_valid(intro_cam):
@@ -88,7 +77,6 @@ func trigger_startle_effect() -> void:
 		player_cam.make_current()
 		active_cam = player_cam
 
-	# 2. Tween Getar (Shake) pada kamera yang aktif
 	var cam_tween: Tween = create_tween()
 	cam_tween.tween_property(active_cam, "offset", Vector2(8, 8), 0.04)
 	cam_tween.tween_property(active_cam, "offset", Vector2(-8, -8), 0.04)

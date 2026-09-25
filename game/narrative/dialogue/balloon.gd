@@ -135,7 +135,6 @@ func apply_dialogue_line() -> void:
 	character_label.visible = not dialogue_line.character.is_empty()
 	character_label.text = tr(dialogue_line.character, "dialogue")
 
-## MY CUSTOM
 	update_portrait(dialogue_line.character)
 
 	dialogue_label.hide()
@@ -245,5 +244,5 @@ func _on_dialogue_label_spoke(letter: String, letter_index: int, _speed: float) 
 
 	# Bunyikan suara setiap 2 huruf (ubah angka 2 sesuai selera kecepatan)
 	if letter_index % 2 == 0 and audio_stream_player.stream:
-		audio_stream_player.pitch_scale = randf_range(0.95, 1.05) # Variasi nada acak
+		audio_stream_player.pitch_scale = randf_range(0.95, 1.05)
 		audio_stream_player.play()

@@ -44,7 +44,6 @@ func _process(delta: float) -> void:
 	if not is_playing:
 		return
 		
-	# Gerakkan kursor ke kanan
 	cursor.position.x += current_speed * delta
 	
 	if cursor.position.x >= max_x_limit:

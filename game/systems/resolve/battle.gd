@@ -426,15 +426,6 @@ func _transition_to_snake_battle() -> void:
 
 
 func _transition_to_snake_cleared_map() -> void:
-	#PlayerRepository.should_restore_position = true
-	#PlayerRepository.end_battle(true)
-	
-	#var target_path := "res://scenes/maps/maphutan_bab2(3).tscn"
-	#if not ResourceLoader.exists(target_path):
-		#target_path = "res://maphutan_bab2(3).tscn"
-	
-	#SceneTransition.change_scene(target_path)
-
 	PlayerRepository.is_snake_cleared = true
 	_return_to_map()
 		
