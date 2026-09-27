@@ -11,6 +11,7 @@
 [ext_resource type="AudioStream" uid="uid://d1uhf3be4ldfb" path="res://assets/audio/introduction.mp3" id="8_d7182"]
 [ext_resource type="FontFile" uid="uid://ckgpk7nwhmai1" path="res://assets/fonts/Courier_Prime/CourierPrime-Regular.ttf" id="9_8bhm3"]
 [ext_resource type="Animation" uid="uid://bvqsyqx4fyjqk" path="res://data/animations/play_cinematic.res" id="10_v5jfm"]
+[ext_resource type="Texture2D" uid="uid://dxp7n2mxxt3d1" path="res://assets/ui/hud/PRESS “Enter” to skip cutscene.png" id="12_i2kq0"]
 
 [sub_resource type="Animation" id="Animation_d7182"]
 length = 0.001
@@ -706,5 +707,20 @@ text = "Di sebuah masa, jauh di depan sana..."
 horizontal_alignment = 1
 vertical_alignment = 1
 text_direction = 1
+
+[node name="SkipButton" type="Control" parent="." unique_id=1940119732]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SkipHUD" type="TextureRect" parent="SkipButton" unique_id=6816601]
+layout_mode = 0
+offset_left = 1499.0
+offset_top = 1033.0
+offset_right = 2257.0
+offset_bottom = 1073.0
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("12_i2kq0")
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
