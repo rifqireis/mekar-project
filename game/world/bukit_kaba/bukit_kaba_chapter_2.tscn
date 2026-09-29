@@ -915,23 +915,23 @@ position = Vector2(1081, -28)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree99" type="Sprite2D" parent="Area2D" unique_id=1161937603]
-position = Vector2(811, 17)
+position = Vector2(811, 7)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree100" type="Sprite2D" parent="Area2D" unique_id=927417353]
-position = Vector2(872, 19)
+position = Vector2(872, 9)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree101" type="Sprite2D" parent="Area2D" unique_id=1429158422]
-position = Vector2(935, 16)
+position = Vector2(935, 6)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree102" type="Sprite2D" parent="Area2D" unique_id=33517276]
-position = Vector2(1004, 15)
+position = Vector2(1004, 5)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree103" type="Sprite2D" parent="Area2D" unique_id=820994065]
-position = Vector2(1078, 15)
+position = Vector2(1078, 5)
 texture = ExtResource("4_kxjp4")
 
 [node name="Tree39" type="Sprite2D" parent="Area2D" unique_id=1141551288]

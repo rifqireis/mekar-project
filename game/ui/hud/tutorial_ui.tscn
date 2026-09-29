@@ -8,6 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://b44ofeipbha23" path="res://assets/ui/maphutan/d.png" id="5_110q8"]
 [ext_resource type="Texture2D" uid="uid://bdnu0vlm1234e" path="res://assets/ui/maphutan/arrow.png" id="6_wsixu"]
 [ext_resource type="Texture2D" uid="uid://dmoidk4ut78rg" path="res://assets/sprites/Donga 1.png" id="7_weu15"]
+[ext_resource type="Texture2D" uid="uid://dp2x48xfadlxq" path="res://assets/ui/etc/d.png" id="9_67bbk"]
+[ext_resource type="FontFile" uid="uid://dk74fmgjeermg" path="res://assets/fonts/raybees/Raybees-Regular.otf" id="10_5206f"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_24lle"]
 atlas = ExtResource("7_weu15")
@@ -201,20 +203,18 @@ custom_minimum_size = Vector2(600, 300)
 layout_mode = 2
 texture = ExtResource("1_c5u2a")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=1131622853]
-position = Vector2(492.5, 133)
-scale = Vector2(0.8, 0.8)
-sprite_frames = SubResource("SpriteFrames_fe65g")
-autoplay = "default"
-frame = 1
-frame_progress = 0.8557932
+[node name="D" type="Sprite2D" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=1664439397]
+position = Vector2(467.00003, 122.00003)
+scale = Vector2(4.425001, 4.425001)
+texture = ExtResource("9_67bbk")
 
 [node name="Label" type="Label" parent="MarginContainer/HBoxContainer/PanelMovement2" unique_id=470224149]
 layout_mode = 0
-offset_left = 115.0
-offset_top = 43.0
-offset_right = 381.0
-offset_bottom = 226.0
+offset_left = 72.0
+offset_top = 70.0
+offset_right = 364.0
+offset_bottom = 253.0
+theme_override_fonts/font = ExtResource("10_5206f")
 theme_override_font_sizes/font_size = 65
 text = "\"E\" To
 Interact."

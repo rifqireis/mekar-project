@@ -16,6 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://cplrnf4v8a6hl" path="res://assets/ui/main_menu/play_hover.png" id="12_e0hcc"]
 [ext_resource type="AudioStream" uid="uid://c3y3rld3pcuf8" path="res://assets/sounds/A Strange Night.mp3" id="15_877pj"]
 [ext_resource type="Animation" uid="uid://bpbkoc4kjh74" path="res://data/animations/autoload_animation.res" id="15_ayp64"]
+[ext_resource type="Texture2D" uid="uid://bmbjaxxd1xdle" path="res://assets/ui/main_menu/MuteSoundBefore.png" id="17_5qrw6"]
 
 [sub_resource type="Animation" id="Animation_8ekit"]
 length = 0.001
@@ -253,6 +254,14 @@ color = Color(0, 0, 0, 1)
 stream = ExtResource("15_877pj")
 autoplay = true
 
+[node name="MuteButton" type="TextureButton" parent="." unique_id=1935477910]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 951.0
+offset_right = 124.0
+offset_bottom = 1051.0
+texture_normal = ExtResource("17_5qrw6")
+
 [connection signal="gui_input" from="RightPanel" to="." method="_on_right_panel_gui_input"]
 [connection signal="mouse_entered" from="AboutDevButton" to="." method="_on_about_dev_button_mouse_entered"]
 [connection signal="pressed" from="AboutDevButton" to="." method="_on_about_dev_button_pressed"]
@@ -261,3 +270,4 @@ autoplay = true
 [connection signal="mouse_entered" from="PlayButton" to="." method="_on_play_button_mouse_entered"]
 [connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="gui_input" from="SwordClickArea" to="." method="_on_sword_click_area_gui_input"]
+[connection signal="pressed" from="MuteButton" to="." method="_on_mute_button_pressed"]
