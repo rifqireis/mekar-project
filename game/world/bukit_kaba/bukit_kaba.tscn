@@ -18,9 +18,9 @@
 [ext_resource type="Texture2D" uid="uid://b3ytso6f8bf63" path="res://assets/ui/maphutan/donga_dialogue.png" id="7_m7ymt"]
 [ext_resource type="Texture2D" uid="uid://d0lmtt5a6fjlg" path="res://assets/tiles/forest/stones/Wall_01.png" id="7_tuifp"]
 [ext_resource type="Resource" uid="uid://bs11yvkr7lie7" path="res://data/enemies/arnoldios.tres" id="7_xxbdk"]
-[ext_resource type="Texture2D" uid="uid://bljxvodoat1wx" path="res://assets/ui/maphutan/rafflesia.png" id="8_24lle"]
 [ext_resource type="Texture2D" uid="uid://c4rgp856to2wa" path="res://assets/tiles/forest/bushes/bush_darkShadow_01.png" id="8_tuifp"]
 [ext_resource type="Texture2D" uid="uid://clm515aqpn2ky" path="res://assets/tiles/forest/stones/little stone_01.png" id="9_22nj0"]
+[ext_resource type="Texture2D" uid="uid://d251lbcjh0pg0" path="res://assets/ui/maphutan/RafflesiaRendered.png" id="10_77yi5"]
 [ext_resource type="Texture2D" uid="uid://dqkqcq7v1hlku" path="res://assets/tiles/forest/stones/little stone_04.png" id="10_nyl8k"]
 [ext_resource type="Texture2D" uid="uid://d0hjlooeyhf21" path="res://assets/tiles/fantasy_world/characters/Rafflesia.png" id="14_nyl8k"]
 [ext_resource type="Script" uid="uid://cpcit2b6yuuj3" path="res://game/world/interactables/arnoldios_area.gd" id="16_rnn7i"]
@@ -887,11 +887,12 @@ texture = ExtResource("7_m7ymt")
 visible = false
 show_behind_parent = true
 layout_mode = 0
-offset_left = 942.0
-offset_top = -567.0
-offset_right = 2124.0
-offset_bottom = 405.0
-texture = ExtResource("8_24lle")
+offset_left = 973.00006
+offset_top = -685.00006
+offset_right = 1862.0
+offset_bottom = 566.99994
+scale = Vector2(0.7913438, 0.7913438)
+texture = ExtResource("10_77yi5")
 stretch_mode = 4
 
 [node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=1601444571]
@@ -1064,7 +1065,7 @@ position = Vector2(289.2859, 106.54765)
 scale = Vector2(0.72761685, 0.72761685)
 
 [node name="Sprite2D5" type="Sprite2D" parent="TileMap/Pohon1/Area2D3" unique_id=1973294588]
-position = Vector2(177.16672, -60.071514)
+position = Vector2(161.15897, -61.354935)
 scale = Vector2(0.99999994, 0.99999994)
 texture = ExtResource("4_orqae")
 
@@ -2160,6 +2161,7 @@ scale_amount_max = 5.0
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=2080269485]
 stream = ExtResource("28_aighs")
 autoplay = true
+parameters/looping = true
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1905900684]
 z_index = 3
