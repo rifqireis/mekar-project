@@ -1277,6 +1277,7 @@ position = Vector2(768, 87)
 remote_path = NodePath("../../../G\'HearldBody")
 
 [node name="UlarEnggano" type="Area2D" parent="." unique_id=753622414]
+position = Vector2(-160, 104)
 script = ExtResource("11_uwhn5")
 enemy_data = ExtResource("12_ne5qy")
 

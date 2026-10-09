@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://d7ea8yijnaug" path="res://assets/dialgoues_char/DONE Chica (istri donga) 1.png" id="4_m00rr"]
 [ext_resource type="Texture2D" uid="uid://ccu6r6dt12ghg" path="res://assets/dialgoues_char/Bossman 1.png" id="5_2x2yy"]
 [ext_resource type="Texture2D" uid="uid://b3ytso6f8bf63" path="res://assets/ui/maphutan/donga_dialogue.png" id="5_gb3oo"]
+[ext_resource type="Texture2D" uid="uid://dg86y166s7j1s" path="res://assets/dialgoues_char/Mas Ikal.png" id="7_dqeag"]
 [ext_resource type="AudioStream" uid="uid://byt6s57ycts6" path="res://assets/sfx/Dialogue Sfx AmbroggioMusic/Retro Low.mp3" id="10_2x2yy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_spyqn"]
@@ -162,6 +163,15 @@ offset_bottom = 961.0
 texture = ExtResource("5_2x2yy")
 stretch_mode = 2
 
+[node name="MasIkal" type="TextureRect" parent="Balloon" unique_id=315367979]
+layout_mode = 0
+offset_left = 939.0
+offset_right = 3939.0
+offset_bottom = 4000.0
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("7_dqeag")
+stretch_mode = 2
+
 [node name="MarginContainer" type="MarginContainer" parent="Balloon" unique_id=1011109179]
 layout_mode = 1
 anchors_preset = 12
@@ -173,6 +183,7 @@ grow_horizontal = 2
 grow_vertical = 0
 
 [node name="PanelContainer" type="TextureRect" parent="Balloon/MarginContainer" unique_id=1321395688]
+unique_name_in_owner = true
 clip_children = 2
 layout_mode = 2
 texture = ExtResource("3_rvrp7")

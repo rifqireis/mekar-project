@@ -1,50 +1,83 @@
 extends CanvasLayer
-## A basic dialogue balloon for use with Dialogue Manager.
+
+enum CharacterCategory { HUMAN, BEAST, FLORA }
+
+const CHAR_CATEGORIES: Dictionary = {
+	"donga": CharacterCategory.HUMAN,
+	"chicha": CharacterCategory.HUMAN,
+	"chika": CharacterCategory.HUMAN,
+	"orey": CharacterCategory.HUMAN,
+	"warga kota": CharacterCategory.HUMAN,
+	"warga": CharacterCategory.HUMAN,
+	"pemuda": CharacterCategory.HUMAN,
+	"freelancer": CharacterCategory.HUMAN,
+	"nenek": CharacterCategory.HUMAN,
+	"bossman": CharacterCategory.HUMAN,
+	"mas ikal": CharacterCategory.HUMAN,
+	"masikal": CharacterCategory.HUMAN,
+
+	"azriel": CharacterCategory.BEAST,
+	"nogura": CharacterCategory.BEAST,
+	"g’hearld": CharacterCategory.BEAST,
+	"g'hearld": CharacterCategory.BEAST,
+	"ghearld": CharacterCategory.BEAST,
+	"ular enggano": CharacterCategory.BEAST,
+	"leonion": CharacterCategory.BEAST,
+	"siamang": CharacterCategory.BEAST,
+
+	"arnoldios": CharacterCategory.FLORA,
+	"pohon meranti": CharacterCategory.FLORA,
+	"meranti": CharacterCategory.FLORA,
+	"rafflesia": CharacterCategory.FLORA
+}
+
+@export_group("Dialogue Box Textures")
+@export var texture_human: Texture2D = preload("res://assets/ui/maphutan/donga_dialoguebox.png")
+@export var texture_beast: Texture2D = preload("res://assets/ui/PanelContainerHewan.png")
+@export var texture_flora: Texture2D = preload("res://assets/ui/PanelContainerFlora.png")
+
+@export_group("Dialogue Settings")
 @export var portraits: Dictionary[String, Texture2D] = {}
-
-## The dialogue resource
+@export var character_voices: Dictionary[String, AudioStream] = {}
+@export var character_pitches: Dictionary[String, float] = {}
+@export var category_voices: Dictionary[String, AudioStream] = {}
+@export var category_pitches: Dictionary[String, float] = {}
+@export var default_voice: AudioStream = preload("res://assets/sfx/Dialogue Sfx AmbroggioMusic/Retro Low.mp3")
+@export var default_pitch: float = 1.0
+@export var pitch_randomness: float = 0.04
+@export var voice_frequency: int = 2
 @export var dialogue_resource: DialogueResource
-
-## Start from a given title when using balloon as a [Node] in a scene.
 @export var start_from_title: String = ""
-
-## If running as a [Node] in a scene then auto start the dialogue.
 @export var auto_start: bool = false
-
-## If all other input is blocked as long as dialogue is shown.
 @export var will_block_other_input: bool = true
-
-## The action to use for advancing the dialogue
 @export var next_action: StringName = &"ui_accept"
-
-## The action to use to skip typing the dialogue
 @export var skip_action: StringName = &"ui_cancel"
 
-## A sound player for voice lines (if they exist).
 @onready var audio_stream_player: AudioStreamPlayer = %AudioStreamPlayer
+@onready var balloon: Control = %Balloon
+@onready var character_label: RichTextLabel = %CharacterLabel
+@onready var dialogue_label: DialogueLabel = %DialogueLabel
+@onready var responses_menu: DialogueResponsesMenu = %ResponsesMenu
+@onready var progress: Polygon2D = %Progress
+@onready var panel_container: TextureRect = %PanelContainer if has_node("%PanelContainer") else null
 
-## Temporary game states
+var _current_voice_stream: AudioStream = null
+var _current_base_pitch: float = 1.0
+var _current_voice_step: int = 2
+
 var temporary_game_states: Array = []
-
-## See if we are waiting for the player
 var is_waiting_for_input: bool = false
-
-## See if we are running a long mutation and should hide the balloon
 var will_hide_balloon: bool = false
-
-## A dictionary to store any ephemeral variables
 var locals: Dictionary = {}
-
 var _locale: String = TranslationServer.get_locale()
+var mutation_cooldown: Timer = Timer.new()
 
-## The current line
 var dialogue_line: DialogueLine:
 	set(value):
 		if value:
 			dialogue_line = value
 			apply_dialogue_line()
 		else:
-			# The dialogue has finished so close the balloon
 			if owner == null:
 				queue_free()
 			else:
@@ -52,32 +85,23 @@ var dialogue_line: DialogueLine:
 	get:
 		return dialogue_line
 
-## A cooldown timer for delaying the balloon hide when encountering a mutation.
-var mutation_cooldown: Timer = Timer.new()
-
-## The base balloon anchor
-@onready var balloon: Control = %Balloon
-
-## The label showing the name of the currently speaking character
-@onready var character_label: RichTextLabel = %CharacterLabel
-
-## The label showing the currently spoken dialogue
-@onready var dialogue_label: DialogueLabel = %DialogueLabel
-
-## The menu of responses
-@onready var responses_menu: DialogueResponsesMenu = %ResponsesMenu
-
-## Indicator to show that player can progress dialogue.
-@onready var progress: Polygon2D = %Progress
-
-
 func _ready() -> void:
 	balloon.hide()
+	if not texture_human:
+		texture_human = load("res://assets/ui/maphutan/donga_dialoguebox.png")
+	if not texture_beast:
+		texture_beast = load("res://assets/ui/PanelContainerHewan.png")
+	if not texture_flora:
+		texture_flora = load("res://assets/ui/PanelContainerFlora.png")
+	if not panel_container and has_node("%PanelContainer"):
+		panel_container = %PanelContainer
+	elif not panel_container and has_node("Balloon/MarginContainer/PanelContainer"):
+		panel_container = get_node("Balloon/MarginContainer/PanelContainer") as TextureRect
+
 	Engine.get_singleton("DialogueManager").mutated.connect(_on_mutated)
-	
+
 	if dialogue_label:
 		dialogue_label.spoke.connect(_on_dialogue_label_spoke)
-	# If the responses menu doesn't have a next action set, use this one
 	if responses_menu.next_action.is_empty():
 		responses_menu.next_action = next_action
 
@@ -89,20 +113,15 @@ func _ready() -> void:
 			assert(false, DMConstants.get_error_message(DMConstants.ERR_MISSING_RESOURCE_FOR_AUTOSTART))
 		start()
 
-
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if is_instance_valid(dialogue_line):
 		progress.visible = not dialogue_label.is_typing and dialogue_line.responses.size() == 0 and not dialogue_line.has_tag("voice")
 
-
 func _unhandled_input(_event: InputEvent) -> void:
-	# Only the balloon is allowed to handle input while it's showing
 	if will_block_other_input:
 		get_viewport().set_input_as_handled()
 
-
 func _notification(what: int) -> void:
-	## Detect a change of locale and update the current dialogue line to show the new language
 	if what == NOTIFICATION_TRANSLATION_CHANGED and _locale != TranslationServer.get_locale() and is_instance_valid(dialogue_label):
 		_locale = TranslationServer.get_locale()
 		var visible_ratio: float = dialogue_label.visible_ratio
@@ -110,8 +129,6 @@ func _notification(what: int) -> void:
 		if visible_ratio < 1:
 			dialogue_label.skip_typing()
 
-
-## Start some dialogue
 func start(with_dialogue_resource: DialogueResource = null, title: String = "", extra_game_states: Array = []) -> void:
 	temporary_game_states = [self] + extra_game_states
 	is_waiting_for_input = false
@@ -122,8 +139,6 @@ func start(with_dialogue_resource: DialogueResource = null, title: String = "", 
 	dialogue_line = await dialogue_resource.get_next_dialogue_line(start_from_title, temporary_game_states)
 	show()
 
-
-## Apply any changes to the balloon given a new [DialogueLine].
 func apply_dialogue_line() -> void:
 	mutation_cooldown.stop()
 
@@ -136,6 +151,8 @@ func apply_dialogue_line() -> void:
 	character_label.text = tr(dialogue_line.character, "dialogue")
 
 	update_portrait(dialogue_line.character)
+	update_dialogue_box_texture(dialogue_line.character, dialogue_line.tags)
+	update_typewriter_voice(dialogue_line.character, dialogue_line.tags)
 
 	dialogue_label.hide()
 	dialogue_label.dialogue_line = dialogue_line
@@ -143,7 +160,6 @@ func apply_dialogue_line() -> void:
 	responses_menu.hide()
 	responses_menu.responses = dialogue_line.responses
 
-	# Show our balloon
 	balloon.show()
 	will_hide_balloon = false
 
@@ -152,7 +168,6 @@ func apply_dialogue_line() -> void:
 		dialogue_label.type_out()
 		await dialogue_label.finished_typing
 
-	# Wait for next line
 	if dialogue_line.has_tag("voice"):
 		audio_stream_player.stream = load(dialogue_line.get_tag_value("voice"))
 		audio_stream_player.play()
@@ -170,20 +185,13 @@ func apply_dialogue_line() -> void:
 		balloon.focus_mode = Control.FOCUS_ALL
 		balloon.grab_focus()
 
-
-## Go to the next line
 func next(next_id: String) -> void:
 	dialogue_line = await dialogue_resource.get_next_dialogue_line(next_id, temporary_game_states)
-
-
-#region Signals
-
 
 func _on_mutation_cooldown_timeout() -> void:
 	if will_hide_balloon:
 		will_hide_balloon = false
 		balloon.hide()
-
 
 func _on_mutated(mutation: Dictionary) -> void:
 	if not mutation.is_inline:
@@ -191,9 +199,7 @@ func _on_mutated(mutation: Dictionary) -> void:
 		will_hide_balloon = true
 		mutation_cooldown.start(0.1)
 
-
 func _on_balloon_gui_input(event: InputEvent) -> void:
-	# See if we need to skip typing of the dialogue
 	if dialogue_label.is_typing:
 		var mouse_was_clicked: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed()
 		var skip_button_was_pressed: bool = event.is_action_pressed(skip_action)
@@ -205,7 +211,6 @@ func _on_balloon_gui_input(event: InputEvent) -> void:
 	if not is_waiting_for_input: return
 	if dialogue_line.responses.size() > 0: return
 
-	# When there are no response options the balloon itself is the clickable thing
 	get_viewport().set_input_as_handled()
 
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
@@ -213,19 +218,62 @@ func _on_balloon_gui_input(event: InputEvent) -> void:
 	elif event.is_action_pressed(next_action) and get_viewport().gui_get_focus_owner() == balloon:
 		next(dialogue_line.next_id)
 
-
 func _on_responses_menu_response_selected(response: DialogueResponse) -> void:
 	next(response.next_id)
 
+func _clean_name(value: String) -> String:
+	var s := value.to_lower().replace(" ", "").replace("_", "").replace("-", "").replace("'", "").replace("’", "")
+	if s == "chicha":
+		return "chika"
+	return s
 
-#endregion
+func get_character_category(character_name: String, tags: PackedStringArray = []) -> CharacterCategory:
+	for tag in tags:
+		var t := tag.to_lower()
+		if t in ["flora", "tumbuhan", "tanaman"]:
+			return CharacterCategory.FLORA
+		elif t in ["beast", "satwa", "hewan"]:
+			return CharacterCategory.BEAST
+		elif t in ["human", "manusia"]:
+			return CharacterCategory.HUMAN
+
+	var clean := _clean_name(character_name)
+	for key in CHAR_CATEGORIES:
+		if _clean_name(key) == clean:
+			return CHAR_CATEGORIES[key]
+
+	return CharacterCategory.HUMAN
+
+func update_dialogue_box_texture(character_name: String, tags: PackedStringArray = []) -> void:
+	var box_node: TextureRect = panel_container
+	if not box_node and has_node("%PanelContainer"):
+		box_node = %PanelContainer
+	if not box_node and has_node("Balloon/MarginContainer/PanelContainer"):
+		box_node = get_node("Balloon/MarginContainer/PanelContainer") as TextureRect
+	if not box_node:
+		return
+
+	var category := get_character_category(character_name, tags)
+	match category:
+		CharacterCategory.BEAST:
+			if texture_beast:
+				box_node.texture = texture_beast
+		CharacterCategory.FLORA:
+			if texture_flora:
+				box_node.texture = texture_flora
+		_:
+			if texture_human:
+				box_node.texture = texture_human
 
 func update_portrait(character_name: String) -> void:
+	var target := _clean_name(character_name)
 	for child in balloon.get_children():
 		if child is TextureRect or child is Sprite2D:
-			if child.name.to_lower() == character_name.to_lower():
+			if child.name in ["SlantedDialogueBox", "Background"]:
+				continue
+			if not target.is_empty() and _clean_name(child.name) == target:
 				child.show()
-			elif child.name not in ["SlantedDialogueBox", "Background"]: 
+			else:
 				child.hide()
 
 	if has_node("%Portrait"):
@@ -236,13 +284,134 @@ func update_portrait(character_name: String) -> void:
 		elif character_name.is_empty():
 			portrait_node.hide()
 
+func update_typewriter_voice(character_name: String, tags: PackedStringArray = []) -> void:
+	var clean := _clean_name(character_name)
+
+	var stream_found: AudioStream = null
+	var pitch_found: float = -1.0
+	var step_found: int = voice_frequency
+
+	for k in character_voices:
+		if _clean_name(k) == clean:
+			stream_found = character_voices[k]
+			break
+
+	for k in character_pitches:
+		if _clean_name(k) == clean:
+			pitch_found = character_pitches[k]
+			break
+
+	var category := get_character_category(character_name, tags)
+	var cat_str := ""
+	match category:
+		CharacterCategory.HUMAN:
+			cat_str = "human"
+		CharacterCategory.BEAST:
+			cat_str = "beast"
+		CharacterCategory.FLORA:
+			cat_str = "flora"
+
+	if not stream_found:
+		for k in category_voices:
+			if k.to_lower() == cat_str:
+				stream_found = category_voices[k]
+				break
+
+	if pitch_found < 0.0:
+		for k in category_pitches:
+			if k.to_lower() == cat_str:
+				pitch_found = category_pitches[k]
+				break
+
+	if not stream_found:
+		stream_found = _get_builtin_character_voice(clean, category)
+
+	if pitch_found < 0.0:
+		pitch_found = _get_builtin_character_pitch(clean, category)
+
+	_current_voice_stream = stream_found if stream_found else default_voice
+	_current_base_pitch = pitch_found if pitch_found > 0.0 else default_pitch
+	_current_voice_step = step_found
+
+func _get_builtin_character_voice(clean_name: String, category: CharacterCategory) -> AudioStream:
+	match clean_name:
+		"donga":
+			return preload("res://assets/sfx/Dialogue Sfx AmbroggioMusic/Retro Low.mp3")
+		"chika", "chicha":
+			return preload("res://assets/sfx/Dialogue Sfx AmbroggioMusic/Retro Ascend.mp3")
+		"orey":
+			return preload("res://assets/sfx/Dialogue Sfx AmbroggioMusic/Retro Double.mp3")
+		"bossman":
+			return preload("res://assets/sfx/Dialogue Sfx AmbroggioMusic/Retro Low.mp3")
+		"masikal":
+			return preload("res://assets/sfx/Dialogue Sfx AmbroggioMusic/Retro Ascend.mp3")
+		"nenek":
+			return preload("res://assets/sfx/Dialogue Sfx AmbroggioMusic/Meh.mp3")
+		"pemuda", "warga", "wargakota", "freelancer":
+			return preload("res://assets/sfx/Dialogue Sfx AmbroggioMusic/Retro Low.mp3")
+		"arnoldios", "meranti", "pohonmeranti", "rafflesia":
+			return preload("res://assets/sfx/Dialogue Sfx AmbroggioMusic/Garble Short 1.mp3")
+		"ularenggano", "azriel", "nogura", "ghearld", "leonion", "siamang":
+			return preload("res://assets/sfx/Dialogue Sfx AmbroggioMusic/Garble Short 2.mp3")
+		_:
+			match category:
+				CharacterCategory.BEAST:
+					return preload("res://assets/sfx/Dialogue Sfx AmbroggioMusic/Garble Short 2.mp3")
+				CharacterCategory.FLORA:
+					return preload("res://assets/sfx/Dialogue Sfx AmbroggioMusic/Garble Short 1.mp3")
+				_:
+					return default_voice
+
+func _get_builtin_character_pitch(clean_name: String, category: CharacterCategory) -> float:
+	match clean_name:
+		"donga":
+			return 1.00
+		"chika", "chicha":
+			return 1.30
+		"orey":
+			return 1.15
+		"bossman":
+			return 0.72
+		"masikal":
+			return 1.05
+		"nenek":
+			return 0.90
+		"pemuda":
+			return 1.10
+		"freelancer":
+			return 0.95
+		"warga", "wargakota":
+			return 1.00
+		"arnoldios", "rafflesia":
+			return 0.78
+		"meranti", "pohonmeranti":
+			return 0.70
+		"ularenggano":
+			return 0.65
+		"azriel", "nogura", "leonion":
+			return 0.75
+		"siamang":
+			return 1.20
+		_:
+			match category:
+				CharacterCategory.BEAST:
+					return 0.75
+				CharacterCategory.FLORA:
+					return 0.80
+				_:
+					return default_pitch
 
 func _on_dialogue_label_spoke(letter: String, letter_index: int, _speed: float) -> void:
-	# Abaikan spasi dan enter
 	if letter == " " or letter == "\n" or letter == "\t":
 		return
 
-	# Bunyikan suara setiap 2 huruf (ubah angka 2 sesuai selera kecepatan)
-	if letter_index % 2 == 0 and audio_stream_player.stream:
-		audio_stream_player.pitch_scale = randf_range(0.95, 1.05)
-		audio_stream_player.play()
+	var step := _current_voice_step if _current_voice_step > 0 else 2
+	if letter_index % step == 0 and audio_stream_player:
+		var stream_to_play: AudioStream = _current_voice_stream if _current_voice_stream else audio_stream_player.stream
+		if not stream_to_play:
+			stream_to_play = default_voice
+		if stream_to_play:
+			audio_stream_player.stream = stream_to_play
+			var r: float = pitch_randomness
+			audio_stream_player.pitch_scale = _current_base_pitch * randf_range(1.0 - r, 1.0 + r)
+			audio_stream_player.play()

@@ -3,10 +3,13 @@
 [ext_resource type="Resource" uid="uid://baosrk40326ru" path="res://game/narrative/dialogue/lines/pohon_meranti.dialogue" id="1_3yfw3"]
 [ext_resource type="Script" uid="uid://clh8s6xa7ml8y" path="res://game/systems/enemy/enemy_data.gd" id="1_rpej5"]
 [ext_resource type="PackedScene" uid="uid://grj5nwkpdubs" path="res://game/systems/minigames/dodge/patterns/pattern_meranti.tscn" id="2_im2dy"]
+[ext_resource type="Texture2D" uid="uid://caoxc8hngdws6" path="res://assets/sprites/meranti_mad_icon.png" id="3_icon"]
 
 [resource]
 script = ExtResource("1_rpej5")
 enemy_name = "meranti_mad_tree"
+display_name = "POHON MERANTI"
+enemy_icon = ExtResource("3_icon")
 dialogue_resource = ExtResource("1_3yfw3")
 normal_patterns = Array[PackedScene]([ExtResource("2_im2dy")])
 suppress_1_hp = 15

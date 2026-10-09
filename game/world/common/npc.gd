@@ -2,7 +2,7 @@ class_name UniversalNPC
 extends StaticBody2D
 
 @export var dialogue_resource: DialogueResource
-@export var dialogue_title: String = "npc0_seller"
+@export var dialogue_title: String = "mas_ikal"
 
 var is_interacting: bool = false
 

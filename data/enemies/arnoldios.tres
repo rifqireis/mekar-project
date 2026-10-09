@@ -3,10 +3,15 @@
 [ext_resource type="PackedScene" uid="uid://bcblm84u3b2vl" path="res://game/systems/minigames/dodge/patterns/pattern_arnoldios.tscn" id="1_5mj4j"]
 [ext_resource type="Resource" uid="uid://c57g1fr3sfc0j" path="res://game/narrative/dialogue/lines/battle.dialogue" id="2_6jchr"]
 [ext_resource type="Script" uid="uid://clh8s6xa7ml8y" path="res://game/systems/enemy/enemy_data.gd" id="3_tcic1"]
+[ext_resource type="Texture2D" uid="uid://bkvkq1kh07gy5" path="res://assets/ui/battle/main/Group 646.png" id="4_card"]
+[ext_resource type="Texture2D" uid="uid://d251lbcjh0pg0" path="res://assets/ui/maphutan/RafflesiaRendered.png" id="5_icon"]
 
 [resource]
 script = ExtResource("3_tcic1")
 enemy_name = "Rafflesia"
+display_name = "Arnoldios"
+enemy_icon = ExtResource("5_icon")
+stats_card_texture = ExtResource("4_card")
 dialogue_resource = ExtResource("2_6jchr")
 normal_patterns = Array[PackedScene]([ExtResource("1_5mj4j")])
 metadata/_custom_type_script = "uid://clh8s6xa7ml8y"

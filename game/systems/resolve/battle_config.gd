@@ -8,7 +8,6 @@ const AGITATION_ON_WRONG_TALK: int = 15
 const DAMAGE_SEVERITY_DIVISOR: float = 60.
 
 const LOG_MISS: String = "* Serangan Donga meleset! Target tertawa tanpa terluka."
-const LOG_CAPTURE_FAIL: String = "* Donga mencoba mencari celah untuk menangkap anomali... (Belum siap!)"
 const LOG_OBSERVE_DONE: String = "* [INFO]: Akar masalah dipahami! Entri Tambo terbuka & AJAK BICARA (Engage) kini aktif!"
 const LOG_TRUST_HALFWAY: String = "\n* [STATUS]: Agresi musuh menurun!"
 
