@@ -1,14 +1,17 @@
 ~ npc0_seller
+=> mas_ikal
+
+~ mas_ikal
 if is_list_taken == true and is_groceries_bought == false:
-	Penjual: Halo Donga! Mau ambil pesanan Chika ya?
+	Mas Ikal: Halo Donga! Mau ambil pesanan Chika ya?
 	Donga: Iya Mang, ini daftar belanjanya.
-	Penjual: Siap, ini beras, telur, sama sayurnya sudah dibungkus rapi.
+	Mas Ikal: Siap, ini beras, telur, sama sayurnya sudah dibungkus rapi.
 	Donga: Terima kasih Mang!
 	set is_groceries_bought = true
 elif is_groceries_bought == true:
-	Penjual: Semua belanjaanmu sudah lengkap. Hati-hati di jalan ya Donga!
+	Mas Ikal: Semua belanjaanmu sudah lengkap. Hati-hati di jalan ya Donga!
 else:
-	Penjual: Buah dan sayur segar! Ayo dibeli sebelum kehabisan!
+	Mas Ikal: Buah dan sayur segar! Ayo dibeli sebelum kehabisan!
 => END
 
 ~ npc1_citizen

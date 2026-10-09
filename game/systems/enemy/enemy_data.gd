@@ -2,6 +2,9 @@ extends Resource
 class_name EnemyData
 
 @export var enemy_name: String = "Musuh"
+@export var display_name: String = ""
+@export var enemy_icon: Texture2D
+@export var stats_card_texture: Texture2D
 @export var max_hp: int = 100
 @export var base_damage: int = 10
 @export var rage_damage: int = 20
@@ -20,8 +23,6 @@ class_name EnemyData
 @export var suppress_2_name: String = "Pukul Berat"
 @export var suppress_2_hp: int = 40
 @export var suppress_2_agit: int = 30
-
-@export var suppress_3_name: String = "Tangkap"
 
 @export_group("Observe Values")
 @export var observe_species_trust: int = 10
@@ -53,3 +54,18 @@ class_name EnemyData
 
 @export var adapt_trap_stability: int = 20
 @export var adapt_trap_trust: int = 20
+
+func get_display_name() -> String:
+	if not display_name.is_empty():
+		return display_name
+	match enemy_name.to_lower():
+		"meranti_tree", "meranti":
+			return "POHON MERANTI"
+		"meranti_mad_tree":
+			return "POHON MERANTI"
+		"ular enggano", "ular_enggano":
+			return "ULAR ENGGANO"
+		"rafflesia", "arnoldios", "arnoldos":
+			return "RAFFLESIA"
+		_:
+			return enemy_name.replace("_", " ").to_upper()

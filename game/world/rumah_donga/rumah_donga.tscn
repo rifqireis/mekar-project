@@ -3594,7 +3594,7 @@ theme_override_font_sizes/mono_font_size = 40
 text = "Raflesia"
 
 [node name="Chika" type="CharacterBody2D" parent="." unique_id=924721675 node_paths=PackedStringArray("kitchen_marker")]
-position = Vector2(106.814606, 181.89049)
+position = Vector2(41, 173)
 scale = Vector2(0.124, 0.124)
 script = ExtResource("11_5isi1")
 dialogue_resource = ExtResource("1_5isi1")

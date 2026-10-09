@@ -14,6 +14,29 @@ func _ready() -> void:
 	var notifier = get_node_or_null("VisibleOnScreenNotifier2D")
 	if notifier:
 		notifier.screen_exited.connect(queue_free)
+	body_entered.connect(_on_hit_player)
+	area_entered.connect(_on_hit_player)
+
+func _on_hit_player(other: Node2D) -> void:
+	if other.is_in_group("player") or other.name == "MinigamePlayer" or other.name == "PlayerIcon":
+		if other.has_method("take_hit"):
+			var was_invincible: bool = false
+			if "is_invincible" in other:
+				was_invincible = other.is_invincible
+			other.take_hit()
+			if not was_invincible:
+				var pattern := _find_parent_pattern(self)
+				if pattern:
+					pattern.register_hit()
+		queue_free()
+
+func _find_parent_pattern(current_node: Node) -> AttackPattern:
+	var parent := current_node.get_parent()
+	while parent != null:
+		if parent is AttackPattern:
+			return parent as AttackPattern
+		parent = parent.get_parent()
+	return null
 
 func start_curved_path(start_pos: Vector2, curve_pos: Vector2, end_pos: Vector2, duration: float = 1.0) -> void:
 	p0 = start_pos
